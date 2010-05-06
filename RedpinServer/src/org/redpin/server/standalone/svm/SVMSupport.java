@@ -26,7 +26,7 @@ import sun.misc.Lock;
 
 public class SVMSupport {
 
-	final static String DIRECTORY = "svm/";
+	final static String DIRECTORY = "";
 	final static String TRAIN = DIRECTORY + "train.1";
 	final static String TEST = DIRECTORY + "test.1";
 	final static String TEMP = DIRECTORY + "temp";

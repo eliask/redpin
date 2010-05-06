@@ -41,12 +41,9 @@ import com.google.gson.JsonElement;
  */
 public class RemoveLocationHandler implements IHandler {
 
-	
-	FingerprintHome fHome;
 	LocationHome locHome;
 	
 	public RemoveLocationHandler() {
-		fHome = HomeFactory.getFingerprintHome();
 		locHome = HomeFactory.getLocationHome();
 	}
 	
@@ -59,18 +56,17 @@ public class RemoveLocationHandler implements IHandler {
 		Response res;
 		
 		Location loc = GsonFactory.getGsonInstance().fromJson(data, Location.class);
-		Fingerprint fp = fHome.getByLocationId(loc.getId());
 		
-		if(fp != null) {
+		if(loc != null) {
 			
-			boolean fpRemove = fHome.remove(fp);
+			boolean locRemove = locHome.remove(loc);
 			
-			if(fpRemove) { 
+			if(locRemove) { 
 				res = new Response(Status.ok, null, null);
-				Log.getLogger().finer("removed fingerprint from database");
+				Log.getLogger().finer("removed location from database");
 			} else {
 				res = new Response(Status.failed, "could not remove from database", loc);
-				Log.getLogger().fine("could not remove fingerprint from database ");
+				Log.getLogger().fine("could not remove location from database ");
 			}
 			
 			

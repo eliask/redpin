@@ -222,6 +222,7 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 			conn.setAutoCommit(false);
 			Measurement m = (Measurement)fprint.getMeasurement();
 			int measurementId = HomeFactory.getMeasurementHome().executeInsertUpdate(vps, m);
+			m.setId(measurementId);
 			// wifi
 			HomeFactory.getWiFiReadingVectorHome().executeUpdate(vps, m.getWiFiReadings(), measurementId);
 			// gsm
@@ -233,6 +234,7 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 			int locationId = l.getId() == null ? -1 : l.getId().intValue();
 			if (locationId == -1) {
 				locationId = HomeFactory.getLocationHome().executeInsertUpdate(vps, l); //.getPrimaryKeyId();
+				l.setId(locationId);
 			}
 			
 			int fingerprintId = executeInsertUpdate(vps, fprint);

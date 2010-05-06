@@ -367,6 +367,9 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	 */
 	@Override
 	public T getById(Integer id) {
+		if (id == null || id == -1) {
+			return null;
+		}
 		String constraint = getTableIdCol() + " = " + id;
 		List<T> list = get(constraint);
 		if (list.size() == 0) {
@@ -453,6 +456,9 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	 */
 	@Override
 	public boolean remove(T e) {
+		if (e == null || e.getId() == -1) {
+			return true;
+		}
 		String constraint = getTableIdCol() + " = " + e.getId();
 		return remove(constraint);
 	}	
