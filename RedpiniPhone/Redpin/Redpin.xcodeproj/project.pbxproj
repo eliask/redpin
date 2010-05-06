@@ -1,0 +1,874 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1D3623260D0F684500981E51 /* RedpinAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* RedpinAppDelegate.m */; };
+		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
+		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
+		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		28860B770F44E54D00985440 /* Redpin.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 28860B760F44E54D00985440 /* Redpin.xcdatamodel */; };
+		28860BE50F44EE6400985440 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28860BE40F44EE6400985440 /* CoreData.framework */; };
+		2892E4100DC94CBA00A64D0F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */; };
+		2899E5600DE3E45000AC0155 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2899E55F0DE3E45000AC0155 /* RootViewController.xib */; };
+		28AD73600D9D9599002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD735F0D9D9599002E5188 /* MainWindow.xib */; };
+		28C286E10D94DF7D0034E888 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C286E00D94DF7D0034E888 /* RootViewController.m */; };
+		78082264102B6E7800A48BA0 /* ListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78082262102B6E7800A48BA0 /* ListTableViewController.m */; };
+		78082265102B6E7800A48BA0 /* ListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78082263102B6E7800A48BA0 /* ListTableViewController.xib */; };
+		780823AB102B876000A48BA0 /* LocationHome.m in Sources */ = {isa = PBXBuildFile; fileRef = 780823AA102B876000A48BA0 /* LocationHome.m */; };
+		780BEB2A1026017000964C58 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 780BEB291026017000964C58 /* MapViewController.m */; };
+		780D7C061040995500711428 /* ActivityIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 780D7C051040995500711428 /* ActivityIndicator.m */; };
+		780D7C511040A17200711428 /* ActivityIndicator.xib in Resources */ = {isa = PBXBuildFile; fileRef = 780D7C501040A17200711428 /* ActivityIndicator.xib */; };
+		781DA3331035B19E00C82659 /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 781DA3281035B19E00C82659 /* NSObject+SBJSON.m */; };
+		781DA3341035B19E00C82659 /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 781DA32A1035B19E00C82659 /* NSString+SBJSON.m */; };
+		781DA3351035B19E00C82659 /* SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 781DA32C1035B19E00C82659 /* SBJSON.m */; };
+		781DA3361035B19E00C82659 /* SBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 781DA32E1035B19E00C82659 /* SBJsonBase.m */; };
+		781DA3371035B19E00C82659 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 781DA3301035B19E00C82659 /* SBJsonParser.m */; };
+		781DA3381035B19E00C82659 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 781DA3321035B19E00C82659 /* SBJsonWriter.m */; };
+		781DA4E41035CDCB00C82659 /* ServerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 781DA4E31035CDCB00C82659 /* ServerResponse.m */; };
+		781DA5771035D42600C82659 /* ServerRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 781DA5761035D42600C82659 /* ServerRequest.m */; };
+		781DA68F1035E15600C82659 /* DBEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 781DA68E1035E15600C82659 /* DBEntity.m */; };
+		781DA79D1035F6DE00C82659 /* RedpinFechtedResultController.m in Sources */ = {isa = PBXBuildFile; fileRef = 781DA79C1035F6DE00C82659 /* RedpinFechtedResultController.m */; };
+		784436E81031ADD100262865 /* locate_me_button_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 784436E71031ADD100262865 /* locate_me_button_icon.png */; };
+		784437041031B04200262865 /* list_button_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 784437031031B04200262865 /* list_button_icon.png */; };
+		7844370B1031BA4600262865 /* add_map_button_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7844370A1031BA4600262865 /* add_map_button_icon.png */; };
+		784439711031EC3F00262865 /* LocationMarkerAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 784439701031EC3F00262865 /* LocationMarkerAnnotation.m */; };
+		784DD69D1042A3EC00326998 /* FingerprintRemoteHome.m in Sources */ = {isa = PBXBuildFile; fileRef = 784DD69C1042A3EC00326998 /* FingerprintRemoteHome.m */; };
+		784DD6A71042A5D600326998 /* MeasurementRemoteHome.m in Sources */ = {isa = PBXBuildFile; fileRef = 784DD6A61042A5D600326998 /* MeasurementRemoteHome.m */; };
+		784DD6AD1042A62B00326998 /* WifiReadingRemoteHome.m in Sources */ = {isa = PBXBuildFile; fileRef = 784DD6AC1042A62B00326998 /* WifiReadingRemoteHome.m */; };
+		784DD74410431A1700326998 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 784DD74310431A1700326998 /* Icon.png */; };
+		784DD76C10434C9500326998 /* MeasurementHome.m in Sources */ = {isa = PBXBuildFile; fileRef = 784DD76B10434C9500326998 /* MeasurementHome.m */; };
+		784DD76F10434CCD00326998 /* FingerprintHome.m in Sources */ = {isa = PBXBuildFile; fileRef = 784DD76E10434CCD00326998 /* FingerprintHome.m */; };
+		784DD77B10434E2A00326998 /* WifiReadingHome.m in Sources */ = {isa = PBXBuildFile; fileRef = 784DD77A10434E2A00326998 /* WifiReadingHome.m */; };
+		785A24E3102DBC2E0087C0BD /* SearchTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 785A24E1102DBC2E0087C0BD /* SearchTableViewController.m */; };
+		785A24E4102DBC2E0087C0BD /* SearchTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 785A24E2102DBC2E0087C0BD /* SearchTableViewController.xib */; };
+		785BEA2510420258005E09DD /* StateSaveManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 785BEA2410420258005E09DD /* StateSaveManager.m */; };
+		785BEB0B10421A64005E09DD /* LocationRemoteHome.m in Sources */ = {isa = PBXBuildFile; fileRef = 785BEB0A10421A64005E09DD /* LocationRemoteHome.m */; };
+		787241861025CE5200ABD25F /* MapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 787241851025CE5200ABD25F /* MapView.m */; };
+		78746A6A1027292700254783 /* purple_map_pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 78746A691027292700254783 /* purple_map_pin.png */; };
+		787641A610208DAA00D38FFB /* LocationListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 787641A410208DAA00D38FFB /* LocationListTableViewController.m */; };
+		787641A710208DAA00D38FFB /* LocationListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 787641A510208DAA00D38FFB /* LocationListTableViewController.xib */; };
+		787641BF10208E5700D38FFB /* LocationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 787641BE10208E5700D38FFB /* LocationTableViewCell.m */; };
+		7876437B1020B8F800D38FFB /* EntityHome.m in Sources */ = {isa = PBXBuildFile; fileRef = 7876437A1020B8F800D38FFB /* EntityHome.m */; };
+		7876440D1020D09B00D38FFB /* ServerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 7876440C1020D09B00D38FFB /* ServerConnection.m */; };
+		7877E8261028D70600FB668B /* MapHome.m in Sources */ = {isa = PBXBuildFile; fileRef = 7877E8251028D70600FB668B /* MapHome.m */; };
+		78794E521031998D009B683D /* Measurement.m in Sources */ = {isa = PBXBuildFile; fileRef = 78794E471031998D009B683D /* Measurement.m */; };
+		78794E531031998D009B683D /* WifiReading.m in Sources */ = {isa = PBXBuildFile; fileRef = 78794E491031998D009B683D /* WifiReading.m */; };
+		78794E541031998D009B683D /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 78794E4B1031998D009B683D /* Location.m */; };
+		78794E551031998D009B683D /* Map.m in Sources */ = {isa = PBXBuildFile; fileRef = 78794E4D1031998D009B683D /* Map.m */; };
+		78794E561031998D009B683D /* Fingerprint.m in Sources */ = {isa = PBXBuildFile; fileRef = 78794E4F1031998D009B683D /* Fingerprint.m */; };
+		787D6EE01039BA2D00155A03 /* RemoteEntityHome.m in Sources */ = {isa = PBXBuildFile; fileRef = 787D6EDF1039BA2D00155A03 /* RemoteEntityHome.m */; };
+		787D6EF41039BE2500155A03 /* MapRemoteHome.m in Sources */ = {isa = PBXBuildFile; fileRef = 787D6EF31039BE2500155A03 /* MapRemoteHome.m */; };
+		787D7416103A1BE400155A03 /* Sniffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 787D7415103A1BE400155A03 /* Sniffer.m */; };
+		787E3D2710309430000B2F55 /* AddMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 787E3D2510309430000B2F55 /* AddMapViewController.m */; };
+		787E3D2810309430000B2F55 /* AddMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 787E3D2610309430000B2F55 /* AddMapViewController.xib */; };
+		787E557B100296510017D9F5 /* MapTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 787E557A100296510017D9F5 /* MapTableViewCell.m */; };
+		787E55D510029C780017D9F5 /* UIImageToDataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 787E55D410029C780017D9F5 /* UIImageToDataTransformer.m */; };
+		7889451910554B6E0089B426 /* current_location.png in Resources */ = {isa = PBXBuildFile; fileRef = 7889451810554B6E0089B426 /* current_location.png */; };
+		7889455A1055777F0089B426 /* annotation.png in Resources */ = {isa = PBXBuildFile; fileRef = 788945591055777F0089B426 /* annotation.png */; };
+		788945D110557F860089B426 /* CurrentLocationCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = 788945D010557F860089B426 /* CurrentLocationCircle.m */; };
+		7896964A102A454D0016D2C1 /* purple_map_pin_big.png in Resources */ = {isa = PBXBuildFile; fileRef = 78969648102A454D0016D2C1 /* purple_map_pin_big.png */; };
+		7896964B102A454D0016D2C1 /* red_map_pin_big.png in Resources */ = {isa = PBXBuildFile; fileRef = 78969649102A454D0016D2C1 /* red_map_pin_big.png */; };
+		789784A0104700190089CE22 /* InternetConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7897849F104700190089CE22 /* InternetConnectionManager.m */; };
+		789784B21047004B0089CE22 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 789784B11047004B0089CE22 /* Reachability.m */; };
+		789784C7104700E00089CE22 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 789784C6104700E00089CE22 /* SystemConfiguration.framework */; };
+		789787E51047499B0089CE22 /* SynchronizationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 789787E41047499B0089CE22 /* SynchronizationManager.m */; };
+		78978E361047A3E70089CE22 /* red_map_pin_big_cur.png in Resources */ = {isa = PBXBuildFile; fileRef = 78978E351047A3E70089CE22 /* red_map_pin_big_cur.png */; };
+		78978E591047A8620089CE22 /* purple_map_pin_big_cur.png in Resources */ = {isa = PBXBuildFile; fileRef = 78978E581047A8620089CE22 /* purple_map_pin_big_cur.png */; };
+		78B997911059481D006632A1 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 78B997901059481D006632A1 /* Default.png */; };
+		78B9984C105957B4006632A1 /* BacksideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B9984A105957B4006632A1 /* BacksideViewController.m */; };
+		78B9984D105957B4006632A1 /* BacksideViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78B9984B105957B4006632A1 /* BacksideViewController.xib */; };
+		78BF4E890FFD9647000BA16E /* Redpin_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 78BF4E880FFD9647000BA16E /* Redpin_logo.png */; };
+		78BF4E960FFDA066000BA16E /* Redpin_logo_glossless.png in Resources */ = {isa = PBXBuildFile; fileRef = 78BF4E950FFDA066000BA16E /* Redpin_logo_glossless.png */; };
+		78BF4EA30FFDA6FD000BA16E /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 78BF4EA20FFDA6FD000BA16E /* pin.png */; };
+		78BF4EB80FFDABCC000BA16E /* ifw.gif in Resources */ = {isa = PBXBuildFile; fileRef = 78BF4EB70FFDABCC000BA16E /* ifw.gif */; };
+		78CAAA3E103B3CF400959892 /* ImageUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CAAA3D103B3CF400959892 /* ImageUploader.m */; };
+		78D87D56103DB1F9008E0B9E /* AsyncSocket Documentation.html in Resources */ = {isa = PBXBuildFile; fileRef = 78D87D53103DB1F9008E0B9E /* AsyncSocket Documentation.html */; };
+		78D87D57103DB1F9008E0B9E /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D87D55103DB1F9008E0B9E /* AsyncSocket.m */; };
+		78D87D6E103DB680008E0B9E /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78D87D6D103DB680008E0B9E /* CFNetwork.framework */; };
+		78DAD93F1021BDFC007EF9A4 /* LocationMarker.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DAD93E1021BDFC007EF9A4 /* LocationMarker.m */; };
+		78DAD9FC1021D1BD007EF9A4 /* red_map_pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 78DAD9FB1021D1BD007EF9A4 /* red_map_pin.png */; };
+		78E61D86102182A00068F16A /* MapListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78E61D85102182A00068F16A /* MapListTableViewController.m */; };
+		78E61D88102182AE0068F16A /* MapListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78E61D87102182AE0068F16A /* MapListTableViewController.xib */; };
+		78F9724B1041BF3300DA1DF3 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 78F9724A1041BF3300DA1DF3 /* Settings.bundle */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1D3623240D0F684500981E51 /* RedpinAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RedpinAppDelegate.h; sourceTree = "<group>"; };
+		1D3623250D0F684500981E51 /* RedpinAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RedpinAppDelegate.m; sourceTree = "<group>"; };
+		1D6058910D05DD3D006BFB54 /* Redpin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Redpin.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		28860B760F44E54D00985440 /* Redpin.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = Redpin.xcdatamodel; sourceTree = "<group>"; };
+		28860BE40F44EE6400985440 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		2899E55F0DE3E45000AC0155 /* RootViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
+		28A0AAE50D9B0CCF005BE974 /* Redpin_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Redpin_Prefix.pch; sourceTree = "<group>"; };
+		28AD735F0D9D9599002E5188 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		28C286DF0D94DF7D0034E888 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		28C286E00D94DF7D0034E888 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		78082261102B6E7800A48BA0 /* ListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListTableViewController.h; sourceTree = "<group>"; };
+		78082262102B6E7800A48BA0 /* ListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListTableViewController.m; sourceTree = "<group>"; };
+		78082263102B6E7800A48BA0 /* ListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ListTableViewController.xib; path = Classes/ListTableViewController.xib; sourceTree = "<group>"; };
+		780823A9102B876000A48BA0 /* LocationHome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationHome.h; sourceTree = "<group>"; };
+		780823AA102B876000A48BA0 /* LocationHome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationHome.m; sourceTree = "<group>"; };
+		780BEB281026017000964C58 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
+		780BEB291026017000964C58 /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
+		780D7C041040995500711428 /* ActivityIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityIndicator.h; sourceTree = "<group>"; };
+		780D7C051040995500711428 /* ActivityIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityIndicator.m; sourceTree = "<group>"; };
+		780D7C501040A17200711428 /* ActivityIndicator.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivityIndicator.xib; sourceTree = "<group>"; };
+		781DA3261035B19E00C82659 /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSON.h; path = JSON/JSON.h; sourceTree = "<group>"; };
+		781DA3271035B19E00C82659 /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+SBJSON.h"; path = "JSON/NSObject+SBJSON.h"; sourceTree = "<group>"; };
+		781DA3281035B19E00C82659 /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+SBJSON.m"; path = "JSON/NSObject+SBJSON.m"; sourceTree = "<group>"; };
+		781DA3291035B19E00C82659 /* NSString+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+SBJSON.h"; path = "JSON/NSString+SBJSON.h"; sourceTree = "<group>"; };
+		781DA32A1035B19E00C82659 /* NSString+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+SBJSON.m"; path = "JSON/NSString+SBJSON.m"; sourceTree = "<group>"; };
+		781DA32B1035B19E00C82659 /* SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJSON.h; path = JSON/SBJSON.h; sourceTree = "<group>"; };
+		781DA32C1035B19E00C82659 /* SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBJSON.m; path = JSON/SBJSON.m; sourceTree = "<group>"; };
+		781DA32D1035B19E00C82659 /* SBJsonBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJsonBase.h; path = JSON/SBJsonBase.h; sourceTree = "<group>"; };
+		781DA32E1035B19E00C82659 /* SBJsonBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBJsonBase.m; path = JSON/SBJsonBase.m; sourceTree = "<group>"; };
+		781DA32F1035B19E00C82659 /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJsonParser.h; path = JSON/SBJsonParser.h; sourceTree = "<group>"; };
+		781DA3301035B19E00C82659 /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBJsonParser.m; path = JSON/SBJsonParser.m; sourceTree = "<group>"; };
+		781DA3311035B19E00C82659 /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJsonWriter.h; path = JSON/SBJsonWriter.h; sourceTree = "<group>"; };
+		781DA3321035B19E00C82659 /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBJsonWriter.m; path = JSON/SBJsonWriter.m; sourceTree = "<group>"; };
+		781DA4E21035CDCB00C82659 /* ServerResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerResponse.h; sourceTree = "<group>"; };
+		781DA4E31035CDCB00C82659 /* ServerResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerResponse.m; sourceTree = "<group>"; };
+		781DA5751035D42600C82659 /* ServerRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerRequest.h; sourceTree = "<group>"; };
+		781DA5761035D42600C82659 /* ServerRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerRequest.m; sourceTree = "<group>"; };
+		781DA68D1035E15600C82659 /* DBEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBEntity.h; sourceTree = "<group>"; };
+		781DA68E1035E15600C82659 /* DBEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBEntity.m; sourceTree = "<group>"; };
+		781DA79B1035F6DE00C82659 /* RedpinFechtedResultController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RedpinFechtedResultController.h; sourceTree = "<group>"; };
+		781DA79C1035F6DE00C82659 /* RedpinFechtedResultController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RedpinFechtedResultController.m; sourceTree = "<group>"; };
+		784436E71031ADD100262865 /* locate_me_button_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = locate_me_button_icon.png; sourceTree = "<group>"; };
+		784437031031B04200262865 /* list_button_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_button_icon.png; sourceTree = "<group>"; };
+		7844370A1031BA4600262865 /* add_map_button_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_map_button_icon.png; sourceTree = "<group>"; };
+		7844396F1031EC3F00262865 /* LocationMarkerAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationMarkerAnnotation.h; sourceTree = "<group>"; };
+		784439701031EC3F00262865 /* LocationMarkerAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationMarkerAnnotation.m; sourceTree = "<group>"; };
+		784DD69B1042A3EC00326998 /* FingerprintRemoteHome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FingerprintRemoteHome.h; sourceTree = "<group>"; };
+		784DD69C1042A3EC00326998 /* FingerprintRemoteHome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FingerprintRemoteHome.m; sourceTree = "<group>"; };
+		784DD6A51042A5D600326998 /* MeasurementRemoteHome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeasurementRemoteHome.h; sourceTree = "<group>"; };
+		784DD6A61042A5D600326998 /* MeasurementRemoteHome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeasurementRemoteHome.m; sourceTree = "<group>"; };
+		784DD6AB1042A62B00326998 /* WifiReadingRemoteHome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WifiReadingRemoteHome.h; sourceTree = "<group>"; };
+		784DD6AC1042A62B00326998 /* WifiReadingRemoteHome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WifiReadingRemoteHome.m; sourceTree = "<group>"; };
+		784DD74310431A1700326998 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		784DD76A10434C9500326998 /* MeasurementHome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeasurementHome.h; sourceTree = "<group>"; };
+		784DD76B10434C9500326998 /* MeasurementHome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeasurementHome.m; sourceTree = "<group>"; };
+		784DD76D10434CCD00326998 /* FingerprintHome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FingerprintHome.h; sourceTree = "<group>"; };
+		784DD76E10434CCD00326998 /* FingerprintHome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FingerprintHome.m; sourceTree = "<group>"; };
+		784DD77910434E2A00326998 /* WifiReadingHome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WifiReadingHome.h; sourceTree = "<group>"; };
+		784DD77A10434E2A00326998 /* WifiReadingHome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WifiReadingHome.m; sourceTree = "<group>"; };
+		785A24E0102DBC2E0087C0BD /* SearchTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchTableViewController.h; sourceTree = "<group>"; };
+		785A24E1102DBC2E0087C0BD /* SearchTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchTableViewController.m; sourceTree = "<group>"; };
+		785A24E2102DBC2E0087C0BD /* SearchTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = SearchTableViewController.xib; path = Classes/SearchTableViewController.xib; sourceTree = "<group>"; };
+		785BEA2310420258005E09DD /* StateSaveManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StateSaveManager.h; sourceTree = "<group>"; };
+		785BEA2410420258005E09DD /* StateSaveManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StateSaveManager.m; sourceTree = "<group>"; };
+		785BEB0910421A64005E09DD /* LocationRemoteHome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationRemoteHome.h; sourceTree = "<group>"; };
+		785BEB0A10421A64005E09DD /* LocationRemoteHome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationRemoteHome.m; sourceTree = "<group>"; };
+		787241841025CE5200ABD25F /* MapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapView.h; sourceTree = "<group>"; };
+		787241851025CE5200ABD25F /* MapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapView.m; sourceTree = "<group>"; };
+		787242E41025E9D600ABD25F /* RedpinTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RedpinTests-Info.plist"; sourceTree = "<group>"; };
+		78746A691027292700254783 /* purple_map_pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = purple_map_pin.png; sourceTree = "<group>"; };
+		787641A310208DAA00D38FFB /* LocationListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LocationListTableViewController.h; path = ../LocationListTableViewController.h; sourceTree = "<group>"; };
+		787641A410208DAA00D38FFB /* LocationListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LocationListTableViewController.m; path = ../LocationListTableViewController.m; sourceTree = "<group>"; };
+		787641A510208DAA00D38FFB /* LocationListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationListTableViewController.xib; sourceTree = "<group>"; };
+		787641BD10208E5700D38FFB /* LocationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationTableViewCell.h; sourceTree = "<group>"; };
+		787641BE10208E5700D38FFB /* LocationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationTableViewCell.m; sourceTree = "<group>"; };
+		787643791020B8F800D38FFB /* EntityHome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntityHome.h; sourceTree = "<group>"; };
+		7876437A1020B8F800D38FFB /* EntityHome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityHome.m; sourceTree = "<group>"; };
+		7876440B1020D09B00D38FFB /* ServerConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerConnection.h; sourceTree = "<group>"; };
+		7876440C1020D09B00D38FFB /* ServerConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerConnection.m; sourceTree = "<group>"; };
+		7877E8241028D70600FB668B /* MapHome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapHome.h; sourceTree = "<group>"; };
+		7877E8251028D70600FB668B /* MapHome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapHome.m; sourceTree = "<group>"; };
+		7877E85A1028DBF800FB668B /* SynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynthesizeSingleton.h; sourceTree = "<group>"; };
+		78794E461031998D009B683D /* Measurement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Measurement.h; sourceTree = "<group>"; };
+		78794E471031998D009B683D /* Measurement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Measurement.m; sourceTree = "<group>"; };
+		78794E481031998D009B683D /* WifiReading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WifiReading.h; sourceTree = "<group>"; };
+		78794E491031998D009B683D /* WifiReading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WifiReading.m; sourceTree = "<group>"; };
+		78794E4A1031998D009B683D /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
+		78794E4B1031998D009B683D /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
+		78794E4C1031998D009B683D /* Map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Map.h; sourceTree = "<group>"; };
+		78794E4D1031998D009B683D /* Map.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Map.m; sourceTree = "<group>"; };
+		78794E4E1031998D009B683D /* Fingerprint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fingerprint.h; sourceTree = "<group>"; };
+		78794E4F1031998D009B683D /* Fingerprint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fingerprint.m; sourceTree = "<group>"; };
+		787D6EDE1039BA2D00155A03 /* RemoteEntityHome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RemoteEntityHome.h; sourceTree = "<group>"; };
+		787D6EDF1039BA2D00155A03 /* RemoteEntityHome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RemoteEntityHome.m; sourceTree = "<group>"; };
+		787D6EF21039BE2500155A03 /* MapRemoteHome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapRemoteHome.h; sourceTree = "<group>"; };
+		787D6EF31039BE2500155A03 /* MapRemoteHome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapRemoteHome.m; sourceTree = "<group>"; };
+		787D7414103A1BE400155A03 /* Sniffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sniffer.h; sourceTree = "<group>"; };
+		787D7415103A1BE400155A03 /* Sniffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sniffer.m; sourceTree = "<group>"; };
+		787E3D2410309430000B2F55 /* AddMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddMapViewController.h; sourceTree = "<group>"; };
+		787E3D2510309430000B2F55 /* AddMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddMapViewController.m; sourceTree = "<group>"; };
+		787E3D2610309430000B2F55 /* AddMapViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = AddMapViewController.xib; path = Classes/AddMapViewController.xib; sourceTree = "<group>"; };
+		787E5579100296510017D9F5 /* MapTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapTableViewCell.h; sourceTree = "<group>"; };
+		787E557A100296510017D9F5 /* MapTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapTableViewCell.m; sourceTree = "<group>"; };
+		787E55D310029C780017D9F5 /* UIImageToDataTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImageToDataTransformer.h; sourceTree = "<group>"; };
+		787E55D410029C780017D9F5 /* UIImageToDataTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageToDataTransformer.m; sourceTree = "<group>"; };
+		7889451810554B6E0089B426 /* current_location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = current_location.png; sourceTree = "<group>"; };
+		788945591055777F0089B426 /* annotation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = annotation.png; sourceTree = "<group>"; };
+		788945CF10557F860089B426 /* CurrentLocationCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentLocationCircle.h; sourceTree = "<group>"; };
+		788945D010557F860089B426 /* CurrentLocationCircle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentLocationCircle.m; sourceTree = "<group>"; };
+		78969648102A454D0016D2C1 /* purple_map_pin_big.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = purple_map_pin_big.png; sourceTree = "<group>"; };
+		78969649102A454D0016D2C1 /* red_map_pin_big.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_map_pin_big.png; sourceTree = "<group>"; };
+		7897849E104700190089CE22 /* InternetConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InternetConnectionManager.h; sourceTree = "<group>"; };
+		7897849F104700190089CE22 /* InternetConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InternetConnectionManager.m; sourceTree = "<group>"; };
+		789784B01047004B0089CE22 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		789784B11047004B0089CE22 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		789784C6104700E00089CE22 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		789787E31047499B0089CE22 /* SynchronizationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynchronizationManager.h; sourceTree = "<group>"; };
+		789787E41047499B0089CE22 /* SynchronizationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SynchronizationManager.m; sourceTree = "<group>"; };
+		78978E351047A3E70089CE22 /* red_map_pin_big_cur.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_map_pin_big_cur.png; sourceTree = "<group>"; };
+		78978E581047A8620089CE22 /* purple_map_pin_big_cur.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = purple_map_pin_big_cur.png; sourceTree = "<group>"; };
+		78B997901059481D006632A1 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		78B99849105957B4006632A1 /* BacksideViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BacksideViewController.h; sourceTree = "<group>"; };
+		78B9984A105957B4006632A1 /* BacksideViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BacksideViewController.m; sourceTree = "<group>"; };
+		78B9984B105957B4006632A1 /* BacksideViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = BacksideViewController.xib; path = Classes/BacksideViewController.xib; sourceTree = "<group>"; };
+		78BF4E880FFD9647000BA16E /* Redpin_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Redpin_logo.png; sourceTree = "<group>"; };
+		78BF4E950FFDA066000BA16E /* Redpin_logo_glossless.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Redpin_logo_glossless.png; sourceTree = "<group>"; };
+		78BF4EA20FFDA6FD000BA16E /* pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin.png; sourceTree = "<group>"; };
+		78BF4EB70FFDABCC000BA16E /* ifw.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = ifw.gif; sourceTree = "<group>"; };
+		78CAAA3C103B3CF400959892 /* ImageUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageUploader.h; sourceTree = "<group>"; };
+		78CAAA3D103B3CF400959892 /* ImageUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageUploader.m; sourceTree = "<group>"; };
+		78D87D53103DB1F9008E0B9E /* AsyncSocket Documentation.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "AsyncSocket Documentation.html"; sourceTree = "<group>"; };
+		78D87D54103DB1F9008E0B9E /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
+		78D87D55103DB1F9008E0B9E /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
+		78D87D6D103DB680008E0B9E /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		78DAD93D1021BDFC007EF9A4 /* LocationMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LocationMarker.h; path = ../LocationMarker.h; sourceTree = "<group>"; };
+		78DAD93E1021BDFC007EF9A4 /* LocationMarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LocationMarker.m; path = ../LocationMarker.m; sourceTree = "<group>"; };
+		78DAD9FB1021D1BD007EF9A4 /* red_map_pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_map_pin.png; sourceTree = "<group>"; };
+		78E61D84102182840068F16A /* MapListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MapListTableViewController.h; path = ../MapListTableViewController.h; sourceTree = "<group>"; };
+		78E61D85102182A00068F16A /* MapListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapListTableViewController.m; sourceTree = SOURCE_ROOT; };
+		78E61D87102182AE0068F16A /* MapListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MapListTableViewController.xib; sourceTree = "<group>"; };
+		78F9724A1041BF3300DA1DF3 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Redpin-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Redpin-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1D60588F0D05DD3D006BFB54 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
+				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
+				2892E4100DC94CBA00A64D0F /* CoreGraphics.framework in Frameworks */,
+				28860BE50F44EE6400985440 /* CoreData.framework in Frameworks */,
+				78D87D6E103DB680008E0B9E /* CFNetwork.framework in Frameworks */,
+				789784C7104700E00089CE22 /* SystemConfiguration.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				787D73F3103A1B0500155A03 /* WiFI Sniffer */,
+				7877E8591028DBDF00FB668B /* Util */,
+				787241541025CB8700ABD25F /* Custom UI Elements */,
+				7876440A1020CF3B00D38FFB /* Server */,
+				787643751020B8AA00D38FFB /* Entity Homes */,
+				787E55781002963C0017D9F5 /* Table Cells */,
+				787E549110027C300017D9F5 /* Model and Model Classes */,
+				787E536E1002381F0017D9F5 /* View Controller */,
+				1D3623240D0F684500981E51 /* RedpinAppDelegate.h */,
+				1D3623250D0F684500981E51 /* RedpinAppDelegate.m */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1D6058910D05DD3D006BFB54 /* Redpin.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
+			isa = PBXGroup;
+			children = (
+				78BF4E870FFD961D000BA16E /* Images */,
+				080E96DDFE201D6D7F000001 /* Classes */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+				787242E41025E9D600ABD25F /* RedpinTests-Info.plist */,
+				78F9724A1041BF3300DA1DF3 /* Settings.bundle */,
+			);
+			name = CustomTemplate;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				28A0AAE50D9B0CCF005BE974 /* Redpin_Prefix.pch */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				78B9984B105957B4006632A1 /* BacksideViewController.xib */,
+				787E3D2610309430000B2F55 /* AddMapViewController.xib */,
+				78082263102B6E7800A48BA0 /* ListTableViewController.xib */,
+				785A24E2102DBC2E0087C0BD /* SearchTableViewController.xib */,
+				78E61D87102182AE0068F16A /* MapListTableViewController.xib */,
+				787641A510208DAA00D38FFB /* LocationListTableViewController.xib */,
+				2899E55F0DE3E45000AC0155 /* RootViewController.xib */,
+				28AD735F0D9D9599002E5188 /* MainWindow.xib */,
+				8D1107310486CEB800E47090 /* Redpin-Info.plist */,
+				780D7C501040A17200711428 /* ActivityIndicator.xib */,
+				78B997901059481D006632A1 /* Default.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				789784C6104700E00089CE22 /* SystemConfiguration.framework */,
+				78D87D6D103DB680008E0B9E /* CFNetwork.framework */,
+				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
+				1D30AB110D05D00D00671497 /* Foundation.framework */,
+				2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */,
+				28860BE40F44EE6400985440 /* CoreData.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		780D7C0710409D1F00711428 /* Activity Indicator */ = {
+			isa = PBXGroup;
+			children = (
+				780D7C041040995500711428 /* ActivityIndicator.h */,
+				780D7C051040995500711428 /* ActivityIndicator.m */,
+			);
+			name = "Activity Indicator";
+			sourceTree = "<group>";
+		};
+		781DA3211035B18100C82659 /* JSON-framework */ = {
+			isa = PBXGroup;
+			children = (
+				781DA3261035B19E00C82659 /* JSON.h */,
+				781DA3271035B19E00C82659 /* NSObject+SBJSON.h */,
+				781DA3281035B19E00C82659 /* NSObject+SBJSON.m */,
+				781DA3291035B19E00C82659 /* NSString+SBJSON.h */,
+				781DA32A1035B19E00C82659 /* NSString+SBJSON.m */,
+				781DA32B1035B19E00C82659 /* SBJSON.h */,
+				781DA32C1035B19E00C82659 /* SBJSON.m */,
+				781DA32D1035B19E00C82659 /* SBJsonBase.h */,
+				781DA32E1035B19E00C82659 /* SBJsonBase.m */,
+				781DA32F1035B19E00C82659 /* SBJsonParser.h */,
+				781DA3301035B19E00C82659 /* SBJsonParser.m */,
+				781DA3311035B19E00C82659 /* SBJsonWriter.h */,
+				781DA3321035B19E00C82659 /* SBJsonWriter.m */,
+			);
+			name = "JSON-framework";
+			sourceTree = "<group>";
+		};
+		787241541025CB8700ABD25F /* Custom UI Elements */ = {
+			isa = PBXGroup;
+			children = (
+				780D7C0710409D1F00711428 /* Activity Indicator */,
+				787241551025CBA600ABD25F /* Map View */,
+			);
+			name = "Custom UI Elements";
+			sourceTree = "<group>";
+		};
+		787241551025CBA600ABD25F /* Map View */ = {
+			isa = PBXGroup;
+			children = (
+				78DAD93E1021BDFC007EF9A4 /* LocationMarker.m */,
+				78DAD93D1021BDFC007EF9A4 /* LocationMarker.h */,
+				787241841025CE5200ABD25F /* MapView.h */,
+				787241851025CE5200ABD25F /* MapView.m */,
+				7844396F1031EC3F00262865 /* LocationMarkerAnnotation.h */,
+				784439701031EC3F00262865 /* LocationMarkerAnnotation.m */,
+				788945CF10557F860089B426 /* CurrentLocationCircle.h */,
+				788945D010557F860089B426 /* CurrentLocationCircle.m */,
+			);
+			name = "Map View";
+			sourceTree = "<group>";
+		};
+		787643751020B8AA00D38FFB /* Entity Homes */ = {
+			isa = PBXGroup;
+			children = (
+				787D6EDD1039BA1500155A03 /* Remote */,
+				787D6EDC1039BA0B00155A03 /* Local */,
+			);
+			name = "Entity Homes";
+			path = ..;
+			sourceTree = "<group>";
+		};
+		7876440A1020CF3B00D38FFB /* Server */ = {
+			isa = PBXGroup;
+			children = (
+				78D87D50103DB186008E0B9E /* AsyncSocket */,
+				7876440B1020D09B00D38FFB /* ServerConnection.h */,
+				7876440C1020D09B00D38FFB /* ServerConnection.m */,
+				781DA4E21035CDCB00C82659 /* ServerResponse.h */,
+				781DA4E31035CDCB00C82659 /* ServerResponse.m */,
+				781DA5751035D42600C82659 /* ServerRequest.h */,
+				781DA5761035D42600C82659 /* ServerRequest.m */,
+				78CAAA3C103B3CF400959892 /* ImageUploader.h */,
+				78CAAA3D103B3CF400959892 /* ImageUploader.m */,
+			);
+			name = Server;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		7877E8591028DBDF00FB668B /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				789787E21047498B0089CE22 /* Synchronization Manager */,
+				781DA3211035B18100C82659 /* JSON-framework */,
+				7897853510470A2B0089CE22 /* State Save Manger */,
+				789784A11047001D0089CE22 /* Internet Connection Manager */,
+				7877E85A1028DBF800FB668B /* SynthesizeSingleton.h */,
+			);
+			name = Util;
+			sourceTree = "<group>";
+		};
+		787D6EDC1039BA0B00155A03 /* Local */ = {
+			isa = PBXGroup;
+			children = (
+				787643791020B8F800D38FFB /* EntityHome.h */,
+				7876437A1020B8F800D38FFB /* EntityHome.m */,
+				7877E8241028D70600FB668B /* MapHome.h */,
+				7877E8251028D70600FB668B /* MapHome.m */,
+				780823A9102B876000A48BA0 /* LocationHome.h */,
+				780823AA102B876000A48BA0 /* LocationHome.m */,
+				784DD76D10434CCD00326998 /* FingerprintHome.h */,
+				784DD76E10434CCD00326998 /* FingerprintHome.m */,
+				784DD76A10434C9500326998 /* MeasurementHome.h */,
+				784DD76B10434C9500326998 /* MeasurementHome.m */,
+				784DD77910434E2A00326998 /* WifiReadingHome.h */,
+				784DD77A10434E2A00326998 /* WifiReadingHome.m */,
+			);
+			name = Local;
+			sourceTree = "<group>";
+		};
+		787D6EDD1039BA1500155A03 /* Remote */ = {
+			isa = PBXGroup;
+			children = (
+				787D6EDE1039BA2D00155A03 /* RemoteEntityHome.h */,
+				787D6EDF1039BA2D00155A03 /* RemoteEntityHome.m */,
+				787D6EF21039BE2500155A03 /* MapRemoteHome.h */,
+				787D6EF31039BE2500155A03 /* MapRemoteHome.m */,
+				785BEB0910421A64005E09DD /* LocationRemoteHome.h */,
+				785BEB0A10421A64005E09DD /* LocationRemoteHome.m */,
+				784DD69B1042A3EC00326998 /* FingerprintRemoteHome.h */,
+				784DD69C1042A3EC00326998 /* FingerprintRemoteHome.m */,
+				784DD6A51042A5D600326998 /* MeasurementRemoteHome.h */,
+				784DD6A61042A5D600326998 /* MeasurementRemoteHome.m */,
+				784DD6AB1042A62B00326998 /* WifiReadingRemoteHome.h */,
+				784DD6AC1042A62B00326998 /* WifiReadingRemoteHome.m */,
+			);
+			name = Remote;
+			sourceTree = "<group>";
+		};
+		787D73F3103A1B0500155A03 /* WiFI Sniffer */ = {
+			isa = PBXGroup;
+			children = (
+				787D7414103A1BE400155A03 /* Sniffer.h */,
+				787D7415103A1BE400155A03 /* Sniffer.m */,
+			);
+			name = "WiFI Sniffer";
+			sourceTree = "<group>";
+		};
+		787E536E1002381F0017D9F5 /* View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				780BEB281026017000964C58 /* MapViewController.h */,
+				780BEB291026017000964C58 /* MapViewController.m */,
+				78082261102B6E7800A48BA0 /* ListTableViewController.h */,
+				78082262102B6E7800A48BA0 /* ListTableViewController.m */,
+				78E61D85102182A00068F16A /* MapListTableViewController.m */,
+				78E61D84102182840068F16A /* MapListTableViewController.h */,
+				787641A310208DAA00D38FFB /* LocationListTableViewController.h */,
+				787641A410208DAA00D38FFB /* LocationListTableViewController.m */,
+				28C286E00D94DF7D0034E888 /* RootViewController.m */,
+				28C286DF0D94DF7D0034E888 /* RootViewController.h */,
+				785A24E0102DBC2E0087C0BD /* SearchTableViewController.h */,
+				785A24E1102DBC2E0087C0BD /* SearchTableViewController.m */,
+				787E3D2410309430000B2F55 /* AddMapViewController.h */,
+				787E3D2510309430000B2F55 /* AddMapViewController.m */,
+				781DA79B1035F6DE00C82659 /* RedpinFechtedResultController.h */,
+				781DA79C1035F6DE00C82659 /* RedpinFechtedResultController.m */,
+				78B99849105957B4006632A1 /* BacksideViewController.h */,
+				78B9984A105957B4006632A1 /* BacksideViewController.m */,
+			);
+			name = "View Controller";
+			sourceTree = "<group>";
+		};
+		787E549110027C300017D9F5 /* Model and Model Classes */ = {
+			isa = PBXGroup;
+			children = (
+				781DA68D1035E15600C82659 /* DBEntity.h */,
+				781DA68E1035E15600C82659 /* DBEntity.m */,
+				78794E461031998D009B683D /* Measurement.h */,
+				78794E471031998D009B683D /* Measurement.m */,
+				78794E481031998D009B683D /* WifiReading.h */,
+				78794E491031998D009B683D /* WifiReading.m */,
+				78794E4A1031998D009B683D /* Location.h */,
+				78794E4B1031998D009B683D /* Location.m */,
+				78794E4C1031998D009B683D /* Map.h */,
+				78794E4D1031998D009B683D /* Map.m */,
+				78794E4E1031998D009B683D /* Fingerprint.h */,
+				78794E4F1031998D009B683D /* Fingerprint.m */,
+				787E55D310029C780017D9F5 /* UIImageToDataTransformer.h */,
+				787E55D410029C780017D9F5 /* UIImageToDataTransformer.m */,
+				28860B760F44E54D00985440 /* Redpin.xcdatamodel */,
+			);
+			name = "Model and Model Classes";
+			path = ..;
+			sourceTree = "<group>";
+		};
+		787E55781002963C0017D9F5 /* Table Cells */ = {
+			isa = PBXGroup;
+			children = (
+				787E5579100296510017D9F5 /* MapTableViewCell.h */,
+				787E557A100296510017D9F5 /* MapTableViewCell.m */,
+				787641BD10208E5700D38FFB /* LocationTableViewCell.h */,
+				787641BE10208E5700D38FFB /* LocationTableViewCell.m */,
+			);
+			name = "Table Cells";
+			path = ..;
+			sourceTree = "<group>";
+		};
+		789784A11047001D0089CE22 /* Internet Connection Manager */ = {
+			isa = PBXGroup;
+			children = (
+				789784B01047004B0089CE22 /* Reachability.h */,
+				789784B11047004B0089CE22 /* Reachability.m */,
+				7897849E104700190089CE22 /* InternetConnectionManager.h */,
+				7897849F104700190089CE22 /* InternetConnectionManager.m */,
+			);
+			name = "Internet Connection Manager";
+			sourceTree = "<group>";
+		};
+		7897853510470A2B0089CE22 /* State Save Manger */ = {
+			isa = PBXGroup;
+			children = (
+				785BEA2310420258005E09DD /* StateSaveManager.h */,
+				785BEA2410420258005E09DD /* StateSaveManager.m */,
+			);
+			name = "State Save Manger";
+			sourceTree = "<group>";
+		};
+		789787E21047498B0089CE22 /* Synchronization Manager */ = {
+			isa = PBXGroup;
+			children = (
+				789787E31047499B0089CE22 /* SynchronizationManager.h */,
+				789787E41047499B0089CE22 /* SynchronizationManager.m */,
+			);
+			name = "Synchronization Manager";
+			sourceTree = "<group>";
+		};
+		78BF4E870FFD961D000BA16E /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				788945591055777F0089B426 /* annotation.png */,
+				7889451810554B6E0089B426 /* current_location.png */,
+				78978E581047A8620089CE22 /* purple_map_pin_big_cur.png */,
+				78978E351047A3E70089CE22 /* red_map_pin_big_cur.png */,
+				784DD74310431A1700326998 /* Icon.png */,
+				7844370A1031BA4600262865 /* add_map_button_icon.png */,
+				784437031031B04200262865 /* list_button_icon.png */,
+				784436E71031ADD100262865 /* locate_me_button_icon.png */,
+				78969648102A454D0016D2C1 /* purple_map_pin_big.png */,
+				78969649102A454D0016D2C1 /* red_map_pin_big.png */,
+				78746A691027292700254783 /* purple_map_pin.png */,
+				78DAD9FB1021D1BD007EF9A4 /* red_map_pin.png */,
+				78BF4EB70FFDABCC000BA16E /* ifw.gif */,
+				78BF4EA20FFDA6FD000BA16E /* pin.png */,
+				78BF4E950FFDA066000BA16E /* Redpin_logo_glossless.png */,
+				78BF4E880FFD9647000BA16E /* Redpin_logo.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
+		78D87D50103DB186008E0B9E /* AsyncSocket */ = {
+			isa = PBXGroup;
+			children = (
+				78D87D53103DB1F9008E0B9E /* AsyncSocket Documentation.html */,
+				78D87D54103DB1F9008E0B9E /* AsyncSocket.h */,
+				78D87D55103DB1F9008E0B9E /* AsyncSocket.m */,
+			);
+			name = AsyncSocket;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1D6058900D05DD3D006BFB54 /* Redpin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Redpin" */;
+			buildPhases = (
+				1D60588D0D05DD3D006BFB54 /* Resources */,
+				1D60588E0D05DD3D006BFB54 /* Sources */,
+				1D60588F0D05DD3D006BFB54 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Redpin;
+			productName = Redpin;
+			productReference = 1D6058910D05DD3D006BFB54 /* Redpin.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Redpin" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				en,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1D6058900D05DD3D006BFB54 /* Redpin */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1D60588D0D05DD3D006BFB54 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28AD73600D9D9599002E5188 /* MainWindow.xib in Resources */,
+				2899E5600DE3E45000AC0155 /* RootViewController.xib in Resources */,
+				78BF4E890FFD9647000BA16E /* Redpin_logo.png in Resources */,
+				78BF4E960FFDA066000BA16E /* Redpin_logo_glossless.png in Resources */,
+				78BF4EA30FFDA6FD000BA16E /* pin.png in Resources */,
+				78BF4EB80FFDABCC000BA16E /* ifw.gif in Resources */,
+				787641A710208DAA00D38FFB /* LocationListTableViewController.xib in Resources */,
+				78E61D88102182AE0068F16A /* MapListTableViewController.xib in Resources */,
+				78DAD9FC1021D1BD007EF9A4 /* red_map_pin.png in Resources */,
+				78746A6A1027292700254783 /* purple_map_pin.png in Resources */,
+				7896964A102A454D0016D2C1 /* purple_map_pin_big.png in Resources */,
+				7896964B102A454D0016D2C1 /* red_map_pin_big.png in Resources */,
+				78082265102B6E7800A48BA0 /* ListTableViewController.xib in Resources */,
+				785A24E4102DBC2E0087C0BD /* SearchTableViewController.xib in Resources */,
+				787E3D2810309430000B2F55 /* AddMapViewController.xib in Resources */,
+				784436E81031ADD100262865 /* locate_me_button_icon.png in Resources */,
+				784437041031B04200262865 /* list_button_icon.png in Resources */,
+				7844370B1031BA4600262865 /* add_map_button_icon.png in Resources */,
+				78D87D56103DB1F9008E0B9E /* AsyncSocket Documentation.html in Resources */,
+				780D7C511040A17200711428 /* ActivityIndicator.xib in Resources */,
+				78F9724B1041BF3300DA1DF3 /* Settings.bundle in Resources */,
+				784DD74410431A1700326998 /* Icon.png in Resources */,
+				78978E361047A3E70089CE22 /* red_map_pin_big_cur.png in Resources */,
+				78978E591047A8620089CE22 /* purple_map_pin_big_cur.png in Resources */,
+				7889451910554B6E0089B426 /* current_location.png in Resources */,
+				7889455A1055777F0089B426 /* annotation.png in Resources */,
+				78B997911059481D006632A1 /* Default.png in Resources */,
+				78B9984D105957B4006632A1 /* BacksideViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1D60588E0D05DD3D006BFB54 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
+				1D3623260D0F684500981E51 /* RedpinAppDelegate.m in Sources */,
+				28C286E10D94DF7D0034E888 /* RootViewController.m in Sources */,
+				28860B770F44E54D00985440 /* Redpin.xcdatamodel in Sources */,
+				787E557B100296510017D9F5 /* MapTableViewCell.m in Sources */,
+				787E55D510029C780017D9F5 /* UIImageToDataTransformer.m in Sources */,
+				787641A610208DAA00D38FFB /* LocationListTableViewController.m in Sources */,
+				787641BF10208E5700D38FFB /* LocationTableViewCell.m in Sources */,
+				7876437B1020B8F800D38FFB /* EntityHome.m in Sources */,
+				7876440D1020D09B00D38FFB /* ServerConnection.m in Sources */,
+				78E61D86102182A00068F16A /* MapListTableViewController.m in Sources */,
+				78DAD93F1021BDFC007EF9A4 /* LocationMarker.m in Sources */,
+				787241861025CE5200ABD25F /* MapView.m in Sources */,
+				780BEB2A1026017000964C58 /* MapViewController.m in Sources */,
+				7877E8261028D70600FB668B /* MapHome.m in Sources */,
+				78082264102B6E7800A48BA0 /* ListTableViewController.m in Sources */,
+				780823AB102B876000A48BA0 /* LocationHome.m in Sources */,
+				785A24E3102DBC2E0087C0BD /* SearchTableViewController.m in Sources */,
+				787E3D2710309430000B2F55 /* AddMapViewController.m in Sources */,
+				78794E521031998D009B683D /* Measurement.m in Sources */,
+				78794E531031998D009B683D /* WifiReading.m in Sources */,
+				78794E541031998D009B683D /* Location.m in Sources */,
+				78794E551031998D009B683D /* Map.m in Sources */,
+				78794E561031998D009B683D /* Fingerprint.m in Sources */,
+				784439711031EC3F00262865 /* LocationMarkerAnnotation.m in Sources */,
+				781DA3331035B19E00C82659 /* NSObject+SBJSON.m in Sources */,
+				781DA3341035B19E00C82659 /* NSString+SBJSON.m in Sources */,
+				781DA3351035B19E00C82659 /* SBJSON.m in Sources */,
+				781DA3361035B19E00C82659 /* SBJsonBase.m in Sources */,
+				781DA3371035B19E00C82659 /* SBJsonParser.m in Sources */,
+				781DA3381035B19E00C82659 /* SBJsonWriter.m in Sources */,
+				781DA4E41035CDCB00C82659 /* ServerResponse.m in Sources */,
+				781DA5771035D42600C82659 /* ServerRequest.m in Sources */,
+				781DA68F1035E15600C82659 /* DBEntity.m in Sources */,
+				781DA79D1035F6DE00C82659 /* RedpinFechtedResultController.m in Sources */,
+				787D6EE01039BA2D00155A03 /* RemoteEntityHome.m in Sources */,
+				787D6EF41039BE2500155A03 /* MapRemoteHome.m in Sources */,
+				787D7416103A1BE400155A03 /* Sniffer.m in Sources */,
+				78CAAA3E103B3CF400959892 /* ImageUploader.m in Sources */,
+				78D87D57103DB1F9008E0B9E /* AsyncSocket.m in Sources */,
+				780D7C061040995500711428 /* ActivityIndicator.m in Sources */,
+				785BEA2510420258005E09DD /* StateSaveManager.m in Sources */,
+				785BEB0B10421A64005E09DD /* LocationRemoteHome.m in Sources */,
+				784DD69D1042A3EC00326998 /* FingerprintRemoteHome.m in Sources */,
+				784DD6A71042A5D600326998 /* MeasurementRemoteHome.m in Sources */,
+				784DD6AD1042A62B00326998 /* WifiReadingRemoteHome.m in Sources */,
+				784DD76C10434C9500326998 /* MeasurementHome.m in Sources */,
+				784DD76F10434CCD00326998 /* FingerprintHome.m in Sources */,
+				784DD77B10434E2A00326998 /* WifiReadingHome.m in Sources */,
+				789784A0104700190089CE22 /* InternetConnectionManager.m in Sources */,
+				789784B21047004B0089CE22 /* Reachability.m in Sources */,
+				789787E51047499B0089CE22 /* SynchronizationManager.m in Sources */,
+				788945D110557F860089B426 /* CurrentLocationCircle.m in Sources */,
+				78B9984C105957B4006632A1 /* BacksideViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1D6058940D05DD3E006BFB54 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Redpin_Prefix.pch;
+				INFOPLIST_FILE = "Redpin-Info.plist";
+				PRODUCT_NAME = Redpin;
+			};
+			name = Debug;
+		};
+		1D6058950D05DD3E006BFB54 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Redpin_Prefix.pch;
+				INFOPLIST_FILE = "Redpin-Info.plist";
+				PRODUCT_NAME = Redpin;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ADDITIONAL_SDKS = "";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
+				GCC_TREAT_NONCONFORMANT_CODE_ERRORS_AS_WARNINGS = NO;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNKNOWN_PRAGMAS = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OTHER_LDFLAGS = "";
+				PREBINDING = NO;
+				SDKROOT = iphoneos3.0;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ADDITIONAL_SDKS = "";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
+				GCC_TREAT_NONCONFORMANT_CODE_ERRORS_AS_WARNINGS = NO;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNKNOWN_PRAGMAS = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OTHER_LDFLAGS = "";
+				PREBINDING = NO;
+				SDKROOT = iphoneos3.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Redpin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D6058940D05DD3E006BFB54 /* Debug */,
+				1D6058950D05DD3E006BFB54 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Redpin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

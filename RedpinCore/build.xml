@@ -1,0 +1,28 @@
+<project default="deploy" name="RedpinCore_v2">
+	<property name="src.dir" value="src/" />
+	<property name="build.dir" value="build/" />
+	<property name="classes.dir" value="${build.dir}bin/classes/" />
+	<property name="deploy.dir" value="${build.dir}deploy/" />
+
+	<path id="classpath">
+		<pathelement location="${build.dir}" />
+	</path>
+
+	<target name="clean">
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${deploy.dir}" />
+	</target>
+
+	<target name="compile" depends="clean">
+		<javac target="1.6" classpathref="classpath" srcdir="${src.dir}" destdir="${classes.dir}" debug="off"/>
+	</target>
+
+	<target name="deploy" depends="compile">
+		<jar destfile="${deploy.dir}/redpinCore.jar" basedir="${classes.dir}"/>
+	</target>
+
+	
+
+</project>

@@ -1,0 +1,53 @@
+<project default="deploy" name="RedpinServer_v2">
+	<property name="src.dir" value="src/" />
+	<property name="lib.dir" value="lib" />
+	<property name="build.dir" value="build/" />
+	<property name="resources.src.dir" value="${src.dir}resources"/>
+	<property name="classes.dir" value="${build.dir}bin/classes/" />
+	<property name="deploy.dir" value="${build.dir}deploy/" />
+
+	<path id="classpath">
+		<pathelement location="${build.dir}" />
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="clean">
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${deploy.dir}" />
+		<mkdir dir="${classes.dir}resources"/>
+	    <copy todir="${classes.dir}resources">
+		    <fileset dir="${resources.src.dir}"/>
+	    </copy>
+	</target>
+
+	<target name="compile" depends="clean">
+		<javac target="1.6" classpathref="classpath" srcdir="../Redpin/${src.dir}" destdir="${classes.dir}" debug="off" />
+		<javac target="1.6" classpathref="classpath" srcdir="${src.dir}" destdir="${classes.dir}" debug="off">
+			<exclude name="org/redpin/server/standalone/test/**" unless="junit" />
+		</javac>
+	</target>
+
+	<target name="deploy" depends="compile, createLib">
+		<jar destfile="${deploy.dir}/redpin.jar" basedir="${classes.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="org.redpin.server.standalone.RedpinStandaloneServer" /> <!-- main method -->
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="createLib">
+		<unjar src="${lib.dir}/gson-1.3.jar" dest="${classes.dir}"/>
+		<unjar src="${lib.dir}/sqlite-jdbc-3.6.17.1.jar" dest="${classes.dir}"/> 
+		<unjar src="${lib.dir}/mysql-connector-java-5.1.5-bin.jar" dest="${classes.dir}"/> 
+		<delete dir="${classes.dir}META-INF"/>
+	</target>
+	
+	<target name="javadoc">
+	        <javadoc access="protected" author="true" classpath="/opt/wtk2.5.2/lib/jsr184.jar:/opt/wtk2.5.2/lib/satsa-pki.jar:/opt/wtk2.5.2/lib/cldcapi11.jar:/opt/wtk2.5.2/lib/wma20.jar:lib/sqlite-jdbc-3.6.17.1.jar:../Redpin/bin:/opt/wtk2.5.2/lib/j2me-ws.jar:/opt/wtk2.5.2/lib/jsr75.jar:/opt/wtk2.5.2/lib/jsr211.jar:/opt/wtk2.5.2/lib/satsa-crypto.jar:/opt/wtk2.5.2/lib/midpapi21.jar:/opt/wtk2.5.2/lib/j2me-xmlrpc.jar:/opt/eclipse-sdk.3.4.2/plugins/org.junit4_4.3.1/junit.jar:/opt/wtk2.5.2/lib/jsr226.jar:/opt/wtk2.5.2/lib/jsr082.jar:/opt/wtk2.5.2/lib/jsr180.jar:/opt/wtk2.5.2/lib/jsr239.jar:/opt/wtk2.5.2/lib/jsr238.jar:lib/mysql-connector-java-5.1.5-bin.jar:/opt/wtk2.5.2/lib/jsr229.jar:/opt/wtk2.5.2/lib/satsa-jcrmi.jar:/opt/wtk2.5.2/lib/mmapi.jar:/opt/wtk2.5.2/lib/jsr179.jar:/opt/wtk2.5.2/lib/jsr234.jar:/opt/wtk2.5.2/lib/satsa-apdu.jar:lib/gson-1.3.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="org.redpin.server.standalone.test,org.redpin.server.standalone,org.redpin.server.standalone.locator,org.redpin.server.standalone.core,org.redpin.server.standalone.db,org.redpin.base.util,org.redpin.server.standalone.db.homes,org.redpin.base.core,org.redpin.server.standalone.net,org.redpin.server.standalone.json,org.redpin.server.standalone.util,org.redpin.server.standalone.core.measure,org.redpin.server.standalone.db.homes.vector,org.redpin.base.core.measure" source="1.6" sourcepath="src:../Redpin/src" splitindex="true" use="true" version="true"/>
+	</target>
+
+</project>
