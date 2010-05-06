@@ -1,5 +1,5 @@
 //
-//  Location.h
+//  IntervalScanner.h
 //  Redpin
 /**  This file is part of the Redpin project.
  * 
@@ -16,34 +16,38 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- * © Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ * © Copyright ETH Zurich, Luba Rogoleva, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
  * 
  *  www.redpin.org
  */
 
+#import <Foundation/Foundation.h>
+#import <CoreFoundation/CoreFoundation.h>
+#import "Sniffer.h"
 
-#import <CoreData/CoreData.h>
-#import "DBEntity.h"
+@protocol IntervalScannerDelegate;
 
-@class Map;
-@class Fingerprint;
-
-@interface Location :  DBEntity  
-{
+@interface IntervalScanner : NSObject<SnifferDelegate, UIAccelerometerDelegate> {
+	BOOL inProcess;
+	NSTimer *timer;
+	int count;
+	id<IntervalScannerDelegate> delegate;
+	BOOL moved;
 }
 
-@property (nonatomic, retain) NSNumber * accuracy;
-@property (nonatomic, retain) NSNumber * mapXcord;
-@property (nonatomic, retain) NSString * symbolicID;
-@property (nonatomic, retain) NSNumber * mapYcord;
-@property (nonatomic, retain) NSNumber * reflocationId;
-@property (nonatomic, retain) Map * map;
-@property (nonatomic, retain) Fingerprint * fingerprint;
+@property (nonatomic, assign) id<IntervalScannerDelegate> delegate;
 
-- (id) proxyForJson;
-+ (Location *) fromJSON:(NSDictionary *) dict;
+- (id) initWithDelegate:(id) aDelegate;
+- (void) startScan;
 
 @end
 
 
+@protocol IntervalScannerDelegate <NSObject>
 
+@optional
+
+- (void) scanner:(IntervalScanner *)aScanner finishScan:(int) times;
+
+
+@end

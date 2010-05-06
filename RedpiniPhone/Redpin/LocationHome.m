@@ -67,12 +67,13 @@ static NSString *key = @"symbolicID";
 }
 
 + (NSFetchedResultsController *) defaultFetchedResultsController {
-	return [[EntityHome sharedEntityHome] fetchedResultsControllerForEntityName:[Location entityName] sortDescriptors:[self defaultSortDescriptors] predicate:nil];
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"reflocationId == -1"];
+	return [[EntityHome sharedEntityHome] fetchedResultsControllerForEntityName:[Location entityName] sortDescriptors:[self defaultSortDescriptors] predicate:predicate];
 }
 
 + (NSFetchedResultsController *) filteredFechtedResultControllerWithMap: (Map *) map {
 	NSLog(@"filtered result controller with map %@", [map mapName]);
-	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"map == %@", map];
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"map == %@ AND reflocationId == -1", map];
 	return [[EntityHome sharedEntityHome] fetchedResultsControllerForEntityName:[Location entityName] sortDescriptors:[self defaultSortDescriptors] predicate:predicate];
 }
 

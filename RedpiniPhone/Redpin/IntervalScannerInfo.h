@@ -1,5 +1,5 @@
 //
-//  Location.h
+//  IntervalScannerInfo.h
 //  Redpin
 /**  This file is part of the Redpin project.
  * 
@@ -16,34 +16,27 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- * © Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ * © Copyright ETH Zurich, Luba Rogoleva, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
  * 
  *  www.redpin.org
  */
 
+#import <Foundation/Foundation.h>
+#import <CoreFoundation/CoreFoundation.h>
+#import "Location.h"
 
-#import <CoreData/CoreData.h>
-#import "DBEntity.h"
 
-@class Map;
-@class Fingerprint;
-
-@interface Location :  DBEntity  
-{
+@interface IntervalScannerInfo : NSObject {
 }
 
-@property (nonatomic, retain) NSNumber * accuracy;
-@property (nonatomic, retain) NSNumber * mapXcord;
-@property (nonatomic, retain) NSString * symbolicID;
-@property (nonatomic, retain) NSNumber * mapYcord;
-@property (nonatomic, retain) NSNumber * reflocationId;
-@property (nonatomic, retain) Map * map;
-@property (nonatomic, retain) Fingerprint * fingerprint;
+static NSNumber * locIDInProcess;
+static Location * locInProcess;
 
-- (id) proxyForJson;
-+ (Location *) fromJSON:(NSDictionary *) dict;
++ (void) initialize;
+- (id) init : (NSNumber*) lId forLocation : (Location *) loc;
+- (id) init;
+- (NSNumber *) locationIdInProcess;
+- (Location *) locationInProcess;
 
 @end
-
-
 

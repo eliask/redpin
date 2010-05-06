@@ -1,5 +1,5 @@
 //
-//  Location.h
+//  IntervalScannerInfo.m
 //  Redpin
 /**  This file is part of the Redpin project.
  * 
@@ -16,34 +16,48 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- * © Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ * © Copyright ETH Zurich, Luba Rogoleva, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
  * 
  *  www.redpin.org
  */
 
+#import "IntervalScannerInfo.h"
 
-#import <CoreData/CoreData.h>
-#import "DBEntity.h"
+@implementation IntervalScannerInfo
 
-@class Map;
-@class Fingerprint;
-
-@interface Location :  DBEntity  
-{
++ (void) initialize {
+	locIDInProcess = [[NSNumber alloc] initWithInt:-1];
+	locInProcess = nil;
 }
 
-@property (nonatomic, retain) NSNumber * accuracy;
-@property (nonatomic, retain) NSNumber * mapXcord;
-@property (nonatomic, retain) NSString * symbolicID;
-@property (nonatomic, retain) NSNumber * mapYcord;
-@property (nonatomic, retain) NSNumber * reflocationId;
-@property (nonatomic, retain) Map * map;
-@property (nonatomic, retain) Fingerprint * fingerprint;
+- (id) init : (NSNumber*) lId forLocation: (Location *) loc {
+	self = [super init];
+	if (super != nil) {
+		locIDInProcess = lId;
+		locInProcess = loc;
+	}
+	return self;
+}
 
-- (id) proxyForJson;
-+ (Location *) fromJSON:(NSDictionary *) dict;
+- (id) init {
+	self = [super init];
+	return self;
+}
+
+
+- (NSNumber *) locationIdInProcess {
+	return locIDInProcess;
+}
+
+
+- (Location *) locationInProcess {
+	return locInProcess;
+}
+
+
+- (void)dealloc {
+	
+    [super dealloc];
+}
 
 @end
-
-
-

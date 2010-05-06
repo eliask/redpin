@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- * © Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ * © Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
  * 
  *  www.redpin.org
  */
@@ -43,7 +43,7 @@
 #import "InternetConnectionManager.h"
 #import "RedpinAppDelegate.h"
 #import "ActivityIndicator.h"
-
+#import "IntervalScannerInfo.h"
 
 @interface RootViewController()
 
@@ -52,7 +52,7 @@
 - (void) showPortrait;
 - (void) showLandscape;
 - (void) buildPosition:(Measurement *) m;
-
+- (void) notifyStopIntervalScan;
 @end
 
 
@@ -62,7 +62,7 @@
 			currentMap, currentLocation, showingLocation, mapViewController,
 			mapListController, listController, backsideController, searchController;
 
-
+NSString * const IntervalScanStopNotification = @"StopIntervalScan";
 
 - (void)viewDidLoad {
     
@@ -181,7 +181,7 @@
 
 
 - (IBAction) addPosition:(id)sender {
-	
+	[self notifyStopIntervalScan];
 	if(locateInProgress) {
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Sniffer busy" message:@"At the moment, the sniffer is trying to locate you. Please wait until the sniffer has finished." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
@@ -209,6 +209,7 @@
 
 
 - (IBAction) showList:(id)sender {
+	[self notifyStopIntervalScan];
 	NSLog(@"showList");
 	[self initListController];
 	[self.navigationController pushViewController:self.listController animated:YES];
@@ -234,6 +235,8 @@
 }
 	
 - (IBAction) refreshPosition:(id)sender {
+	[self notifyStopIntervalScan];
+	
 	NSLog(@"refreshPosition");
 	
 	locateInProgress = YES;
@@ -282,8 +285,20 @@
 	backsideVisible = !backsideVisible;
 	
 	[UIView commitAnimations];
-	
-		
+}
+
+
+#pragma mark -
+#pragma mark IntervalScannerDelegate
+
+- (void) scanner:(IntervalScanner *)scanner finishScan:(int) count {
+	[scanner release];
+}
+
+- (void) notifyStopIntervalScan {
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	NSLog(@"Sending stop interval scan notification");
+	[nc postNotificationName:IntervalScanStopNotification object:self];
 }
 
 #pragma mark -
@@ -296,6 +311,10 @@
 		[aSniffer retrieveLocationForMeasurement:measurement];
 	} else {
 		[self buildPosition: measurement];
+		IntervalScanner *scanner = [[IntervalScanner alloc] initWithDelegate:self];
+		if(scanner) {
+			[scanner startScan];
+		}
 		[aSniffer release];
 	}
 	[measurement release];

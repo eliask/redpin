@@ -11,7 +11,9 @@
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
-		28860B770F44E54D00985440 /* Redpin.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 28860B760F44E54D00985440 /* Redpin.xcdatamodel */; };
+		1EF738791128810D009ACE7C /* IntervalScannerInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF738781128810D009ACE7C /* IntervalScannerInfo.m */; };
+		1EF73D90112ADCAB009ACE7C /* IntervalScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF73D8F112ADCAB009ACE7C /* IntervalScanner.m */; };
+		28860B770F44E54D00985440 /* Redpin_v3.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 28860B760F44E54D00985440 /* Redpin_v3.xcdatamodel */; };
 		28860BE50F44EE6400985440 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28860BE40F44EE6400985440 /* CoreData.framework */; };
 		2892E4100DC94CBA00A64D0F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */; };
 		2899E5600DE3E45000AC0155 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2899E55F0DE3E45000AC0155 /* RootViewController.xib */; };
@@ -103,7 +105,11 @@
 		1D3623250D0F684500981E51 /* RedpinAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RedpinAppDelegate.m; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* Redpin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Redpin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		28860B760F44E54D00985440 /* Redpin.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = Redpin.xcdatamodel; sourceTree = "<group>"; };
+		1EF738771128810D009ACE7C /* IntervalScannerInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntervalScannerInfo.h; sourceTree = "<group>"; };
+		1EF738781128810D009ACE7C /* IntervalScannerInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntervalScannerInfo.m; sourceTree = "<group>"; };
+		1EF73D8E112ADCAB009ACE7C /* IntervalScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntervalScanner.h; sourceTree = "<group>"; };
+		1EF73D8F112ADCAB009ACE7C /* IntervalScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntervalScanner.m; sourceTree = "<group>"; };
+		28860B760F44E54D00985440 /* Redpin_v3.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = Redpin_v3.xcdatamodel; sourceTree = "<group>"; };
 		28860BE40F44EE6400985440 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		2899E55F0DE3E45000AC0155 /* RootViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
@@ -266,6 +272,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				1EF7387611288086009ACE7C /* Interval Labeling */,
 				787D73F3103A1B0500155A03 /* WiFI Sniffer */,
 				7877E8591028DBDF00FB668B /* Util */,
 				787241541025CB8700ABD25F /* Custom UI Elements */,
@@ -286,6 +293,18 @@
 				1D6058910D05DD3D006BFB54 /* Redpin.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		1EF7387611288086009ACE7C /* Interval Labeling */ = {
+			isa = PBXGroup;
+			children = (
+				1EF738771128810D009ACE7C /* IntervalScannerInfo.h */,
+				1EF738781128810D009ACE7C /* IntervalScannerInfo.m */,
+				1EF73D8E112ADCAB009ACE7C /* IntervalScanner.h */,
+				1EF73D8F112ADCAB009ACE7C /* IntervalScanner.m */,
+			);
+			name = "Interval Labeling";
+			path = ..;
 			sourceTree = "<group>";
 		};
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
@@ -745,6 +764,8 @@
 				789787E51047499B0089CE22 /* SynchronizationManager.m in Sources */,
 				788945D110557F860089B426 /* CurrentLocationCircle.m in Sources */,
 				78B9984C105957B4006632A1 /* BacksideViewController.m in Sources */,
+				1EF738791128810D009ACE7C /* IntervalScannerInfo.m in Sources */,
+				1EF73D90112ADCAB009ACE7C /* IntervalScanner.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

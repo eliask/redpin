@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- * © Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ * © Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
  * 
  *  www.redpin.org
  */
@@ -25,7 +25,11 @@
 #import "Fingerprint.h"
 #import "Measurement.h"
 #import "WifiReading.h"
-
+#import "IntervalScannerInfo.h"
+#import "Map.h"
+#import "Location.h"
+#import "MapHome.h"
+#import "LocationHome.h"
 
 @implementation FingerprintRemoteHome
 @synthesize delegate;
@@ -63,6 +67,27 @@
 			if([locationDict isKindOfClass:[NSDictionary class]]) {
 				key = [locationDict objectForKey:@"id"];
 				if([key intValue] != -1) {
+					Location *loc = [LocationHome getLocationByRemoteId:key];
+					if (loc == nil) { // original location
+						Location *loc = [[LocationHome newObjectInContext] retain];
+						[loc setRId:key];
+						[loc setReflocationId:key];
+						[loc setMapXcord:[locationDict objectForKey:@"mapXcord"]];
+						[loc setMapYcord:[locationDict objectForKey:@"mapYcord"]];
+						[loc setAccuracy:[locationDict objectForKey:@"accuracy"]];
+						[loc setSymbolicID:[locationDict objectForKey:@"symbolicID"]];
+						NSDictionary *mapDict = [locationDict objectForKey:@"map"];
+						if([mapDict isKindOfClass:[NSDictionary class]]) {
+							Map *map = [MapHome getMapByRemoteId:[mapDict objectForKey:@"id"]];
+							if(map) {
+								[loc setMap:map];
+							}
+						}
+						
+						IntervalScannerInfo *info = [[IntervalScannerInfo alloc] init : (NSNumber *) key forLocation:(Location *) loc];
+						[info release];
+					}
+					
 					[fprint.location setRId:key];
 				}				
 			}
