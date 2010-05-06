@@ -22,7 +22,6 @@ import org.redpin.server.standalone.core.measure.WiFiReading;
 import org.redpin.server.standalone.db.HomeFactory;
 import org.redpin.server.standalone.util.Log;
 
-import sun.misc.Lock;
 
 public class SVMSupport {
 
@@ -37,7 +36,6 @@ public class SVMSupport {
 	final static String MODEL = DIRECTORY + "train.1.scale.model";	
 	final static String TRAIN_SCRIPT = DIRECTORY + "train.pl";
 	final static String PREDICT_SCRIPT = DIRECTORY + "predict.pl";
-	final static Lock lock = new Lock();
 	
 	/**
 	 * Train
@@ -50,7 +48,7 @@ public class SVMSupport {
 		CategorizerFactory.buildCategories();
 		
 		List<Measurement> setupdata = HomeFactory.getMeasurementHome().getAll();
-		if (setupdata == null) return;
+		if (setupdata == null || setupdata.size() == 0) return;
 		
 		System.out.println("Transforming data to the format of an SVM package...");
 		transformToSVMFormat(setupdata, TRAIN, false);
@@ -65,14 +63,12 @@ public class SVMSupport {
 				s.run(scaleargs, TRAIN_SCALE);
 				t.run(args);
 				File f = new File(TEMP);
-				lock.lock();
+				//lock.lock(); not needed because method is synchronized
 				f.renameTo(new File(MODEL)); // change to model file shall be done atomically 
-				lock.unlock();
+				//lock.unlock(); nod needed
 			} catch (IOException e) {
 				Log.getLogger().log(Level.SEVERE, "Failed to create SVM model: " + e.getMessage());
-			} catch (InterruptedException e) {
-				Log.getLogger().log(Level.SEVERE, "Failed to create SVM model: " + e.getMessage());
-			}
+			} 
 		}
 		System.out.println("SVM train finished..");
 	}
@@ -99,17 +95,15 @@ public class SVMSupport {
 				s.run(scaleargs, TEST_SCALE);
 			
 				String[] args={TEST_SCALE,modelfile+"",outputfile+""};
-				lock.lock();
+				//lock.lock();
 				svm_predict.main(args);	
-				lock.unlock();
+				//lock.unlock();
 			}		
 					
 		} catch (FileNotFoundException e) {
 			Log.getLogger().log(Level.SEVERE, "predict failed due to FileNotFoundException: " + e.getMessage());
 		} catch (IOException e) {
 			Log.getLogger().log(Level.SEVERE, "predict failed due to IOException: " + e.getMessage());
-		} catch (InterruptedException e) {
-			Log.getLogger().log(Level.SEVERE, "predict failed due to InterruptedException: " + e.getMessage());
 		}
 		
 		return OUT;
