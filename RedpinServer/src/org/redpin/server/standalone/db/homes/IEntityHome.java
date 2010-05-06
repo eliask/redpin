@@ -48,9 +48,7 @@ public interface IEntityHome<T, ID> {
 	public boolean update(List<T> list);
 	
 	public boolean remove(T e);
-	public boolean removeById(ID id);
 	public boolean remove(List<T> list);
-	public boolean removeById(List<ID> ids);
 	public boolean removeAll();
 	
 	

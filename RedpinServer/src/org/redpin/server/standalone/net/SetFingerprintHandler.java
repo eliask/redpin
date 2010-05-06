@@ -15,13 +15,15 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ *  (c) Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
  * 
  *  www.redpin.org
  */
 package org.redpin.server.standalone.net;
 
 import org.redpin.server.standalone.core.Fingerprint;
+import org.redpin.server.standalone.core.Location;
+import org.redpin.server.standalone.core.Measurement;
 import org.redpin.server.standalone.db.HomeFactory;
 import org.redpin.server.standalone.db.homes.FingerprintHome;
 import org.redpin.server.standalone.json.GsonFactory;
@@ -33,6 +35,7 @@ import com.google.gson.JsonElement;
 /**
  * @see IHandler
  * @author Pascal Brogle (broglep@student.ethz.ch)
+ * @author Luba Rogoleva (lubar@student.ethz.ch)
  *
  */
 public class SetFingerprintHandler implements IHandler {
@@ -51,6 +54,10 @@ public class SetFingerprintHandler implements IHandler {
 		Response res;
 		
 		Fingerprint fprint = GsonFactory.getGsonInstance().fromJson(data, Fingerprint.class);
+		if (fprint.getLocation() != null && ((Location)fprint.getLocation()).getId() != null && ((Location)fprint.getLocation()).getId().intValue() != -1) {
+			Location l = HomeFactory.getLocationHome().getLocation(((Location)fprint.getLocation()).getId(), null);
+			fprint = new Fingerprint(l,(Measurement)fprint.getMeasurement());
+		}
 		fprint = fingerprintHome.add(fprint);
 		
 		if(fprint == null) {

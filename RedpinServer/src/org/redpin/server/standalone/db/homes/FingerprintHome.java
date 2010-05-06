@@ -21,22 +21,28 @@
  */
 package org.redpin.server.standalone.db.homes;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.redpin.server.standalone.core.Fingerprint;
 import org.redpin.server.standalone.core.Location;
 import org.redpin.server.standalone.core.Measurement;
 import org.redpin.server.standalone.core.Vector;
-import org.redpin.server.standalone.core.measure.BluetoothReading;
-import org.redpin.server.standalone.core.measure.GSMReading;
-import org.redpin.server.standalone.core.measure.WiFiReading;
+import org.redpin.server.standalone.db.DatabaseConnection;
 import org.redpin.server.standalone.db.HomeFactory;
+import org.redpin.server.standalone.util.Log;
 
 /**
  * @see EntityHome
  * @author Pascal Brogle (broglep@student.ethz.ch)
+ * @author Luba Rogoleva (lubar@student.ethz.ch)
  *
  */
 public class FingerprintHome extends EntityHome<Fingerprint> {
@@ -45,20 +51,22 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 	private static final String[] TableCols = {"locationId", "measurementId"};
 	private static final String TableName = "fingerprint"; 
 	private static final String TableIdCol = "fingerprintId";
+	private static final String selectFingerprints = " SELECT " + TableName + "." + TableIdCol + ", " + HomeFactory.getLocationHome().getTableColNames() + ", " +
+	 												 HomeFactory.getMapHome().getTableColNames() + ", " + HomeFactory.getMeasurementHome().getTableColNames() + ", " +
+	 												 " readinginmeasurement.readingClassName, " + HomeFactory.getWiFiReadingHome().getTableColNames() + ", " + 
+	 												 HomeFactory.getGSMReadingHome().getTableColNames() + ", " + HomeFactory.getBluetoothReadingHome().getTableColNames()  +
+	 												 " FROM " + TableName + " INNER JOIN location ON fingerprint.locationId = location.locationId " +
+	 												 " INNER JOIN map ON location.mapId = map.mapId INNER JOIN measurement ON fingerprint.measurementId = measurement.measurementId " + 
+	 												 " INNER JOIN readinginmeasurement ON readinginmeasurement.measurementId = measurement.measurementId " +
+	 												 " LEFT OUTER JOIN wifireading ON wifireading.wifiReadingId = readinginmeasurement.readingId " +
+	 												 " LEFT OUTER JOIN gsmreading ON gsmreading.gsmReadingId = readinginmeasurement.readingId " +
+	 												 " LEFT OUTER JOIN bluetoothreading ON bluetoothreading.bluetoothReadingId = readinginmeasurement.readingId ";
+	private static final String orderFingerprints = " fingerprint.fingerprintId, fingerprint.measurementId, readinginmeasurement.readingClassName ";
 	
+	
+
 	public FingerprintHome() {
 		super();
-	}
-
-	/**
-	 * @see EntityHome#getColValues(org.redpin.server.standalone.db.IEntity)
-	 */
-	@Override
-	protected Object[] getColValues(Fingerprint e) {
-		Object[] res = new Object[getTableCols().length];
-		res[0] = ((Location) e.getLocation()).getId();
-		res[1] = ((Measurement) e.getMeasurement()).getId();
-		return res;
 	}
 
 	/**
@@ -85,6 +93,7 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 		return TableName;
 	}
 	
+	
 	/**
 	 * @see EntityHome#parseResultRow(ResultSet)
 	 */
@@ -95,9 +104,8 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 		try {
 			
 			f.setId(rs.getInt(1));
-			f.setLocation(HomeFactory.getLocationHome().getById(rs.getInt(2)));
-			f.setMeasurement(HomeFactory.getMeasurementHome().getById(rs.getInt(3)));
-			
+			f.setLocation(HomeFactory.getLocationHome().parseResultRow(rs, 2));
+			f.setMeasurement(HomeFactory.getMeasurementHome().parseResultRow(rs, HomeFactory.getLocationHome().getTableCols().length + 2 + HomeFactory.getMapHome().getTableCols().length + 2));
 		
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, "parseResultRow failed: " + e.getMessage(), e);
@@ -107,160 +115,335 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 		return f;
 	}
 	
-	/**
-	 * Checks if the fingerprint's location is already stored in the database. if not, the location is saved
-	 * @param e {@link Fingerprint}
-	 */
-	private void checkLocation(Fingerprint e) {
-		Location l = (Location) e.getLocation();
-		if(l.getId() == null) {
-			log.finer("location not yet saved, now saving it");
-			l = HomeFactory.getLocationHome().add(l);
-		}
-	}
 	
 	/**
-	 * Checks if the fingerprint's measurement is already stored in the database. if not, the location is saved
-	 * @param e {@link Fingerprint}
-	 */
-	private void checkMeasurement(Fingerprint e) {
-		Measurement m = (Measurement) e.getMeasurement();
-		if(m.getId() == null) {
-			log.finer("measurement not yet saved, now saving it");
-			m = HomeFactory.getMeasurementHome().add(m);
-		}
-	}
-	
-	/**
-	 * @see EntityHome#add(org.redpin.server.standalone.db.IEntity)
+	 * @see EntityHome#getAll()
 	 */
 	@Override
-	public Fingerprint add(Fingerprint e) {
-		checkLocation(e);
-		checkMeasurement(e);
-		return super.add(e);
+	public List<Fingerprint> getAll() {
+		return getFingerprints(-1, -1, -1);
 	}
 	
-	/**
-	 * @see EntityHome#update(org.redpin.server.standalone.db.IEntity)
-	 */
+	private List<Fingerprint> getFingerprints(Integer fingerprintId, Integer locationId, Integer measurementId) { 
+		String cnst = "";
+		if (fingerprintId != -1) cnst += getTableName() + "." + getTableIdCol() + " = " + fingerprintId;
+		else if (locationId != -1) cnst += getTableName() + "." + getTableCols()[0] + " = " + locationId;
+		else if (measurementId != -1) cnst += getTableName() + "." + getTableCols()[1] + " = " + measurementId;
+		return get(cnst);
+	}
+	
+	
+	
 	@Override
-	public boolean update(Fingerprint e) {
-		checkLocation(e);
-		checkMeasurement(e);
-		return super.update(e);
+	protected String getSelectSQL() {
+		return selectFingerprints;
 	}
 	
+	@Override
+	protected String getOrder() {
+		return orderFingerprints;
+	}
 	
-	/**
-	 * Removes measurements if they are not already deleted
-	 * 
-	 * @param f {@link Fingerprint}
-	 */
-	private void removeMeasurements(Fingerprint f) {
-		MeasurementHome mh = HomeFactory.getMeasurementHome();
-		if(f.getMeasurement() != null) {
-			log.finer("implicit deletion of measurement");
-			if(!mh.remove((Measurement)f.getMeasurement())) {
-				log.log(Level.WARNING, "implicit deletion of measurement failed");
+	/*
+	@Override
+	protected List<Fingerprint> get(String constrain) { 
+		
+		List<Fingerprint> res = new ArrayList<Fingerprint>();
+		
+		String sql = selectFingerprints; 
+		if (constrain != null && constrain.length() > 0) sql += " WHERE " + constrain;
+		sql += orderFingerprints;
+		
+		log.finest(sql);
+		ResultSet rs = null;
+		Statement stat = null;
+		try {
+			stat = db.getConnection().createStatement();
+			rs = stat.executeQuery(sql);
+			do {
+				if (rs.isAfterLast()) break;
+				if (!rs.isBeforeFirst() || rs.next()) { 
+					res.add(parseResultRow(rs));
+				}
+			} while(!rs.isAfterLast());
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, "getFingerprints failed: " + e.getMessage(), e);
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (stat != null) stat.close();
+			} catch (SQLException es) {
+				log.log(Level.WARNING, "failed to close database resources: " + es.getMessage(), es);
 			}
 		}
+		
+		return res;
 	}
+	*/
 	
 	/**
-	 * Also deletes the fingerprint's measurement, but not its location
-	 * @see EntityHome#removeById(Integer)
-	 */
-	@Override
-	public boolean removeById(Integer id) {
-		Fingerprint f = getById(id);
-		removeMeasurements(f);
-		return super.removeById(id);
-	}
-	
-	/**
-	 * Also deletes the fingerprint's measurement, but not its location
-	 * @see EntityHome#remove(org.redpin.server.standalone.db.IEntity)
-	 */
-	@Override
-	public boolean remove(Fingerprint f) {
-		removeMeasurements(f);
-		return super.removeById(f.getId());
-	}
-	
-	/**
-	 * get the location by its {@link Measurement}
+	 * get the total number of Fingerprints
 	 * 
-	 * @param m {@link Measurement}
-	 * @return {@link Fingerprint} containing the {@link Measurement} m
+	 * @return the number of Fingerprints
 	 */
-	public Fingerprint getByMeasurement(Measurement m) {
-		return getByMeasurementId(m.getId());
+	public int getCount() {
+		int res = 0;
+		
+		String sql = "SELECT COUNT(*) FROM " + TableName;
+		Log.getLogger().finest(sql);
+		ResultSet rs = null;
+		Statement stat = null;
+		try {
+			stat = DatabaseConnection.getInstance().getConnection().createStatement();
+			rs = stat.executeQuery(sql);
+			res = rs.getInt(1);
+		} catch (SQLException e) {
+			Log.getLogger().log(Level.SEVERE, "getNum failed: " + e.getMessage(), e);
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (stat != null) stat.close();
+			} catch (SQLException es) {
+				Log.getLogger().log(Level.WARNING, "failed to close database resources: " + es.getMessage(), es);
+			}
+		}
+		
+		return res;
+	}
+
+	@Override
+	public synchronized Fingerprint add(Fingerprint fprint) {
+		Connection conn = db.getConnection();
+		Vector<PreparedStatement> vps = new Vector<PreparedStatement>();
+		ResultSet rs = null;
+		
+		try {
+
+			conn.setAutoCommit(false);
+			Measurement m = (Measurement)fprint.getMeasurement();
+			int measurementId = HomeFactory.getMeasurementHome().executeInsertUpdate(vps, m);
+			// wifi
+			HomeFactory.getWiFiReadingVectorHome().executeUpdate(vps, m.getWiFiReadings(), measurementId);
+			// gsm
+			HomeFactory.getGSMReadingVectorHome().executeUpdate(vps, m.getGsmReadings(), measurementId);			
+			// bluetooth
+			HomeFactory.getBluetoothReadingVectorHome().executeUpdate(vps, m.getBluetoothReadings(), measurementId);
+			
+			Location l = (Location)fprint.getLocation();
+			int locationId = l.getId() == null ? -1 : l.getId().intValue();
+			if (locationId == -1) {
+				locationId = HomeFactory.getLocationHome().executeInsertUpdate(vps, l); //.getPrimaryKeyId();
+			}
+			
+			int fingerprintId = executeInsertUpdate(vps, fprint);
+			conn.commit();
+			
+			return getById(fingerprintId);
+		
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, "add fingerprint failed: " + e.getMessage(), e);
+		} finally {
+			try {
+				conn.setAutoCommit(true);
+				if (rs != null) rs.close();
+				for(PreparedStatement p : vps) {
+					if (p != null) p.close();
+				}
+			} catch (SQLException es) {
+				log.log(Level.WARNING, "failed to close statement: " + es.getMessage(), es);
+			}
+		}
+		return null;
+	}
+
+	
+	@Override
+	public Fingerprint parseResultRow(ResultSet rs, int fromIndex)
+			throws SQLException {
+		return parseResultRow(rs, 1);
 	}
 	
+	
 	/**
-	 * get the location by its {@link Measurement} primary key
+	 * get the fingerprint by its {@link Fingerprint} primary key
 	 * 
 	 * @param id primary key
-	 * @return {@link Fingerprint} containing the measurement m
+	 * @return {@link Fingerprint} 
+	 */
+	@Override
+	public Fingerprint getById(Integer id) {
+		if (id == null) return null;
+		List<Fingerprint> res = getFingerprints(id, -1, -1);
+		return res == null || res.size() == 0 ? null : res.get(0); 
+	}
+	
+	/**
+	 * get the fingerprint by its {@link Fingerprint} location id
+	 * 
+	 * @param id primary key
+	 * @return {@link Fingerprint} 
+	 */
+	public Fingerprint getByLocationId(Integer id) {
+		if (id == null) return null;
+		List<Fingerprint> res = getFingerprints(-1, id, -1);
+		return res == null || res.size() == 0 ? null : res.get(0);
+	}
+
+	/**
+	 * get the fingerprint by its {@link Fingerprint} measurement id
+	 * 
+	 * @param id primary key
+	 * @return {@link Fingerprint} 
 	 */
 	public Fingerprint getByMeasurementId(Integer id) {
-		Fingerprint res = null;
+		if (id == null) return null;
+		List<Fingerprint> res = getFingerprints(-1, -1, id);
+		return res == null || res.size() == 0 ? null : res.get(0);
+	}
+	
+	/*
+	@Override
+	public boolean remove(Fingerprint fp) {
 		
-		String sql = "SELECT * FROM " + getTableName() + " WHERE "	+ getTableCols()[1] + "=" + id;
-		log.finest(sql);
-
+		String fingerprintsCnst = getTableIdCol() + " = " + fp.getId() + " OR " + getTableCols()[0] + " = " + ((Location)fp.getLocation()).getId();
+		String measurementsCnst = HomeFactory.getMeasurementHome().getTableIdCol() + " = " + ((Measurement)fp.getMeasurement()).getId() + 
+								  " OR " + HomeFactory.getMeasurementHome().getTableIdCol() + 
+								  " IN (SELECT " + getTableCols()[1] + " FROM " + getTableName() + " WHERE (" + fingerprintsCnst + ")) ";
+		String readingInMeasurementCnst = " IN (SELECT readingId FROM readinginmeasurement WHERE (" + measurementsCnst + ")) ";
+		
+		String sql_l = "DELETE FROM " + HomeFactory.getLocationHome().getTableName() + " WHERE " + HomeFactory.getLocationHome().getTableIdCol() + " = " + ((Location)fp.getLocation()).getId();
+		String sql_m = " DELETE FROM " + HomeFactory.getMeasurementHome().getTableName() + " WHERE " + measurementsCnst;
+		String sql_wifi = " DELETE FROM " + HomeFactory.getWiFiReadingHome().getTableName() + 
+						  " WHERE " + HomeFactory.getWiFiReadingHome().getTableIdCol() + readingInMeasurementCnst;
+		String sql_gsm = " DELETE FROM " + HomeFactory.getGSMReadingHome().getTableName() + 
+		  				 " WHERE " + HomeFactory.getGSMReadingHome().getTableIdCol() + readingInMeasurementCnst;
+		String sql_bluetooth = " DELETE FROM " + HomeFactory.getBluetoothReadingHome().getTableName() + 
+		  					   " WHERE " + HomeFactory.getBluetoothReadingHome().getTableIdCol() + readingInMeasurementCnst;
+		 
+		String sql_rinm = "DELETE FROM readinginmeasurement WHERE " + measurementsCnst;
+		String sql_fp = "DELETE FROM " + getTableName() + " WHERE " + fingerprintsCnst;
+		Statement stat = null;
+		int res = -1;
 		try {
-			ResultSet rs = executeQuery(sql);
-			if (rs.next()) {
-				res = parseResultRow(rs);
+			db.getConnection().setAutoCommit(false);
+			stat = db.getConnection().createStatement();
+			if (db.getConnection().getMetaData().supportsBatchUpdates()) {
+				stat.addBatch(sql_wifi);
+				stat.addBatch(sql_gsm);
+				stat.addBatch(sql_bluetooth);
+				stat.addBatch(sql_rinm);
+				stat.addBatch(sql_m);
+				stat.addBatch(sql_l);
+				stat.addBatch(sql_fp);
+				int results[] = stat.executeBatch();
+				if (results != null && results.length > 0) {
+					res = results[results.length - 1];
+				}
 			} else {
-				log.log(Level.WARNING, "getByMeasurementId returned no result");
+				stat.executeUpdate(sql_wifi);
+				stat.executeUpdate(sql_gsm);
+				stat.executeUpdate(sql_bluetooth);
+				stat.executeUpdate(sql_rinm);
+				stat.executeUpdate(sql_m);
+				stat.executeUpdate(sql_l);
+				res = stat.executeUpdate(sql_fp);
 			}
+			db.getConnection().commit();
+			return res > 0;
 		} catch (SQLException e) {
-			log.log(Level.SEVERE, "getByMeasurementId failed: " + e.getMessage(), e);
+			log.log(Level.SEVERE, "remove fingerprint failed: " + e.getMessage(), e);
+		} finally {
+			try {
+				db.getConnection().setAutoCommit(true);
+				if (stat != null) stat.close();
+			} catch (SQLException es) {
+				log.log(Level.WARNING, "failed to close statement: " + es.getMessage(), es);
+			}
 		}
-			
-	
-		
-		return res;
+		return false;
 	}
-	
-	/**
-	 * get the location by its {@link Fingerprint}
-	 * 
-	 * @param l {@link Fingerprint}
-	 * @return {@link Fingerprint} containing the {@link Fingerprint} f
-	 */
-	public Fingerprint getByLocation(Location l) {
-		return getByFingerprintId(l.getId());
-	}
-	
-	/**
-	 * get the location by its {@link Fingerprint} primary key
-	 * 
-	 * @param id primary key
-	 * @return {@link Fingerprint} containing the measurement m
-	 */
-	public Fingerprint getByFingerprintId(Integer id) {
-		Fingerprint res = null;
-		
-		String sql = "SELECT * FROM " + getTableName() + " WHERE "	+ getTableCols()[0] + "=" + id;
-		log.finest(sql);
+	*/
 
+
+	@Override
+	public int fillInStatement(PreparedStatement ps, Fingerprint t, int fromIndex) throws SQLException {
+		return fillInStatement(ps, new Object[] {((Location)t.getLocation()).getId(), ((Measurement)t.getMeasurement()).getId()}, 
+				new int[]{Types.INTEGER, Types.INTEGER},
+				fromIndex);
+	}
+
+	@Override
+	protected boolean remove(String constrain) {
+
+		String fingerprintsCnst = (constrain != null && constrain.length() > 0) ? constrain : "1=1";
+		
+		String measurementsCnst = HomeFactory.getMeasurementHome().getTableIdCol() + " IN (SELECT " + HomeFactory.getFingerprintHome().getTableCols()[1] + 
+																					 " FROM " + HomeFactory.getFingerprintHome().getTableName() + 
+																					 " WHERE (" + fingerprintsCnst + ")) ";
+		String readingInMeasurementCnst = " IN (SELECT readingId FROM readinginmeasurement WHERE (" + measurementsCnst + ")) ";
+		
+		
+		String sql_m = " DELETE FROM " + HomeFactory.getMeasurementHome().getTableName() + " WHERE " + measurementsCnst;
+		String sql_wifi = " DELETE FROM " + HomeFactory.getWiFiReadingHome().getTableName() + 
+						  " WHERE " + HomeFactory.getWiFiReadingHome().getTableIdCol() + readingInMeasurementCnst;
+		String sql_gsm = " DELETE FROM " + HomeFactory.getGSMReadingHome().getTableName() + 
+		  				 " WHERE " + HomeFactory.getGSMReadingHome().getTableIdCol() + readingInMeasurementCnst;
+		String sql_bluetooth = " DELETE FROM " + HomeFactory.getBluetoothReadingHome().getTableName() + 
+		  					   " WHERE " + HomeFactory.getBluetoothReadingHome().getTableIdCol() + readingInMeasurementCnst;
+		 
+		String sql_rinm = "DELETE FROM readinginmeasurement WHERE " + measurementsCnst;
+		String sql_fp = "DELETE FROM " + HomeFactory.getFingerprintHome().getTableName() + " WHERE " + fingerprintsCnst;
+
+		Statement stat = null;
+		
+		log.finest(sql_wifi);
+		log.finest(sql_gsm);
+		log.finest(sql_bluetooth);
+		log.finest(sql_rinm);
+		log.finest(sql_m);
+		log.finest(sql_fp);
 		try {
-			ResultSet rs = executeQuery(sql);
-			if (rs.next()) {
-				res = parseResultRow(rs);
+			int res = -1;
+			db.getConnection().setAutoCommit(false);
+			stat = db.getConnection().createStatement();
+			if (db.getConnection().getMetaData().supportsBatchUpdates()) {
+				stat.addBatch(sql_wifi);
+				stat.addBatch(sql_gsm);
+				stat.addBatch(sql_bluetooth);
+				stat.addBatch(sql_rinm);
+				stat.addBatch(sql_m);
+				stat.addBatch(sql_fp);
+				int results[] = stat.executeBatch();
+				if (results != null && results.length > 0) {
+					res = results[results.length - 1];
+				}
 			} else {
-				log.log(Level.WARNING, "getByMeasurementId returned no result");
+				stat.executeUpdate(sql_wifi);
+				stat.executeUpdate(sql_gsm);
+				stat.executeUpdate(sql_bluetooth);
+				stat.executeUpdate(sql_rinm);
+				stat.executeUpdate(sql_m);
+				res = stat.executeUpdate(sql_fp);
 			}
+			db.getConnection().commit();
+			return res > 0;
 		} catch (SQLException e) {
-			log.log(Level.SEVERE, "getByMeasurementId failed: " + e.getMessage(), e);
-		}	
+			log.log(Level.SEVERE, "remove map failed: " + e.getMessage(), e);
+		} finally {
+			try {
+				db.getConnection().setAutoCommit(true);
+				if (stat != null) stat.close();
+			} catch (SQLException es) {
+				log.log(Level.WARNING, "failed to close statement: " + es.getMessage(), es);
+			}
+		}
+		return false;
 		
-		return res;
 	}
+
 	
 
+	
+
+	
 }

@@ -28,11 +28,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.redpin.server.standalone.core.Location;
+import org.redpin.server.standalone.core.Map;
 import org.redpin.server.standalone.db.DatabaseConnection;
+import org.redpin.server.standalone.db.HomeFactory;
 import org.redpin.server.standalone.db.IEntity;
 import org.redpin.server.standalone.util.Configuration;
 import org.redpin.server.standalone.util.Log;
@@ -43,28 +48,124 @@ import org.redpin.server.standalone.util.Configuration.DatabaseTypes;
  * needed to add, get, update and remove entities to/from database
  * 
  * @author Pascal Brogle (broglep@student.ethz.ch)
+ * @author Luba Rogoleva (lubar@student.ethz.ch)
  *
  * @param <T> entity which implements the interface IEntity<Integer>
  */
 
 public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityHome<T, Integer> {
 	
+	protected int primaryKeyId = -1;
 	protected DatabaseConnection db;	
 	protected Logger log;
+	protected String TableColNames = null;
+	protected String insertSQL = null;
+	protected String updateSQL = null;
+	protected String selectSQL = null;
+	protected String deleteSQL = null;
 	
-
 	public EntityHome() {
 		this.db = DatabaseConnection.getInstance();
 		this.log = Log.getLogger();
 	}
-	
-	
 	
 	/**
 	 * 
 	 * @return Table name of entity
 	 */
 	abstract protected String getTableName();
+	
+	/**
+	 * 
+	 * @return columns names of entity for a query
+	 */
+	protected String getTableColNames() {
+		if (TableColNames == null) {
+			TableColNames = getTableName() + "." + getTableIdCol();
+			for (String colName : getTableCols()) {
+				TableColNames += ", " + getTableName() + "." + colName;
+			}
+		}
+		return TableColNames;
+	}
+		
+	/**
+	 * 
+	 * @return next primary key for the entry
+	 */
+	protected synchronized int getPrimaryKeyId() {
+		if (primaryKeyId == -1) {
+			ResultSet rs = null;
+			Statement stat = null;
+			try {
+				stat = db.getConnection().createStatement();
+				rs = stat.executeQuery("SELECT MAX(" + getTableIdCol() + ") FROM " + getTableName());
+				primaryKeyId = rs.next() ? rs.getInt(1) : 0;
+			} catch (SQLException e) {
+				primaryKeyId = -1;
+				log.log(Level.SEVERE, "getPrimaryKeyId failed: " + e.getMessage(), e);
+			} finally {
+				try {
+					if (rs != null) rs.close();
+					if (stat != null) stat.close();
+				} catch (SQLException es) {
+					log.log(Level.WARNING, "failed to close db resources: " + es.getMessage(), es);
+				}
+			}
+		}
+		primaryKeyId++;
+		return primaryKeyId;
+	}
+	
+	/**
+	 * 
+	 * @return prepared INSERT sql string
+	 */
+	protected String getInsertSQL() {
+		if (insertSQL == null) {
+			insertSQL = " INSERT INTO " + getTableName() + " (" + getTableIdCol() + ", " + implode(getTableCols()) + ") VALUES (? " + repeat(",?", getTableCols().length) + ");";
+		}
+		return insertSQL;
+	}
+	
+	protected String getUpdateSQL() {
+
+		if (updateSQL == null) {
+			String[] cols = getTableCols();
+			updateSQL = " UPDATE " + getTableName() + " SET ";
+			boolean first = true;
+			for(int i=0; i < getTableCols().length; i++) {
+				if (!first) {
+					updateSQL += " , ";
+				} 
+				updateSQL += cols[i] + " = ?";
+				first = false;
+			}
+			
+			updateSQL += " WHERE " + getTableIdCol() + " = ? ;";
+		}
+		return updateSQL;
+	}
+	
+	protected String getSelectSQL() {
+
+		if (selectSQL == null) {
+			selectSQL = "SELECT " + getTableColNames() + " FROM " + getTableName();
+		}
+		return selectSQL;
+	}
+	
+	protected String getOrder() {
+		return "";
+	}
+	
+	protected String getDeleteSQL() {
+
+		if (deleteSQL == null) {
+			deleteSQL = "DELETE FROM " + getTableName();
+		}
+		return deleteSQL;
+	}
 	
 	/**
 	 * 
@@ -78,12 +179,9 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	 */
 	abstract protected String[] getTableCols();
 	
-	/**
-	 * 
-	 * @param e Entity
-	 * @return All column values (including primary key) in order getTableIdCol(), getTableCols() 
-	 */
-	abstract protected Object[] getColValues(T e);	
+	
+	
+	
 	
 	/**
 	 * This function restores an entity from a database row
@@ -92,10 +190,68 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	 * @return Restored entity from database row
 	 * @throws SQLException
 	 */
-	abstract protected T parseResultRow(ResultSet rs) throws SQLException;
+	protected T parseResultRow(final ResultSet rs) throws SQLException {
+		return parseResultRow(rs, 1);
+	}
 		
+	/**
+	 * 
+	 * @param rs {@link ResultSet}
+	 * @param fromIndex index from where the parsing starts 
+	 * @return Restored entity from database row
+	 * @throws SQLException
+	 */
+	public abstract T parseResultRow(final ResultSet rs, int fromIndex) throws SQLException;
 	
-	/* add */
+	
+	protected int fillInStatement(PreparedStatement ps, Object[] values, int[] sqlTypes) throws SQLException {
+		return fillInStatement(ps, values, sqlTypes, 1);
+	}
+	
+	/**
+	 * 
+	 * @param ps {@link PreparedStatement}
+	 * @param values
+	 * @param sqlTypes
+	 * @throws SQLException
+	 */
+	protected int fillInStatement(PreparedStatement ps, Object[] values, int[] sqlTypes, int fromIndex) throws SQLException {
+		for (int i = 0; i < values.length; i++) {
+			ps.setObject(fromIndex + i, values[i], sqlTypes[i]);
+		}
+		
+		return values.length;
+	}
+	
+	protected int fillInStatement(PreparedStatement ps, T t) throws SQLException {
+		return fillInStatement(ps, t, 1);
+	}
+	
+	/**
+	 * 
+	 * @param ps {@link PreparedStatement}
+	 * @param t
+	 * @throws SQLException
+	 */
+	protected abstract int fillInStatement(PreparedStatement ps, T t, int fromIndex) throws SQLException;
+	
+	/**
+	 * 
+	 * @param vps Vector<{@link PreparedStatement}>
+	 * @param t
+	 * @return primary key for the new entry
+	 * @throws SQLException
+	 */
+	public int executeInsertUpdate(Vector<PreparedStatement> vps, T t) throws SQLException {
+		int id =  getPrimaryKeyId();
+		//t.setId(id);
+		PreparedStatement ps  = getPreparedStatement(getInsertSQL());
+		ps.setInt(1, id);
+		fillInStatement(ps, t, 2);
+		vps.add(ps);
+		ps.executeUpdate();
+		return id;
+	}
 	
 	/**
 	 * Add an entity to the database. 
@@ -103,35 +259,33 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	 * @param e Entity
 	 * @return Entity with its generated primary key
 	 */
-	@Override
 	public T add(T e) {
-		String[] cols = getTableCols();
-		String[] questionmarks = new String[cols.length];
-		for(int i=0; i < cols.length; i++) {
-			questionmarks[i] = "?";
-		}
-		String sql = "INSERT INTO " + getTableName() + " (" + implode(getTableCols()) + ") VALUES (" + implode(questionmarks)  + ")";
-		log.finest(sql);
-		
-		T res = null;
-		
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
 		try {
-			ResultSet rs = executeUpdate(sql, getColValues(e));
-			if(rs != null) {
-				
-				if(rs.next()) {
-					int i = rs.getInt(1);
-					e.setId(new Integer(i));
-					res = e;
-				}
-				
-			} 
-		
+			ps =  getPreparedStatement(getInsertSQL());
+			e.setId(getPrimaryKeyId());
+			ps.setInt(1, e.getId());
+			fillInStatement(ps, e, 2);
+			ps.executeUpdate();
+			rs = getGeneratedKey(ps);
+			if(rs != null && rs.next()) {
+				e.setId(rs.getInt(1));
+			}
+			
 		} catch (SQLException ex) {
 			log.log(Level.SEVERE, "add failed: " + ex.getMessage(), ex);
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (ps != null) ps.close();
+			} catch (SQLException es) {
+				log.log(Level.WARNING, "failed to close db resources: " + es.getMessage(), es);
+			}
 		}
 		
-		return res;
+		return e;
 	}
 	
 	/**
@@ -162,52 +316,33 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	
 	/* get */
 	
-	/**
-	 * Get an entity by it's primary key
-	 * 
-	 * @param id Primary Key
-	 * @return Entity
-	 */
-	@Override
-	public T getById(Integer id) {
-		String sql = "SELECT * FROM " + getTableName() + " WHERE " + getTableIdCol() + "=" + id;
-		log.finest(sql);
-		
-		T res = null;
-
-		try {
-			ResultSet rs = executeQuery(sql);
-			if(rs.next()) {
-				res = parseResultRow(rs);
-			} else {
-				log.log(Level.WARNING, "getById returned no result");
-			}
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "getById failed: " + e.getMessage(), e);
-		}
-		
-		return res;
-	}
-	
-	/**
-	 * Get all entities
-	 * 
-	 * @return {@link List} of all entities
-	 */
-	@Override
-	public List<T> getAll() {
-		String sql = "SELECT * FROM " + getTableName() ;
-		log.finest(sql);
-		
+	protected List<T> get(String constrain) {
 		List<T> res = new ArrayList<T>();
 		
+		String sql = getSelectSQL();
+		if (constrain != null && constrain.length() > 0) sql += " WHERE " + constrain;
+		String order = getOrder();
+		if (order != null && order.length() > 0) sql += " ORDER BY " + order;
+		
+		
+		log.finest(sql);
+		ResultSet rs = null;
+		Statement stat = null;
 		try {
-			ResultSet rs = executeQuery(sql);
+			stat = db.getConnection().createStatement();
+			rs = stat.executeQuery(sql);
 			while(rs.next()) {
 				res.add(parseResultRow(rs));
 			}
 		} catch (SQLException e) {
-			log.log(Level.SEVERE, "getAll failed: " + e.getMessage(), e);
+			log.log(Level.SEVERE, "get failed: " + e.getMessage(), e);
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (stat != null) stat.close();
+			} catch (SQLException es) {
+				log.log(Level.WARNING, "failed to close ResultSet: " + es.getMessage(), es);
+			}
 		}
 		
 		return res;
@@ -225,6 +360,21 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	}
 	
 	/**
+	 * Get an entity by it's primary key
+	 * 
+	 * @param id Primary Key
+	 * @return Entity
+	 */
+	@Override
+	public T getById(Integer id) {
+		String constraint = getTableIdCol() + " = " + id;
+		List<T> list = get(constraint);
+		if (list.size() == 0) {
+			return null;
+		}
+		return list.get(0);
+	}
+	/**
 	 * Get a {@link List} of entities
 	 * 
 	 * @param list {@link List} of primary keys
@@ -232,11 +382,13 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	 */
 	@Override
 	public List<T> get(List<T> list) {
-		List<T> res = new ArrayList<T>(list.size());
-		for(T e : list) {
-			res.add(get(e));
+		
+		List<Integer> l = new ArrayList<Integer>(list.size());
+		for(T entity: list) {
+			l.add(entity.getId());
 		}
-		return res;
+		
+		return getById(l);
 	}
 	
 	/**
@@ -247,45 +399,51 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	 */
 	@Override
 	public List<T> getById(List<Integer> ids) {
-		List<T> res = new ArrayList<T>(ids.size());
-		for(Integer id : ids) {
-			res.add(getById(id));
-		}
-		return res;
+		String constrain = getTableIdCol() + " IN  (" + implode(ids.toArray()) + ")";
+		return get(constrain);
+	}	
+	
+	/**
+	 * Get all entities
+	 * 
+	 * @return {@link List} of all entities
+	 */
+	@Override
+	public List<T> getAll() {
+		return get("");
 	}
-
-	
-	
-	
 
 	
 	/* remove */
 	
-	/**
-	 * Removes an entity by it's primary key
-	 * 
-	 * @param id Primary Key
-	 * @return True if successful
-	 */
-	@Override
-	public boolean removeById(Integer id) {
-		String sql = "DELETE FROM " + getTableName() + " WHERE " + getTableIdCol() + "=" + id;
+	protected boolean remove(String constrain) {
+		String sql = getDeleteSQL();
+		if (constrain != null && constrain.length() > 0) sql += " WHERE " + constrain;
+		
 		log.finest(sql);
 		
-		boolean res = false;
-				
+		Statement stat = null;
 		try {
+			int res = -1;
+
+			stat = db.getConnection().createStatement();			
+			res = stat.executeUpdate(sql);	
 			
-			res = executeUpdate(sql);
-			
+			return res > 0;
 		} catch (SQLException e) {
-			log.log(Level.SEVERE, "getById failed: " + e.getMessage(), e);
+			log.log(Level.SEVERE, "remove map failed: " + e.getMessage(), e);
+		} finally {
+			try {
+				db.getConnection().setAutoCommit(true);
+				if (stat != null) stat.close();
+			} catch (SQLException es) {
+				log.log(Level.WARNING, "failed to close statement: " + es.getMessage(), es);
+			}
 		}
-		
-		return res;
-		
-		
+		return false;
 	}
+	
+	
 	
 	/**
 	 * Removes an entity
@@ -295,7 +453,8 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	 */
 	@Override
 	public boolean remove(T e) {
-		return removeById(e.getId());
+		String constraint = getTableIdCol() + " = " + e.getId();
+		return remove(constraint);
 	}	
 	
 	/**
@@ -306,37 +465,16 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	 */
 	@Override
 	public boolean remove(List<T> list) {
-		boolean ok = true;		
+		List<Integer> ids = new ArrayList<Integer>(list.size());
+		for(T entity: list) {
+			ids.add(entity.getId());
+		}	
 		
-		for(T e : list) {			
-			if(!remove(e))
-				break;			
-		}		
-
-		return ok;
+		String constrain = getTableIdCol() + " IN  (" + implode(ids.toArray()) + ")";
+		
+		return remove(constrain);
 	}
 	
-	/**
-	 * Removes a list of entities by their primary keys
-	 * 
-	 * @param ids List of primary keys
-	 * @return True if removal of all entities was successful
-	 */
-	@Override
-	public boolean removeById(List<Integer> ids) {
-		boolean ok = true;		
-		
-		for(Integer id : ids) {			
-			if(!removeById(id)) {
-				ok = false;
-				break;
-			}			
-		}		
-
-		return ok;
-	}
-
-
 	
 	/**
 	 * Removes all entities from database
@@ -345,7 +483,7 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	 */
 	@Override
 	public boolean removeAll() {		
-		return remove(getAll());
+		return remove("");
 	}
 
 	/* update */
@@ -358,45 +496,35 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	 */
 	@Override
 	public boolean update(T e) {
-		
-		String[] cols = getTableCols();
-		cols = Arrays.copyOf(cols, cols.length);
-		
-		for(int i=0; i < cols.length; i++) {
-			cols[i] = cols[i] + "=?";
-		}
-		
-		
-		String sql = "UPDATE " + getTableName() + " SET " + implode(cols) + " WHERE " + getTableIdCol() + "=" + e.getId();
-		log.finest(sql);
-		
+		PreparedStatement ps = null;
 		boolean res = false;
-
 		try {
-			
-			ResultSet rs = executeUpdate(sql, getColValues(e));
-			if(rs != null) {
-				
-				if(Configuration.DatabaseType == DatabaseTypes.SQLITE) {
-					if(rs.next()) {
-						res = true;
-					}
-				} 
-				
-				if(Configuration.DatabaseType == DatabaseTypes.MYSQL) {
-					res = true;
-				}
-				
-			} 
-			
+			ps = db.getConnection().prepareStatement(getUpdateSQL());
+			int c = fillInStatement(ps, e);
+			ps.setInt(c + 1, e.getId());
+			/*
+			ps.setString(1, loc.getSymbolicID());
+			ps.setInt(2, ((Map)loc.getMap()).getId());
+			ps.setInt(3, loc.getMapXcord());
+			ps.setInt(4, loc.getMapYcord());
+			ps.setInt(5, loc.getAccuracy());
+			ps.setInt(6, loc.getId());
+			*/
+			int numcol = ps.executeUpdate();
+			res = numcol == 1;		
 			
 		} catch (SQLException ex) {
-			log.log(Level.SEVERE, "getById failed: " + ex.getMessage(), ex);
+			log.log(Level.SEVERE, "update location failed: " + ex.getMessage(), ex);
+		} finally {
+			try {
+				if (ps != null) ps.close();
+			} catch (SQLException es) {
+				log.log(Level.WARNING, "failed to close ResultSet: " + es.getMessage(), es);
+			}
 		}
 		
 		return res;
 	}
-	
 	
 	/**
 	 * Updates a {@link List} of entities
@@ -416,107 +544,6 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 		}		
 
 		return ok;
-	}
-
-		
-	/**
-	 * 
-	 * @param sql SQL query to be executed
-	 * @return {@link ResultSet} in case of success, otherwise <code>null</code>
-	 * @throws SQLException
-	 */
-	protected ResultSet executeQuery(String sql) throws SQLException {
-		 
-		
-		Statement stat;
-		ResultSet res = null;
-
-		try {
-			stat = db.getConnection().createStatement();
-			res = stat.executeQuery(sql);
-
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "executeQuery failed: " + e.getMessage(), e);
-			throw e;
-		}
-		
-		
-		return res;
-		
-		
-	}
-	
-	
-	/**
-	 * This function is intended to be used for DELETE commands, because
-	 * it does not return the generated key
-	 * 
-	 * @param sql SQL command (DELETE) to be executed
-	 * @return <code>true</code> if at least one row has been changed
-	 * @throws SQLException
-	 */
-	protected boolean executeUpdate(String sql) throws SQLException {
-		
-		Connection conn = db.getConnection();
-		Statement stat = null;
-		boolean res;
-		
-		
-		try {
-			stat = conn.createStatement();
-			int uc = stat.executeUpdate(sql);
-			log.finest("executeUpdate(sql) Update Count: " + uc);
-			res = (uc > 0);
-		} catch (SQLException e) {
-			/*TODO: perhaps retry executeUpdate (often encountered a 
-			 * database is locked error from sqlite jdbc when database file is accessed outsite
-			 */
-			log.log(Level.SEVERE, "executeUpdate(sql) failed: " + e.getMessage(), e);
-			throw e;
-		}
-		
-		return res;
-		
-	}
-	
-	/**
-	 * This function is intended to be used for INSERT and UPDATE commands
-	 * where the generated key is needed
-	 * 
-	 * @param sql SQL command (INSERT, UPDATE) to be executed
-	 * @param data Array of data do be used in the SQL command
-	 * @return {@link ResultSet} with generated key
-	 * @throws SQLException
-	 */
-	protected ResultSet executeUpdate(String sql, Object[] data) throws SQLException {
-		
-		PreparedStatement ps;
-		ResultSet res = null;
-
-		try {
-			ps = getPreparedStatement(sql);
-			
-			int len = data.length;
-			for(int i=0; i < len; i++) {
-				ps.setObject(i+1, data[i]);
-			}
-			
-			int uc = ps.executeUpdate();
-			log.finest("executeUpdate(sql,data) Update Count: " + uc);			
-			res = getGeneratedKey(ps);
-			
-			
-			
-			
-
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "executeUpdate(sql,data) failed: " + e.getMessage(), e);
-			throw e;
-		}
-		
-		
-		return res;
-		
 	}
 	
 	
@@ -590,7 +617,7 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	 * @param obj Objects to be imploded
 	 * @return String with each object separated by a colon
 	 */
-	protected String implode(Object[] obj) {
+	static protected String implode(Object[] obj) {
 		
 		String res;
 		
@@ -607,6 +634,17 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 		}
 		
 		return res;
+	}
+
+
+	private String repeat(String str, int repeatCount) {
+		if (str == null) return null;		
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < repeatCount; i ++) {
+			sb.append(str);
+		}
+		
+		return sb.toString();
 	}
 
 }

@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.redpin.server.standalone.net.ConnectionHandler;
+import org.redpin.server.standalone.svm.TrainSVMTimerTask;
 import org.redpin.server.standalone.util.Configuration;
 import org.redpin.server.standalone.util.Log;
 /**
@@ -88,7 +89,7 @@ public class RedpinStandaloneServer implements Runnable {
     		RedpinStandaloneServer server = new RedpinStandaloneServer(Configuration.ServerPort);
 			new Thread(server).start();
 			Runtime.getRuntime().addShutdownHook(new Thread(server.new ShutdownHandler(server)));
-			
+			TrainSVMTimerTask.start();
 		} catch (IOException e) {
 			Log.getLogger().log(Level.SEVERE, "Failed to start server", e);			
 			e.printStackTrace();

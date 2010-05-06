@@ -15,15 +15,18 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ *  (c) Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
  * 
  *  www.redpin.org
  */
 package org.redpin.server.standalone.db.homes;
 
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -35,6 +38,7 @@ import org.redpin.server.standalone.db.HomeFactory;
 /**
  * @see EntityHome
  * @author Pascal Brogle (broglep@student.ethz.ch)
+ * @author Luba Rogoleva (lubar@student.ethz.ch)
  *
  */
 public class MapHome extends EntityHome<Map> {
@@ -72,29 +76,18 @@ public class MapHome extends EntityHome<Map> {
 	protected String[] getTableCols() {
 		return TableCols;
 	}
-
-	/**
-	 * @see EntityHome#getColValues(org.redpin.server.standalone.db.IEntity)
-	 */
-	@Override
-	protected Object[] getColValues(Map e) {
-		Object[] res = new Object[getTableCols().length];
-		res[0] = e.getMapName();
-		res[1] = e.getMapURL();
-		return res;
-	}
 	
 	/**
-	 * @see EntityHome#parseResultRow(ResultSet)
+	 * @see EntityHome#parseResultRow(ResultSet, int)
 	 */
 	@Override
-	protected Map parseResultRow(ResultSet rs) throws SQLException{
+	public Map parseResultRow(final ResultSet rs, int fromIndex) throws SQLException{
 		Map map = new Map();
 		
 		try {
-			map.setId(rs.getInt(1));
-			map.setMapName(rs.getString(2));
-			map.setMapURL(rs.getString(3));
+			map.setId(rs.getInt(fromIndex));
+			map.setMapName(rs.getString(fromIndex + 1));
+			map.setMapURL(rs.getString(fromIndex + 2));
 		
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, "parseResultRow failed: " + e.getMessage(), e);
@@ -103,38 +96,133 @@ public class MapHome extends EntityHome<Map> {
 		
 		return map;
 	}
-	
+
 	/**
-	 * Removes all map locations
-	 * 
+	 * delete map from the database
+	 * @param m
+	 * @return true if map has been successfully deleted
 	 */
-	
-	private void removeLocations(Integer id) {
-		LocationHome lh = HomeFactory.getLocationHome();
-		List<Location> list = lh.getListByMapId(id);
-		if(!lh.remove(list)) {
-			log.log(Level.WARNING, "implicit deletion of map location failed");
+	@Override
+	public boolean remove(String constrain) {
+		// remove all locations and fingerprints for the map, then remove map
+		String mapCnst = (constrain != null && constrain.length() > 0) ? constrain : "1=1";
+		String locationCnst = HomeFactory.getLocationHome().getTableIdCol() + " IN (SELECT " + HomeFactory.getLocationHome().getTableIdCol() + 
+																				 " FROM " + HomeFactory.getLocationHome().getTableName() + 
+																				 " WHERE " + mapCnst + ")";
+		String fingerprintsCnst = HomeFactory.getFingerprintHome().getTableIdCol() + " IN (SELECT " + HomeFactory.getFingerprintHome().getTableIdCol() + 
+																					   " FROM " + HomeFactory.getFingerprintHome().getTableName() +
+																					   " WHERE (" + locationCnst + ")) ";
+		String measurementsCnst = HomeFactory.getMeasurementHome().getTableIdCol() + " IN (SELECT " + HomeFactory.getFingerprintHome().getTableCols()[1] + 
+																					 " FROM " + HomeFactory.getFingerprintHome().getTableName() + 
+																					 " WHERE (" + fingerprintsCnst + ")) ";
+		String readingInMeasurementCnst = " IN (SELECT readingId FROM readinginmeasurement WHERE (" + measurementsCnst + ")) ";
+		
+		
+		String sql_m = " DELETE FROM " + HomeFactory.getMeasurementHome().getTableName() + " WHERE " + measurementsCnst;
+		String sql_wifi = " DELETE FROM " + HomeFactory.getWiFiReadingHome().getTableName() + 
+						  " WHERE " + HomeFactory.getWiFiReadingHome().getTableIdCol() + readingInMeasurementCnst;
+		String sql_gsm = " DELETE FROM " + HomeFactory.getGSMReadingHome().getTableName() + 
+		  				 " WHERE " + HomeFactory.getGSMReadingHome().getTableIdCol() + readingInMeasurementCnst;
+		String sql_bluetooth = " DELETE FROM " + HomeFactory.getBluetoothReadingHome().getTableName() + 
+		  					   " WHERE " + HomeFactory.getBluetoothReadingHome().getTableIdCol() + readingInMeasurementCnst;
+		 
+		String sql_rinm = "DELETE FROM readinginmeasurement WHERE " + measurementsCnst;
+		String sql_fp = "DELETE FROM " + HomeFactory.getFingerprintHome().getTableName() + " WHERE " + fingerprintsCnst;
+		
+		String sql_l = "DELETE FROM " + HomeFactory.getLocationHome().getTableName() + " WHERE " + mapCnst;
+		String sql_map = "DELETE FROM " + getTableName() + " WHERE " + mapCnst;
+		Statement stat = null;
+		
+		log.finest(sql_wifi);
+		log.finest(sql_gsm);
+		log.finest(sql_bluetooth);
+		log.finest(sql_rinm);
+		log.finest(sql_m);
+		log.finest(sql_fp);
+		log.finest(sql_l);
+		log.finest(sql_map);
+		try {
+			int res = -1;
+			db.getConnection().setAutoCommit(false);
+			stat = db.getConnection().createStatement();
+			if (db.getConnection().getMetaData().supportsBatchUpdates()) {
+				stat.addBatch(sql_wifi);
+				stat.addBatch(sql_gsm);
+				stat.addBatch(sql_bluetooth);
+				stat.addBatch(sql_rinm);
+				stat.addBatch(sql_m);
+				stat.addBatch(sql_fp);
+				stat.addBatch(sql_l);
+				stat.addBatch(sql_map);
+				int results[] = stat.executeBatch();
+				if (results != null && results.length > 0) {
+					res = results[results.length - 1];
+				}
+			} else {
+				stat.executeUpdate(sql_wifi);
+				stat.executeUpdate(sql_gsm);
+				stat.executeUpdate(sql_bluetooth);
+				stat.executeUpdate(sql_rinm);
+				stat.executeUpdate(sql_m);
+				stat.executeUpdate(sql_fp);
+				stat.executeUpdate(sql_l);
+				res = stat.executeUpdate(sql_map);
+			}
+			db.getConnection().commit();
+			return res > 0;
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, "remove map failed: " + e.getMessage(), e);
+		} finally {
+			try {
+				db.getConnection().setAutoCommit(true);
+				if (stat != null) stat.close();
+			} catch (SQLException es) {
+				log.log(Level.WARNING, "failed to close statement: " + es.getMessage(), es);
+			}
 		}
+		return false;
+
 	}
-	
+
 	/**
-	 * Also deletes the map's locations
-	 * @see EntityHome#removeById(Integer)
+	 * insert map into the database
+	 * @param map
+	 * @return map
 	 */
-	@Override
-	public boolean removeById(Integer id) {
-		removeLocations(id);
-		return super.removeById(id);
+	/*
+	public Map add(Map map) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			ps =  getPreparedStatement(getInsertSQL());
+			map.setId(getPrimaryKeyId());
+			fillInStatement(ps, map);
+			ps.executeUpdate();
+			rs = getGeneratedKey(ps);
+			if(rs != null && rs.next()) {
+				map.setId(rs.getInt(1));
+			}
+			
+		} catch (SQLException ex) {
+			log.log(Level.SEVERE, "add map failed: " + ex.getMessage(), ex);
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (ps != null) ps.close();
+			} catch (SQLException es) {
+				log.log(Level.WARNING, "failed to close db resources: " + es.getMessage(), es);
+			}
+		}
+		
+		return map;
 	}
-	
-	/**
-	 * Also deletes the map's locations
-	 * @see EntityHome#remove(org.redpin.server.standalone.db.IEntity)
-	 */
+	*/
 	@Override
-	public boolean remove(Map m) {
-		removeLocations(m.getId());
-		return super.removeById(m.getId());
+	public int fillInStatement(PreparedStatement ps, Map t, int fromIndex)
+			throws SQLException {
+		return fillInStatement(ps, new Object[] {t.getMapName(), t.getMapURL()}, new int[]{Types.VARCHAR, Types.VARCHAR}, fromIndex);
 	}
+
 
 }

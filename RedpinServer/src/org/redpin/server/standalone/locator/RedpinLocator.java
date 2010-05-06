@@ -210,7 +210,8 @@ public class RedpinLocator implements ILocator {
 				 * bssid match: add ID contribution and signal strength
 				 * contribution
 				 */
-				if (this_wifi.getBssid().equals(other_wifi.getBssid())) {
+				if (this_wifi != null && this_wifi.getBssid() != null && other_wifi != null && other_wifi.getBssid() != null && 
+						this_wifi.getBssid().equals(other_wifi.getBssid())) {
 					
 					//log.log(loglevel, "WiFi + ID + SC");
 					

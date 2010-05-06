@@ -28,6 +28,7 @@ import org.redpin.server.standalone.core.measure.GSMReading;
 import org.redpin.server.standalone.core.measure.WiFiReading;
 import org.redpin.server.standalone.db.IEntity;
 import org.redpin.server.standalone.locator.LocatorHome;
+import java.util.Vector;
 
 
 /**

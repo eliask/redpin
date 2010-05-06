@@ -15,14 +15,17 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ *  (c) Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
  * 
  *  www.redpin.org
  */
 package org.redpin.server.standalone.db.homes;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,6 +39,7 @@ import org.redpin.server.standalone.db.HomeFactory;
 /**
  * @see EntityHome
  * @author Pascal Brogle (broglep@student.ethz.ch)
+ * @author Luba Rogoleva (lubar@student.ethz.ch)
  *
  */
 public class LocationHome extends EntityHome<Location> {
@@ -46,24 +50,8 @@ public class LocationHome extends EntityHome<Location> {
 	private static final String TableName = "location"; 
 	private static final String TableIdCol = "locationId";
 	
-	
 	public LocationHome() {
 		super();
-	}
-
-	/**
-	 * @see EntityHome#getColValues(org.redpin.server.standalone.db.IEntity)
-	 */
-	@Override
-	protected Object[] getColValues(Location e) {
-		Object[] res = new Object[getTableCols().length];
-		res[0] = e.getSymbolicID();
-		res[1] = ((Map)e.getMap()).getId();
-		res[2] = e.getMapXcord();
-		res[3] = e.getMapYcord();
-		res[4] = e.getAccuracy();
-		return res;
-		
 	}
 	
 	/**
@@ -91,20 +79,20 @@ public class LocationHome extends EntityHome<Location> {
 	}
 
 	/**
-	 * @see EntityHome#parseResultRow(ResultSet)
+	 * @see EntityHome#parseResultRow(ResultSet, int)
 	 */
 	@Override
-	protected Location parseResultRow(ResultSet rs) throws SQLException {
+	public Location parseResultRow(final ResultSet rs, int fromIndex) throws SQLException {
 		Location loc = new Location();
 		
 		try {
-			loc.setId(rs.getInt(1));
-			loc.setSymbolicID(rs.getString(2));
-			loc.setMap(HomeFactory.getMapHome().getById(rs.getInt(3)));
-			loc.setMapXcord(rs.getInt(4));
-			loc.setMapYcord(rs.getInt(5));
-			loc.setAccuracy(rs.getInt(6));
-		
+			loc.setId(rs.getInt(fromIndex));
+			loc.setSymbolicID(rs.getString(fromIndex + 1));
+			loc.setMapXcord(rs.getInt(fromIndex + 3));
+			loc.setMapYcord(rs.getInt(fromIndex + 4));
+			loc.setAccuracy(rs.getInt(fromIndex + 5));
+			Map map = HomeFactory.getMapHome().parseResultRow(rs, fromIndex + 6);
+			loc.setMap(map);
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, "parseResultRow failed: " + e.getMessage(), e);
 			throw e;
@@ -114,58 +102,209 @@ public class LocationHome extends EntityHome<Location> {
 	}
 	
 	/**
-	 * Checks if the {@link Location}'s {@link Map} is already stored in the database. if not, the {@link Map} is saved
-	 * @param e {@link Location}
+	 * 
+	 * @param id - map id
+	 * @return locations for the map with id; or all locations if map id is -1
 	 */
-	private void checkMap(Location e) {
-		Map m = (Map) e.getMap();
-		if(m.getId() == null) {
-			log.finer("map not yet saved, now saving it");
-			m = HomeFactory.getMapHome().add(m);
-		}
+	public List<Location> getListByMapId(Integer id) {	
+		String constrain = ""; 
+		if (id != -1) constrain += " location.mapId = " + id;
+		return get(constrain);
 	}
 	
-	/**
-	 * @see EntityHome#add(org.redpin.server.standalone.db.IEntity)
-	 */
-	@Override
-	public Location add(Location e) {
-		//checkMap(e);
-		return super.add(e);
-	}
-	
-	/**
-	 * @see EntityHome#update(org.redpin.server.standalone.db.IEntity)
-	 */
-	@Override
-	public boolean update(Location e) {
-		//checkMap(e);
-		return super.update(e);
+	public List<Location> getListByMap(Map m) {	
+		return getListByMapId(m.getId());
 	}
 
-	
-	public List<Location> getListByMapId(Integer id) {
-		List<Location> res = new ArrayList<Location>();
+	/**
+	 * @see EntityHome#getAll()
+	 */
+	@Override
+	public List<Location> getAll() {
+		return getListByMapId(-1);
+	}
+
+	/**
+	 * 
+	 * @param locationId
+	 * @param symbolicId
+	 * @return location either by locationId or by symbolicId 
+	 */
+	public Location getLocation(Integer locationId, String symbolicId) {
+		List<Location> list;
 		
-		String sql = "SELECT * FROM " + getTableName() + " WHERE "	+ getTableCols()[1] + "=" + id;
-		log.finest(sql);
+		if (locationId != -1) {
+			list =  get("locationId = " + locationId);
+			return list.size() == 0 ? null : list.get(0);
+		} else if (symbolicId != null && symbolicId.length() > 0) {
+			list = get("symbolicId = '" + symbolicId + "'");
+			return list.size() == 0 ? null : list.get(0);
+		} else {
+			return null;
+		}
+		
+		
+	}
+	
+	
 
+	/**
+	 * updates location
+	 */
+	/*
+	public boolean update(Location loc) {
+		
+		PreparedStatement ps = null;
+		boolean res = false;
 		try {
-			ResultSet rs = executeQuery(sql);
-			while(rs.next()) {
-				res.add(parseResultRow(rs));
+			ps = db.getConnection().prepareStatement(updateLocation);
+			ps.setString(1, loc.getSymbolicID());
+			ps.setInt(2, ((Map)loc.getMap()).getId());
+			ps.setInt(3, loc.getMapXcord());
+			ps.setInt(4, loc.getMapYcord());
+			ps.setInt(5, loc.getAccuracy());
+			ps.setInt(6, loc.getId());
+			 
+			int numcol = ps.executeUpdate();
+			res = numcol == 1;		
+			
+		} catch (SQLException ex) {
+			log.log(Level.SEVERE, "update location failed: " + ex.getMessage(), ex);
+		} finally {
+			try {
+				if (ps != null) ps.close();
+			} catch (SQLException es) {
+				log.log(Level.WARNING, "failed to close ResultSet: " + es.getMessage(), es);
 			}
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "getListByMapId failed: " + e.getMessage(), e);
 		}
 		
 		return res;
 	}
-	
-	public List<Location> getListByMap(Map m) {
-		return getListByMapId(m.getId());
+	*/
+
+	@Override
+	public int fillInStatement(PreparedStatement ps, Location t, int fromIndex)
+			throws SQLException {
+		return fillInStatement(ps, new Object[] {t.getSymbolicID(), ((Map)t.getMap()).getId(), t.getMapXcord(), t.getMapYcord(), t.getAccuracy()},   
+				new int[]{Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER},
+				fromIndex);
+		
 	}
 	
 	
 
+	@Override
+	protected String getSelectSQL() {
+		return "SELECT " + getTableColNames() + ", " + HomeFactory.getMapHome().getTableColNames() + " FROM " + getTableName() + " INNER JOIN map ON location.mapId = map.mapId ";
+	}
+
+	/*
+	@Override
+	protected List<Location> get(String constrain) {
+		List<Location> res = new ArrayList<Location>();
+		
+		String sql = "SELECT " + getTableColNames() + ", " + HomeFactory.getMapHome().getTableColNames() + " FROM " + getTableName() + " INNER JOIN map ON location.mapId = map.mapId ";
+		if (constrain != null && constrain.length() > 0) sql += " WHERE " + constrain;
+		
+		log.finest(sql);
+		ResultSet rs = null;
+		Statement stat = null;
+		try {
+			stat = db.getConnection().createStatement();
+			rs = stat.executeQuery(sql);
+			while(rs.next()) {
+				res.add(parseResultRow(rs));
+			}
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, "get failed: " + e.getMessage(), e);
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (stat != null) stat.close();
+			} catch (SQLException es) {
+				log.log(Level.WARNING, "failed to close ResultSet: " + es.getMessage(), es);
+			}
+		}
+		
+		return res;
+	}
+	*/
+	
+	@Override
+	public boolean remove(String constrain) {
+		// remove all fingerprints for the location, then remove location
+		String locationCnst = (constrain != null && constrain.length() > 0) ? constrain : "1=1";
+		String fingerprintsCnst = HomeFactory.getFingerprintHome().getTableIdCol() + " IN (SELECT " + HomeFactory.getFingerprintHome().getTableIdCol() + 
+																					   " FROM " + HomeFactory.getFingerprintHome().getTableName() +
+																					   " WHERE (" + locationCnst + ")) ";
+		String measurementsCnst = HomeFactory.getMeasurementHome().getTableIdCol() + " IN (SELECT " + HomeFactory.getFingerprintHome().getTableCols()[1] + 
+																					 " FROM " + HomeFactory.getFingerprintHome().getTableName() + 
+																					 " WHERE (" + fingerprintsCnst + ")) ";
+		String readingInMeasurementCnst = " IN (SELECT readingId FROM readinginmeasurement WHERE (" + measurementsCnst + ")) ";
+		
+		
+		String sql_m = " DELETE FROM " + HomeFactory.getMeasurementHome().getTableName() + " WHERE " + measurementsCnst;
+		String sql_wifi = " DELETE FROM " + HomeFactory.getWiFiReadingHome().getTableName() + 
+						  " WHERE " + HomeFactory.getWiFiReadingHome().getTableIdCol() + readingInMeasurementCnst;
+		String sql_gsm = " DELETE FROM " + HomeFactory.getGSMReadingHome().getTableName() + 
+		  				 " WHERE " + HomeFactory.getGSMReadingHome().getTableIdCol() + readingInMeasurementCnst;
+		String sql_bluetooth = " DELETE FROM " + HomeFactory.getBluetoothReadingHome().getTableName() + 
+		  					   " WHERE " + HomeFactory.getBluetoothReadingHome().getTableIdCol() + readingInMeasurementCnst;
+		 
+		String sql_rinm = "DELETE FROM readinginmeasurement WHERE " + measurementsCnst;
+		String sql_fp = "DELETE FROM " + HomeFactory.getFingerprintHome().getTableName() + " WHERE " + fingerprintsCnst;
+	
+		String sql_loc = "DELETE FROM " + getTableName() + " WHERE " + locationCnst;
+		Statement stat = null;
+		
+		log.finest(sql_wifi);
+		log.finest(sql_gsm);
+		log.finest(sql_bluetooth);
+		log.finest(sql_rinm);
+		log.finest(sql_m);
+		log.finest(sql_fp);
+		log.finest(sql_loc);
+		try {
+			int res = -1;
+			db.getConnection().setAutoCommit(false);
+			stat = db.getConnection().createStatement();
+			if (db.getConnection().getMetaData().supportsBatchUpdates()) {
+				stat.addBatch(sql_wifi);
+				stat.addBatch(sql_gsm);
+				stat.addBatch(sql_bluetooth);
+				stat.addBatch(sql_rinm);
+				stat.addBatch(sql_m);
+				stat.addBatch(sql_fp);
+				stat.addBatch(sql_loc);
+				int results[] = stat.executeBatch();
+				if (results != null && results.length > 0) {
+					res = results[results.length - 1];
+				}
+			} else {
+				stat.executeUpdate(sql_wifi);
+				stat.executeUpdate(sql_gsm);
+				stat.executeUpdate(sql_bluetooth);
+				stat.executeUpdate(sql_rinm);
+				stat.executeUpdate(sql_m);
+				stat.executeUpdate(sql_fp);
+				res = stat.executeUpdate(sql_loc);
+			}
+			db.getConnection().commit();
+			return res > 0;
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, "remove map failed: " + e.getMessage(), e);
+		} finally {
+			try {
+				db.getConnection().setAutoCommit(true);
+				if (stat != null) stat.close();
+			} catch (SQLException es) {
+				log.log(Level.WARNING, "failed to close statement: " + es.getMessage(), es);
+			}
+		}
+		return false;
+
+	}
+	
+
+	
 }

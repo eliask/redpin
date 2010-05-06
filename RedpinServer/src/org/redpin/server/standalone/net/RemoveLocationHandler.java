@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ *  (c) Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
  * 
  *  www.redpin.org
  */
@@ -36,6 +36,7 @@ import com.google.gson.JsonElement;
  * Does remove location and the corresponding fingerprint (+measurements)
  * 
  * @author Pascal Brogle (broglep@student.ethz.ch)
+ * @author Luba Rogoleva (lubar@student.ethz.ch)
  *
  */
 public class RemoveLocationHandler implements IHandler {
@@ -58,25 +59,24 @@ public class RemoveLocationHandler implements IHandler {
 		Response res;
 		
 		Location loc = GsonFactory.getGsonInstance().fromJson(data, Location.class);
-		Fingerprint fp = fHome.getByLocation(loc);
+		Fingerprint fp = fHome.getByLocationId(loc.getId());
 		
 		if(fp != null) {
 			
 			boolean fpRemove = fHome.remove(fp);
-			boolean locRemove = locHome.remove(loc);
 			
-			if(fpRemove && locRemove) {
+			if(fpRemove) { 
 				res = new Response(Status.ok, null, null);
-				Log.getLogger().finer("removed location & fingerprint from database");
+				Log.getLogger().finer("removed fingerprint from database");
 			} else {
 				res = new Response(Status.failed, "could not remove from database", loc);
-				Log.getLogger().fine("could not remove location / fingerprint from database:" + (!fpRemove ? " fingerprint not removed" : "" )+  (!locRemove ? " location not removed" : "" ));
+				Log.getLogger().fine("could not remove fingerprint from database ");
 			}
 			
 			
 		} else {
-			res = new Response(Status.failed, "could not remove from database, no fingerprint found", loc);
-			Log.getLogger().fine("could not remove location from database, no fingerprint found");
+			res = new Response(Status.ok, null, null);
+			Log.getLogger().fine("fingerprint is not in the database");
 		}
 		
 		

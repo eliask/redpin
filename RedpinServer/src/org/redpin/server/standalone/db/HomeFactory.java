@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ *  (c) Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
  * 
  *  www.redpin.org
  */
@@ -28,6 +28,7 @@ import org.redpin.server.standalone.db.homes.GSMReadingHome;
 import org.redpin.server.standalone.db.homes.LocationHome;
 import org.redpin.server.standalone.db.homes.MapHome;
 import org.redpin.server.standalone.db.homes.MeasurementHome;
+import org.redpin.server.standalone.db.homes.ReadingInMeasurementHome;
 import org.redpin.server.standalone.db.homes.WiFiReadingHome;
 import org.redpin.server.standalone.db.homes.vector.BluetoothReadingVectorHome;
 import org.redpin.server.standalone.db.homes.vector.GSMReadingVectorHome;
@@ -37,6 +38,7 @@ import org.redpin.server.standalone.db.homes.vector.WiFiReadingVectorHome;
  * Factory for all {@link EntityHome}s
  * 
  * @author Pascal Brogle (broglep@student.ethz.ch)
+ * @author Luba Rogoleva (lubar@student.ethz.ch)
  *
  */
 public class HomeFactory {
@@ -71,6 +73,14 @@ public class HomeFactory {
 			mHome = new MeasurementHome();
 		}		
 		return mHome;
+	}
+	
+	private static ReadingInMeasurementHome rinmHome = null;
+	public synchronized static ReadingInMeasurementHome getReadingInMeasurementHome() {
+		if(rinmHome == null) {
+			rinmHome = new ReadingInMeasurementHome();
+		}		
+		return rinmHome;
 	}
 	
 	private static WiFiReadingHome wrHome = null;

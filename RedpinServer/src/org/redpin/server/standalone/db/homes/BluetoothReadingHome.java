@@ -15,14 +15,17 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ *  (c) Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
  * 
  *  www.redpin.org
  */
 package org.redpin.server.standalone.db.homes;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.redpin.server.standalone.core.measure.BluetoothReading;
@@ -30,6 +33,7 @@ import org.redpin.server.standalone.core.measure.BluetoothReading;
 /**
  * @see EntityHome
  * @author Pascal Brogle (broglep@student.ethz.ch)
+ * @author Luba Rogoleva (lubar@student.ethz.ch)
  *
  */
 public class BluetoothReadingHome extends EntityHome<BluetoothReading> {
@@ -37,11 +41,14 @@ public class BluetoothReadingHome extends EntityHome<BluetoothReading> {
 	private static final String[] TableCols = {"friendlyName", "bluetoothAddress", "majorDeviceClass", "minorDeviceClass"};
 	private static final String TableName = "bluetoothreading"; 
 	private static final String TableIdCol = "bluetoothReadingId";
+	
 
 	public BluetoothReadingHome() {
 		super();
 	}
-
+	
+	
+	
 	/**
 	 * @see EntityHome#getTableName()
 	 */
@@ -65,33 +72,20 @@ public class BluetoothReadingHome extends EntityHome<BluetoothReading> {
 	protected String[] getTableCols() {
 		return TableCols;
 	}
-
-	/**
-	 * @see EntityHome#getColValues(org.redpin.server.standalone.db.IEntity)
-	 */
-	@Override
-	protected Object[] getColValues(BluetoothReading e) {
-		Object[] res = new Object[getTableCols().length];
-		res[0] = e.getFriendlyName();
-		res[1] = e.getBluetoothAddress();
-		res[2] = e.getMajorDeviceClass();
-		res[3] = e.getMinorDeviceClass();
-		return res;
-	}
 	
 	/**
 	 * @see EntityHome#parseResultRow(ResultSet)
 	 */
 	@Override
-	protected BluetoothReading parseResultRow(ResultSet rs) throws SQLException{
+	public BluetoothReading parseResultRow(final ResultSet rs, int fromIndex) throws SQLException{
 		BluetoothReading reading = new BluetoothReading();
 		
 		try {
-			reading.setId(rs.getInt(1));
-			reading.setFriendlyName(rs.getString(2));
-			reading.setBluetoothAddress(rs.getString(3));
-			reading.setMajorDeviceClass(rs.getString(4));
-			reading.setMinorDeviceClass(rs.getString(5));		
+			reading.setId(rs.getInt(fromIndex));
+			reading.setFriendlyName(rs.getString(fromIndex + 1));
+			reading.setBluetoothAddress(rs.getString(fromIndex + 2));
+			reading.setMajorDeviceClass(rs.getString(fromIndex + 3));
+			reading.setMinorDeviceClass(rs.getString(fromIndex + 4));		
 		
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, "parseResultRow failed: " + e.getMessage(), e);
@@ -100,5 +94,15 @@ public class BluetoothReadingHome extends EntityHome<BluetoothReading> {
 		
 		return reading;
 	}
+
+	@Override
+	public int fillInStatement(PreparedStatement ps, BluetoothReading t, int fromIndex)
+			throws SQLException {
+		return fillInStatement(ps, new Object[] {t.getFriendlyName(), t.getBluetoothAddress(), t.getMajorDeviceClass(), t.getMinorDeviceClass()},   
+			new int[]{Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR},
+			fromIndex);
+
+	}
+
 
 }

@@ -21,55 +21,39 @@
  */
 package org.redpin.server.standalone.db.homes;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
+import org.redpin.server.standalone.core.Location;
 import org.redpin.server.standalone.core.Measurement;
 import org.redpin.server.standalone.core.Vector;
-import org.redpin.server.standalone.core.measure.BluetoothReading;
-import org.redpin.server.standalone.core.measure.GSMReading;
-import org.redpin.server.standalone.core.measure.WiFiReading;
 import org.redpin.server.standalone.db.HomeFactory;
-import org.redpin.server.standalone.db.homes.vector.BluetoothReadingVectorHome;
-import org.redpin.server.standalone.db.homes.vector.GSMReadingVectorHome;
-import org.redpin.server.standalone.db.homes.vector.WiFiReadingVectorHome;
 
-/**
- * @see EntityHome
- * @author Pascal Brogle (broglep@student.ethz.ch)
- *
- */
 public class MeasurementHome extends EntityHome<Measurement> {
 
-
-	private static final String[] TableCols = {"timestamp", "wifiReadingsvectorId","gsmReadingsvectorId","bluetoothReadingsvectorId"};
+	private static final String[] TableCols = {"timestamp"};
 	private static final String TableName = "measurement"; 
 	private static final String TableIdCol = "measurementId";
+	private static final String selectMeasurements = " SELECT " + HomeFactory.getMeasurementHome().getTableColNames() + ", " +
+					 								 " readinginmeasurement.readingClassName, " + HomeFactory.getWiFiReadingHome().getTableColNames() + ", " + 
+					 								 HomeFactory.getGSMReadingHome().getTableColNames() + ", " + HomeFactory.getBluetoothReadingHome().getTableColNames()  +
+					 								 " FROM measurement INNER JOIN readinginmeasurement ON readinginmeasurement.measurementId = measurement.measurementId " +
+					 								 " LEFT OUTER JOIN wifireading ON wifireading.wifiReadingId = readinginmeasurement.readingId " +
+					 								 " LEFT OUTER JOIN gsmreading ON gsmreading.gsmReadingId = readinginmeasurement.readingId " +
+					 								 " LEFT OUTER JOIN bluetoothreading ON bluetoothreading.bluetoothReadingId = readinginmeasurement.readingId ";
+	private static final String orderMeasurements = " measurement.measurementId, readinginmeasurement.readingClassName ";
 	
-	private WiFiReadingVectorHome wrvh = HomeFactory.getWiFiReadingVectorHome();
-	private GSMReadingVectorHome grvh = HomeFactory.getGSMReadingVectorHome();
-	private BluetoothReadingVectorHome brvh = HomeFactory.getBluetoothReadingVectorHome();
-	
-
 	public MeasurementHome() {
 		super();
 	}
 	
-	/**
-	 * @see EntityHome#getColValues(org.redpin.server.standalone.db.IEntity)
-	 */
-	@Override
-	protected Object[] getColValues(Measurement e) {
-		Object[] res = new Object[getTableCols().length];
-		res[0] = e.getTimestamp();
-		res[1] = e.getWiFiReadings().getId();
-		res[2] = e.getGsmReadings().getId();
-		res[3] = e.getBluetoothReadings().getId();
-		
-		return res;
-	}
-
 	/**
 	 * @see EntityHome#getTableIdCol()
 	 */
@@ -94,163 +78,171 @@ public class MeasurementHome extends EntityHome<Measurement> {
 		return TableName;
 	}
 	
-	/**
-	 * @see EntityHome#parseResultRow(ResultSet)
-	 */
 	@Override
-	protected Measurement parseResultRow(ResultSet rs) throws SQLException {
+	public Measurement parseResultRow(final ResultSet rs, int fromIndex)
+			throws SQLException {
 		Measurement m = new Measurement();
 		
 		try {
-			
-			m.setId(rs.getInt(1));
-			m.setTimestamp(rs.getLong(2));
-			m.setWiFiReadings(wrvh.getById(rs.getInt(3)));
-			m.setGSMReadings(grvh.getById(rs.getInt(4)));
-			m.setBluetoothReadings(brvh.getById(rs.getInt(5)));
-		
+			if (!rs.isAfterLast()) {
+				m.setId(rs.getInt(fromIndex));
+				m.setTimestamp(rs.getLong(fromIndex + 1));
+				String readingClassName = rs.getString(fromIndex + 2);
+				if (readingClassName.equals(HomeFactory.getWiFiReadingVectorHome().getContainedObjectClassName())) {
+					m.setWiFiReadings(HomeFactory.getWiFiReadingVectorHome().parseResultRow(rs, fromIndex + 3));
+				} else if (readingClassName.equals(HomeFactory.getGSMReadingVectorHome().getContainedObjectClassName())) {
+					m.setGSMReadings(HomeFactory.getGSMReadingVectorHome().parseResultRow(rs, fromIndex + 3 + HomeFactory.getWiFiReadingHome().getTableCols().length + 1));
+				} else if (readingClassName.equals(HomeFactory.getBluetoothReadingVectorHome().getContainedObjectClassName())) {
+					m.setBluetoothReadings(HomeFactory.getBluetoothReadingVectorHome().parseResultRow(rs, fromIndex + 3 + HomeFactory.getGSMReadingHome().getTableCols().length + 1 + HomeFactory.getWiFiReadingHome().getTableCols().length + 1));
+				} else {
+					rs.next();
+				}
+			}
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, "parseResultRow failed: " + e.getMessage(), e);
 			throw e;
 		}
 		
 		return m;
-	}
-	
-	private void checkReadings(Measurement e) {
-		Vector<WiFiReading> wv = e.getWiFiReadings();
-		if(wv.getId() == null) {
-			log.finer("wifireading vector not yet saved, now saving it");
-			wv = wrvh.add(wv);
-		}
-		
-		Vector<GSMReading> gv = e.getGsmReadings();
-		if(gv.getId() == null) {
-			log.finer("gsmreading vector not yet saved, now saving it");
-			gv = grvh.add(gv);
-		}
-		
-		Vector<BluetoothReading> bv = e.getBluetoothReadings();
-		if(bv.getId() == null) {
-			log.finer("bluetoothreading vector not yet saved, now saving it");
-			bv = brvh.add(bv);
-		}
+
 	}
 	
 	
-	/**
-	 * @see EntityHome#add(org.redpin.server.standalone.db.IEntity)
-	 */
+	
+
 	@Override
-	public Measurement add(Measurement e) {
-		checkReadings(e);
-		
-		return super.add(e);
-	}
-	
-	
-	/**
-	 * @see EntityHome#update(org.redpin.server.standalone.db.IEntity)
-	 */
-	@Override
-	public boolean update(Measurement e) {
-		checkReadings(e);
-		
-		return super.update(e);
-	}
-	
-	/**
-	 * Removes vectors if they are not already deleted
-	 * 
-	 * @param m {@link Measurement}
-	 */
-	private void removeVectors(Measurement m) {
-		Vector<WiFiReading> wrv = m.getWiFiReadings();
-		Vector<GSMReading> grv = m.getGsmReadings();
-		Vector<BluetoothReading> brv = m.getBluetoothReadings();
-		
-		if( (wrv != null) && (wrv.getId() != null)) {
-			log.finer("implicit deletion of wifireading vector");
-			wrvh.remove(wrv);
+	public Measurement getById(Integer id) {
+		String constraint = getTableName() + "." + getTableIdCol() + " = " + id;
+		List<Measurement> list = get(constraint);
+		if (list.size() == 0) {
+			return null;
 		}
+		return list.get(0);
 		
-		if( (grv != null) && (grv.getId() != null)) {
-			log.finer("implicit deletion of gsmreading vector");
-			grvh.remove(grv);
-		}
-		
-		if( (brv != null) && (brv.getId() != null)) {
-			log.finer("implicit deletion of bluetoothreading vector");
-			brvh.remove(brv);
-		}
-		
-			
-	}
-	
-	/**
-	 * Also removes the measurment's vectors
-	 * @see EntityHome#removeById(Integer)
-	 */
-	@Override
-	public boolean removeById(Integer id) {
-		Measurement m = getById(id);
-		removeVectors(m);
-		return super.removeById(id);
-	}
-	
-	/**
-	 * Also removes the measurment's vectors
-	 * @see EntityHome#remove(org.redpin.server.standalone.db.IEntity)
-	 */
-	@Override
-	public boolean remove(Measurement e) {
-		removeVectors(e);
-		return super.removeById(e.getId());
-	}
-	
-	
-	/**
-	 * Helper Function to remove old {@link Vector} and if successful assign the new one to the {@link Measurement}
-	 * (on update there is no automatic removal of the old vector when a new {@link Vector} is set)
-	 *  
-	 * @param m {@link Measurement} 
-	 * @param v New {@link Vector} which will be assigned to the {@link Measurement} m
-	 * @return <code>true</code> if removal of the old {@link Vector} was successful
-	 */
-	public boolean setWiFiReadingVector(Measurement m, Vector<WiFiReading> v) {
-		boolean res = false;
-		log.finer("try to remove old vector");
-		if(wrvh.remove(m.getWiFiReadings())) {
-			m.setWiFiReadings(v);
-			res = true;
-		}		
-		return res;
-	}
-	
-	/**
-	 * @see MeasurementHome#setWiFiReadingVector(Measurement, Vector)
-	 */
-	public boolean setGSMReadingVector(Measurement m, Vector<GSMReading> v) {
-		boolean res = false;
-		log.finer("try to remove old vector");
-		if(grvh.remove(m.getGsmReadings())) {
-			m.setGSMReadings(v);
-			res = true;
-		}		
-		return res;
-	}
-	
-	/**
-	 * @see MeasurementHome#setWiFiReadingVector(Measurement, Vector)
-	 */
-	public boolean setBluetoothReadingVector(Measurement m, Vector<BluetoothReading> v) {
-		boolean res = false;
-		log.finer("try to remove old vector");
-		if(brvh.remove(m.getBluetoothReadings())) {
-			m.setBluetoothReadings(v);
-			res = true;
-		}		
-		return res;
 	}
 
+	@Override
+	public Measurement add(Measurement m) {
+		Connection conn = db.getConnection();
+		Vector<PreparedStatement> vps = new Vector<PreparedStatement>();
+		ResultSet rs = null;
+		
+		try {
+
+			conn.setAutoCommit(false);
+			
+			int measurementId = HomeFactory.getMeasurementHome().executeInsertUpdate(vps, m);
+			// wifi
+			HomeFactory.getWiFiReadingVectorHome().executeUpdate(vps, m.getWiFiReadings(), measurementId);
+			// gsm
+			HomeFactory.getGSMReadingVectorHome().executeUpdate(vps, m.getGsmReadings(), measurementId);			
+			// bluetooth
+			HomeFactory.getBluetoothReadingVectorHome().executeUpdate(vps, m.getBluetoothReadings(), measurementId);
+		
+			
+			
+			conn.commit();
+			
+			return getById(measurementId);
+		
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, "add fingerprint failed: " + e.getMessage(), e);
+		} finally {
+			try {
+				conn.setAutoCommit(true);
+				if (rs != null) rs.close();
+				for(PreparedStatement p : vps) {
+					if (p != null) p.close();
+				}
+			} catch (SQLException es) {
+				log.log(Level.WARNING, "failed to close statement: " + es.getMessage(), es);
+			}
+		}
+		return null;
+	}
+	
+	
+
+
+	@Override
+	protected String getSelectSQL() {
+		return selectMeasurements;
+	}
+	
+	@Override
+	protected String getOrder() {
+		return orderMeasurements;
+	}
+
+	
+	
+
+	@Override
+	protected boolean remove(String constrain) {
+		String measurementsCnst = (constrain != null && constrain.length() > 0) ? constrain : "1=1";
+		
+		String readingInMeasurementCnst = " IN (SELECT readingId FROM readinginmeasurement WHERE (" + measurementsCnst + ")) ";
+		
+		
+		String sql_m = " DELETE FROM " + HomeFactory.getMeasurementHome().getTableName() + " WHERE " + measurementsCnst;
+		String sql_wifi = " DELETE FROM " + HomeFactory.getWiFiReadingHome().getTableName() + 
+						  " WHERE " + HomeFactory.getWiFiReadingHome().getTableIdCol() + readingInMeasurementCnst;
+		String sql_gsm = " DELETE FROM " + HomeFactory.getGSMReadingHome().getTableName() + 
+		  				 " WHERE " + HomeFactory.getGSMReadingHome().getTableIdCol() + readingInMeasurementCnst;
+		String sql_bluetooth = " DELETE FROM " + HomeFactory.getBluetoothReadingHome().getTableName() + 
+		  					   " WHERE " + HomeFactory.getBluetoothReadingHome().getTableIdCol() + readingInMeasurementCnst;
+		 
+		String sql_rinm = "DELETE FROM readinginmeasurement WHERE " + measurementsCnst;
+		
+		Statement stat = null;
+		
+		log.finest(sql_wifi);
+		log.finest(sql_gsm);
+		log.finest(sql_bluetooth);
+		log.finest(sql_rinm);
+		log.finest(sql_m);
+
+		try {
+			int res = -1;
+			db.getConnection().setAutoCommit(false);
+			stat = db.getConnection().createStatement();
+			if (db.getConnection().getMetaData().supportsBatchUpdates()) {
+				stat.addBatch(sql_wifi);
+				stat.addBatch(sql_gsm);
+				stat.addBatch(sql_bluetooth);
+				stat.addBatch(sql_rinm);
+				stat.addBatch(sql_m);
+				int results[] = stat.executeBatch();
+				if (results != null && results.length > 0) {
+					res = results[results.length - 1];
+				}
+			} else {
+				stat.executeUpdate(sql_wifi);
+				stat.executeUpdate(sql_gsm);
+				stat.executeUpdate(sql_bluetooth);
+				stat.executeUpdate(sql_rinm);
+				res = stat.executeUpdate(sql_m);
+			}
+			db.getConnection().commit();
+			return res > 0;
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, "remove map failed: " + e.getMessage(), e);
+		} finally {
+			try {
+				db.getConnection().setAutoCommit(true);
+				if (stat != null) stat.close();
+			} catch (SQLException es) {
+				log.log(Level.WARNING, "failed to close statement: " + es.getMessage(), es);
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public int fillInStatement(PreparedStatement ps, Measurement t, int fromIndex)
+			throws SQLException {
+		return fillInStatement(ps, new Object[] {t.getTimestamp()}, new int[]{ Types.BIGINT}, fromIndex);
+	}
+
+	
 }

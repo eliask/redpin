@@ -34,16 +34,13 @@ CREATE TABLE IF NOT EXISTS 'map' (
 ) ;
 CREATE TABLE IF NOT EXISTS 'measurement' (
   'measurementId' INTEGER PRIMARY KEY,
-  'timestamp' bigint(20) NOT NULL,
-  'wifiReadingsvectorId' int(10) NOT NULL,
-  'gsmReadingsvectorId' int(10) NOT NULL,
-  'bluetoothReadingsvectorId' int(10) NOT NULL
+  'timestamp' bigint(20) NOT NULL
 ) ;
-CREATE TABLE IF NOT EXISTS 'serializablevector' (
-  'vectorId' INTEGER PRIMARY KEY,
-  'size' int(9) NOT NULL default '0',
-  'containedObjectsClassName' varchar(255)  NOT NULL default '',
-  'containedObjectIds' varchar(255) NOT NULL default ''
+CREATE TABLE IF NOT EXISTS 'readinginmeasurement' (
+  'id' INTEGER PRIMARY KEY,
+  'measurementId' int(10) NOT NULL,
+  'readingId' int(10) NOT NULL,
+  'readingClassName' varchar(255)  NOT NULL default ''
 ) ;
 CREATE TABLE IF NOT EXISTS 'wifireading' (
   'wifiReadingId' INTEGER PRIMARY KEY,

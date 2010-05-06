@@ -15,12 +15,17 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ *  (c) Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
  * 
  *  www.redpin.org
  */
 package org.redpin.server.standalone.db.homes.vector;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
+
+import org.redpin.server.standalone.core.Vector;
 import org.redpin.server.standalone.core.measure.WiFiReading;
 import org.redpin.server.standalone.db.HomeFactory;
 import org.redpin.server.standalone.db.homes.EntityHome;
@@ -29,17 +34,18 @@ import org.redpin.server.standalone.db.homes.EntityHome;
  * @see EntityHome
  * @see VectorHome
  * @author Pascal Brogle (broglep@student.ethz.ch)
+ * @author Luba Rogoleva (lubar@student.ethz.ch)
  *
  */
 public class WiFiReadingVectorHome extends VectorHome<WiFiReading> {
 
-	private static final String className = "org.redpin.core.measure.WiFiReading";
+	private static final String className = WiFiReading.class.getSimpleName(); //"org.redpin.core.measure.WiFiReading";
 	
 	/**
 	 * @see VectorHome#getContainedObjectClassName()
 	 */
 	@Override
-	protected String getContainedObjectClassName() {
+	public String getContainedObjectClassName() {
 		return className;
 	}
 
@@ -47,9 +53,10 @@ public class WiFiReadingVectorHome extends VectorHome<WiFiReading> {
 	 * @see VectorHome#getObjectHome()
 	 */
 	@Override
-	protected EntityHome<WiFiReading> getObjectHome() {
+	public EntityHome<WiFiReading> getObjectHome() {
 		return HomeFactory.getWiFiReadingHome();
 	}
+
 
 	
 }

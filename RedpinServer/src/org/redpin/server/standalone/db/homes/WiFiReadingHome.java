@@ -15,14 +15,17 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ *  (c) Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
  * 
  *  www.redpin.org
  */
 package org.redpin.server.standalone.db.homes;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.redpin.server.standalone.core.measure.WiFiReading;
@@ -30,6 +33,7 @@ import org.redpin.server.standalone.core.measure.WiFiReading;
 /**
  * @see EntityHome
  * @author Pascal Brogle (broglep@student.ethz.ch)
+ * @author Luba Rogoleva (lubar@student.ethz.ch)
  *
  */
 public class WiFiReadingHome extends EntityHome<WiFiReading> {
@@ -39,10 +43,12 @@ public class WiFiReadingHome extends EntityHome<WiFiReading> {
 	private static final String TableName = "wifireading"; 
 	private static final String TableIdCol = "wifiReadingId";
 	
+	
 	public WiFiReadingHome() {
 		super();
 	}
 
+	
 	/**
 	 * @see EntityHome#getTableName()
 	 */
@@ -66,36 +72,21 @@ public class WiFiReadingHome extends EntityHome<WiFiReading> {
 	protected String[] getTableCols() {
 		return TableCols;
 	}
-
-	/**
-	 * @see EntityHome#getColValues(org.redpin.server.standalone.db.IEntity)
-	 */
-	@Override
-	protected Object[] getColValues(WiFiReading e) {
-		Object[] res = new Object[getTableCols().length];
-		res[0] = e.getBssid();
-		res[1] = e.getSsid();
-		res[2] = e.getRssi();
-		res[3] = e.isWepEnabled();
-		res[4] = e.isInfrastructure();
-		return res;
-	}
 	
 	/**
 	 * @see EntityHome#parseResultRow(ResultSet)
 	 */
 	@Override
-	protected WiFiReading parseResultRow(ResultSet rs) throws SQLException{
+	public WiFiReading parseResultRow(final ResultSet rs, int fromIndex) throws SQLException{
 		WiFiReading reading = new WiFiReading();
 		
 		try {
-			reading.setId(rs.getInt(1));
-			reading.setBssid(rs.getString(2));
-			reading.setSsid(rs.getString(3));
-			reading.setRssi(rs.getInt(4));
-			reading.setWepEnabled(rs.getBoolean(5));
-			reading.setInfrastructure(rs.getBoolean(6));
-			
+			reading.setId(rs.getInt(fromIndex));
+			reading.setBssid(rs.getString(fromIndex + 1));
+			reading.setSsid(rs.getString(fromIndex + 2));
+			reading.setRssi(rs.getInt(fromIndex + 3));
+			reading.setWepEnabled(rs.getBoolean(fromIndex + 4));
+			reading.setInfrastructure(rs.getBoolean(fromIndex + 5));
 		
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, "parseResultRow failed: " + e.getMessage(), e);
@@ -104,6 +95,15 @@ public class WiFiReadingHome extends EntityHome<WiFiReading> {
 		
 		return reading;
 	}
+
+	@Override
+	public int fillInStatement(PreparedStatement ps, WiFiReading t, int fromIndex)
+			throws SQLException {
+		return fillInStatement(ps, new Object[] {t.getBssid(), t.getSsid(), t.getRssi(), t.isWepEnabled(), t.isInfrastructure()},   
+				new int[]{Types.VARCHAR, Types.VARCHAR, Types.INTEGER, Types.TINYINT, Types.TINYINT}, fromIndex);
+	}
+
+	
 	
 	
 

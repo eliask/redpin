@@ -15,12 +15,16 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ *  (c) Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
  * 
  *  www.redpin.org
  */
 package org.redpin.server.standalone.db.homes.vector;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import org.redpin.server.standalone.core.Vector;
 import org.redpin.server.standalone.core.measure.BluetoothReading;
 import org.redpin.server.standalone.db.HomeFactory;
 import org.redpin.server.standalone.db.homes.EntityHome;
@@ -29,17 +33,18 @@ import org.redpin.server.standalone.db.homes.EntityHome;
  * @see EntityHome
  * @see VectorHome
  * @author Pascal Brogle (broglep@student.ethz.ch)
+ * @author Luba Rogoleva (lubar@student.ethz.ch)
  *
  */
 public class BluetoothReadingVectorHome extends VectorHome<BluetoothReading> {
 
-	private static final String className = "org.redpin.core.measure.BluetoothReading";
+	private static final String className = BluetoothReading.class.getSimpleName(); //"org.redpin.core.measure.BluetoothReading";
 	
 	/**
 	 * @see VectorHome#getContainedObjectClassName()
 	 */
 	@Override
-	protected String getContainedObjectClassName() {
+	public String getContainedObjectClassName() {
 		return className;
 	}
 
@@ -47,7 +52,9 @@ public class BluetoothReadingVectorHome extends VectorHome<BluetoothReading> {
 	 * @see VectorHome#getObjectHome()
 	 */
 	@Override
-	protected EntityHome<BluetoothReading> getObjectHome() {
+	public EntityHome<BluetoothReading> getObjectHome() {
 		return HomeFactory.getBluetoothReadingHome();
 	}
+
+	
 }
