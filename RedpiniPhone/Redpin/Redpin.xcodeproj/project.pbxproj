@@ -13,7 +13,7 @@
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		1EF738791128810D009ACE7C /* IntervalScannerInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF738781128810D009ACE7C /* IntervalScannerInfo.m */; };
 		1EF73D90112ADCAB009ACE7C /* IntervalScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF73D8F112ADCAB009ACE7C /* IntervalScanner.m */; };
-		28860B770F44E54D00985440 /* Redpin_v3.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 28860B760F44E54D00985440 /* Redpin_v3.xcdatamodel */; };
+		28860B770F44E54D00985440 /* Redpin.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 28860B760F44E54D00985440 /* Redpin.xcdatamodel */; };
 		28860BE50F44EE6400985440 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28860BE40F44EE6400985440 /* CoreData.framework */; };
 		2892E4100DC94CBA00A64D0F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */; };
 		2899E5600DE3E45000AC0155 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2899E55F0DE3E45000AC0155 /* RootViewController.xib */; };
@@ -109,7 +109,7 @@
 		1EF738781128810D009ACE7C /* IntervalScannerInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntervalScannerInfo.m; sourceTree = "<group>"; };
 		1EF73D8E112ADCAB009ACE7C /* IntervalScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntervalScanner.h; sourceTree = "<group>"; };
 		1EF73D8F112ADCAB009ACE7C /* IntervalScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntervalScanner.m; sourceTree = "<group>"; };
-		28860B760F44E54D00985440 /* Redpin_v3.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = Redpin_v3.xcdatamodel; sourceTree = "<group>"; };
+		28860B760F44E54D00985440 /* Redpin.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = Redpin.xcdatamodel; sourceTree = "<group>"; };
 		28860BE40F44EE6400985440 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		2899E55F0DE3E45000AC0155 /* RootViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
