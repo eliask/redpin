@@ -11,7 +11,6 @@
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
-		1EF738791128810D009ACE7C /* IntervalScannerInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF738781128810D009ACE7C /* IntervalScannerInfo.m */; };
 		1EF73D90112ADCAB009ACE7C /* IntervalScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF73D8F112ADCAB009ACE7C /* IntervalScanner.m */; };
 		28860B770F44E54D00985440 /* Redpin.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 28860B760F44E54D00985440 /* Redpin.xcdatamodel */; };
 		28860BE50F44EE6400985440 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28860BE40F44EE6400985440 /* CoreData.framework */; };
@@ -105,8 +104,6 @@
 		1D3623250D0F684500981E51 /* RedpinAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RedpinAppDelegate.m; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* Redpin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Redpin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		1EF738771128810D009ACE7C /* IntervalScannerInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntervalScannerInfo.h; sourceTree = "<group>"; };
-		1EF738781128810D009ACE7C /* IntervalScannerInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntervalScannerInfo.m; sourceTree = "<group>"; };
 		1EF73D8E112ADCAB009ACE7C /* IntervalScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntervalScanner.h; sourceTree = "<group>"; };
 		1EF73D8F112ADCAB009ACE7C /* IntervalScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntervalScanner.m; sourceTree = "<group>"; };
 		28860B760F44E54D00985440 /* Redpin.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = Redpin.xcdatamodel; sourceTree = "<group>"; };
@@ -298,8 +295,6 @@
 		1EF7387611288086009ACE7C /* Interval Labeling */ = {
 			isa = PBXGroup;
 			children = (
-				1EF738771128810D009ACE7C /* IntervalScannerInfo.h */,
-				1EF738781128810D009ACE7C /* IntervalScannerInfo.m */,
 				1EF73D8E112ADCAB009ACE7C /* IntervalScanner.h */,
 				1EF73D8F112ADCAB009ACE7C /* IntervalScanner.m */,
 			);
@@ -764,7 +759,6 @@
 				789787E51047499B0089CE22 /* SynchronizationManager.m in Sources */,
 				788945D110557F860089B426 /* CurrentLocationCircle.m in Sources */,
 				78B9984C105957B4006632A1 /* BacksideViewController.m in Sources */,
-				1EF738791128810D009ACE7C /* IntervalScannerInfo.m in Sources */,
 				1EF73D90112ADCAB009ACE7C /* IntervalScanner.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

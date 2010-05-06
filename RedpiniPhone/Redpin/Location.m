@@ -21,25 +21,22 @@
  *  www.redpin.org
  */
 
-
 #import "Location.h"
 
-#import "Map.h"
 #import "Fingerprint.h"
+#import "Map.h"
+
 #import "LocationHome.h"
 #import "MapHome.h"
 
 @implementation Location 
 
-@dynamic accuracy;
-@dynamic mapXcord;
-@dynamic symbolicID;
 @dynamic mapYcord;
-@dynamic reflocationId;
+@dynamic symbolicID;
+@dynamic mapXcord;
+@dynamic accuracy;
 @dynamic map;
-@dynamic fingerprint;
-
-
+@dynamic fingerprints;
 
 - (id) proxyForJson {
 	NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:6];
@@ -55,9 +52,7 @@
 	
 	if(self.mapYcord) 
 		[dict setObject:self.mapYcord forKey:@"mapYcord"];
-
-	if(self.reflocationId)
-		[dict setObject:self.reflocationId forKey:@"reflocationId"];
+	
 	
 	if(self.map) {
 		[dict setObject:self.map forKey:@"map"];
@@ -74,7 +69,6 @@
 	[loc setMapXcord:[dict objectForKey:@"mapXcord"]];
 	[loc setMapYcord:[dict objectForKey:@"mapYcord"]];
 	[loc setAccuracy:[dict objectForKey:@"accuracy"]];
-	[loc setReflocationId:[dict objectForKey:@"reflocationId"]];
 	
 	Map *map = [MapHome getMapByRemoteId:[dict objectForKey:@"mapId"]];
 	if(map) {

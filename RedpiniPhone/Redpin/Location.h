@@ -16,32 +16,39 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- * © Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ *  © Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
  * 
  *  www.redpin.org
  */
 
-
 #import <CoreData/CoreData.h>
 #import "DBEntity.h"
 
-@class Map;
 @class Fingerprint;
+@class Map;
 
 @interface Location :  DBEntity  
 {
 }
 
-@property (nonatomic, retain) NSNumber * accuracy;
-@property (nonatomic, retain) NSNumber * mapXcord;
-@property (nonatomic, retain) NSString * symbolicID;
 @property (nonatomic, retain) NSNumber * mapYcord;
-@property (nonatomic, retain) NSNumber * reflocationId;
+@property (nonatomic, retain) NSString * symbolicID;
+@property (nonatomic, retain) NSNumber * mapXcord;
+@property (nonatomic, retain) NSNumber * accuracy;
 @property (nonatomic, retain) Map * map;
-@property (nonatomic, retain) Fingerprint * fingerprint;
+@property (nonatomic, retain) NSSet* fingerprints;
 
 - (id) proxyForJson;
 + (Location *) fromJSON:(NSDictionary *) dict;
+
+@end
+
+
+@interface Location (CoreDataGeneratedAccessors)
+- (void)addFingerprintsObject:(Fingerprint *)value;
+- (void)removeFingerprintsObject:(Fingerprint *)value;
+- (void)addFingerprints:(NSSet *)value;
+- (void)removeFingerprints:(NSSet *)value;
 
 @end
 

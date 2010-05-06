@@ -31,7 +31,6 @@
 #import "AddMapViewController.h"
 #import "BacksideViewController.h"
 #import "Sniffer.h"
-#import "IntervalScannerInfo.h"
 #import "IntervalScanner.h"
 
 

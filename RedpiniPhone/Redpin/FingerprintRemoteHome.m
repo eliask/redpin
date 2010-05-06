@@ -25,7 +25,6 @@
 #import "Fingerprint.h"
 #import "Measurement.h"
 #import "WifiReading.h"
-#import "IntervalScannerInfo.h"
 #import "Map.h"
 #import "Location.h"
 #import "MapHome.h"
@@ -59,7 +58,7 @@
 		if([response.data isKindOfClass:[NSDictionary class]]) {
 			NSNumber *key = [response.data objectForKey:@"id"];
 			if([key intValue] != -1) {
-				NSLog(@"%s: set key %@ of map %@", __FUNCTION__,key, fprint);
+				NSLog(@"%s: set key %@ of fingerprint %@", __FUNCTION__,key, fprint);
 				[fprint setRId:key];			
 			}		
 			
@@ -67,15 +66,15 @@
 			if([locationDict isKindOfClass:[NSDictionary class]]) {
 				key = [locationDict objectForKey:@"id"];
 				if([key intValue] != -1) {
-					Location *loc = [LocationHome getLocationByRemoteId:key];
-					if (loc == nil) { // original location
-						Location *loc = [[LocationHome newObjectInContext] retain];
+					Location *loc = ((Fingerprint *) request.data).location;
+					if ([[loc rId] intValue] == -1) {
+											
 						[loc setRId:key];
-						[loc setReflocationId:key];
 						[loc setMapXcord:[locationDict objectForKey:@"mapXcord"]];
 						[loc setMapYcord:[locationDict objectForKey:@"mapYcord"]];
 						[loc setAccuracy:[locationDict objectForKey:@"accuracy"]];
 						[loc setSymbolicID:[locationDict objectForKey:@"symbolicID"]];
+						/*
 						NSDictionary *mapDict = [locationDict objectForKey:@"map"];
 						if([mapDict isKindOfClass:[NSDictionary class]]) {
 							Map *map = [MapHome getMapByRemoteId:[mapDict objectForKey:@"id"]];
@@ -83,12 +82,10 @@
 								[loc setMap:map];
 							}
 						}
-						
-						IntervalScannerInfo *info = [[IntervalScannerInfo alloc] init : (NSNumber *) key forLocation:(Location *) loc];
-						[info release];
+						*/
 					}
 					
-					[fprint.location setRId:key];
+					[fprint setLocation:loc];
 				}				
 			}
 			

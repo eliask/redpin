@@ -31,6 +31,8 @@
 
 @synthesize delegate;
 
+NSString * const LocationRemoteHomeDeletionNotification = @"LocationRemoteHomeDeletion";
+
 - (id) initWithDelegate:(id<RemoteEntityHomeProtocolDelegate>)aDelegate {
 	if((self = [super init])) {
 		self.delegate = aDelegate;
@@ -43,10 +45,17 @@
 }
 
 - (void) deleteObject:(id)anObject {
+	/*
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc postNotificationName:LocationRemoteHomeDeletionNotification object:anObject];
+	*/
 	
 	ServerRequest *request = [[ServerRequest alloc] initWithAction:ServerRequestAction_removeLocation data:anObject];
 	ServerConnection *connection = [(ServerConnection *)[ServerConnection alloc] initWithDelegate:self];
 	[connection performRequest:request responseAction:@selector(delete_didRecieveResponse:fromRequest:connection:)];
+	
+	
+	
 	
 }
 

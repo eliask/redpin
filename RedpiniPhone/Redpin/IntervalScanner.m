@@ -22,7 +22,6 @@
  */
 
 #import "IntervalScanner.h"
-#import "IntervalScannerInfo.h"
 #import "Fingerprint.h"
 #import "FingerprintHome.h"
 #import "Location.h"
@@ -36,17 +35,20 @@
 #define MAX_INTERVAL 3600.f // maximal interval
 
 extern NSString * const IntervalScanStopNotification;
+//extern NSString * const LocationRemoteHomeDeletionNotification;
 
 @implementation IntervalScanner
 
-@synthesize delegate;
+@synthesize delegate, location;
 
 
-- (id) initWithDelegate:(id) aDelegate {
-	if([super init]) {
+- (id) initWithLocation: (Location *) loc Delegate:(id) aDelegate {
+	if((self = [super init])) {
 		self.delegate = aDelegate;
+		self.location = loc;
 		NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 		[nc addObserver:self selector:@selector(endScan:) name:IntervalScanStopNotification object:nil];
+		//[nc addObserver:self selector:@selector(locationDeleted:) name:LocationRemoteHomeDeletionNotification object:nil];
 	}
 	
 	return self;
@@ -54,6 +56,7 @@ extern NSString * const IntervalScanStopNotification;
 
 
 - (void) endScan {
+	self.location = nil;
 	if (inProcess) {
 		inProcess = NO;
 		[[UIAccelerometer sharedAccelerometer] setDelegate:nil];
@@ -70,7 +73,19 @@ extern NSString * const IntervalScanStopNotification;
 - (void) endScan: (NSNotification *) note {
 	[self endScan];
 }
-
+/*
+- (void) locationDeleted: (NSNotification *) note {
+	Location *loc = (Location *) [note object];
+	if (!loc) {
+		return;
+	}
+	if (loc == self.location || [loc.rId intValue] == [self.location.rId intValue]) {
+		self.location = nil;
+		[self endScan];
+	}
+	
+}
+*/
 
 - (void) takeNextMeasurement : (NSTimer *) aTimer {
 	
@@ -78,9 +93,8 @@ extern NSString * const IntervalScanStopNotification;
 		[self endScan];
 		return;
 	}
-	IntervalScannerInfo *info = [[IntervalScannerInfo alloc] init];
-	NSNumber *lId = [info locationIdInProcess];
-	if ([lId intValue] != -1) {
+
+	if (self.location) {
 		Sniffer *sniffer = [[Sniffer alloc] initWithDelegate:self];
 		if(sniffer) {
 			count++;
@@ -89,37 +103,25 @@ extern NSString * const IntervalScanStopNotification;
 			[self endScan];
 		}	
 	}
-	[info release];
 	
 }
 
 - (void) copyPosition:(Measurement *) m {
-	IntervalScannerInfo *info = [[IntervalScannerInfo alloc] init];
-	NSNumber *lId = [info locationIdInProcess];
-	if ([lId intValue] != -1) {
+
+	if (self.location) {
 		Fingerprint *fp = [[FingerprintHome newObjectInContext] retain];
-		Location *loc = [[LocationHome newObjectInContext] retain];
-		[loc setMap:[[info locationInProcess] map]];
-		[loc setAccuracy:[[info locationInProcess] accuracy]];
-		[loc setMapXcord:[[info locationInProcess] mapXcord]];
-		[loc setMapYcord:[[info locationInProcess] mapYcord]];
-		[loc setSymbolicID:[[info locationInProcess] symbolicID]];
-		[loc setReflocationId:lId];
-		[loc setRId:lId];
 		
 		for(WifiReading *r in m.wifiReadings) {
 			[WifiReadingHome insertObjectInContext:r];
 		}
 		[MeasurementHome insertObjectInContext:m];
 		
-		[fp setLocation:loc];
+		[fp setLocation:self.location];
 		[fp setMeasurement:m];
 		
 		[[EntityHome sharedEntityHome] saveContext];
+		[fp release];
 	}
-	
-	[info release];
-	[m release];
 }
 
 
@@ -161,6 +163,7 @@ extern NSString * const IntervalScanStopNotification;
 - (void) dealloc {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc removeObserver:self];
+	self.location = nil;
 	[super dealloc];
 }
 

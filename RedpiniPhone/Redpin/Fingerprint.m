@@ -21,20 +21,18 @@
  *  www.redpin.org
  */
 
-
 #import "Fingerprint.h"
 
-#import "Measurement.h"
 #import "Location.h"
+#import "Measurement.h"
+
 #import "FingerprintHome.h"
 #import "LocationHome.h"
 
 @implementation Fingerprint 
 
-@dynamic measurement;
 @dynamic location;
-
-
+@dynamic measurement;
 
 - (id) proxyForJson {
 	
@@ -48,7 +46,7 @@
 	
 	if(self.location) 
 		[dict setObject:self.location forKey:@"location"];
-
+	
 	
 	return [dict autorelease];
 }
@@ -59,7 +57,7 @@
 	[fprint setRId:[dict objectForKey:@"id"]];
 	[fprint setMeasurement:[Measurement fromJSON:[dict objectForKey:@"measurement"]]];
 	
-
+	
 	Location *loc = [LocationHome getLocationByRemoteId:[dict objectForKey:@"locationId"]];
 	if(loc) {
 		[fprint setLocation:loc];
@@ -69,5 +67,6 @@
 	
 	return [fprint autorelease];
 }
+
 
 @end

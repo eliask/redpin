@@ -63,9 +63,10 @@
 	if(response.status == ServerResponseStatus_OK) {
 		if([response.data isKindOfClass:[NSDictionary class]]) {
 			NSNumber *key = [response.data objectForKey:@"id"];
-			if([key intValue] != 1) {
+			if([key intValue] != -1) {
 				NSLog(@"%s: set key %@ of map %@", __FUNCTION__,key, map);
-				[map setRId:key];			
+				[map setRId:key];
+				[((Map *) request.data) setRId:key];
 			}
 		}
 		

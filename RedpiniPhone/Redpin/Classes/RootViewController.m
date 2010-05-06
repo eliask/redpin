@@ -43,7 +43,6 @@
 #import "InternetConnectionManager.h"
 #import "RedpinAppDelegate.h"
 #import "ActivityIndicator.h"
-#import "IntervalScannerInfo.h"
 
 @interface RootViewController()
 
@@ -51,7 +50,7 @@
 - (void) internetConnectionChanged:(NSNotification *) note;
 - (void) showPortrait;
 - (void) showLandscape;
-- (void) buildPosition:(Measurement *) m;
+- (Fingerprint *) buildPosition:(Measurement *) m;
 - (void) notifyStopIntervalScan;
 @end
 
@@ -310,12 +309,13 @@ NSString * const IntervalScanStopNotification = @"StopIntervalScan";
 	if(locateInProgress) {
 		[aSniffer retrieveLocationForMeasurement:measurement];
 	} else {
-		[self buildPosition: measurement];
-		IntervalScanner *scanner = [[IntervalScanner alloc] initWithDelegate:self];
+		Fingerprint *fp = [self buildPosition: measurement];
+		IntervalScanner *scanner = [[IntervalScanner alloc] initWithLocation:fp.location Delegate:self];
 		if(scanner) {
 			[scanner startScan];
 		}
 		[aSniffer release];
+
 	}
 	[measurement release];
 }
@@ -345,7 +345,7 @@ NSString * const IntervalScanStopNotification = @"StopIntervalScan";
 	
 }
 
-- (void) buildPosition:(Measurement *) m {
+- (Fingerprint *) buildPosition:(Measurement *) m {
 	[[ActivityIndicator sharedActivityIndicator] hide];
 	Fingerprint *fp = [[FingerprintHome newObjectInContext] retain];
 	Location *loc = [[LocationHome newObjectInContext] retain];
@@ -362,8 +362,10 @@ NSString * const IntervalScanStopNotification = @"StopIntervalScan";
 	
 	[[EntityHome sharedEntityHome] saveContext];
 	
-	[m release];
-	
+	//[m release];
+	//[loc release];
+	//[fp autorelease];
+	return fp;
 }
 
 #pragma mark -

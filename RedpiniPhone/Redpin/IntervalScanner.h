@@ -32,12 +32,14 @@
 	NSTimer *timer;
 	int count;
 	id<IntervalScannerDelegate> delegate;
+	Location *location;
 	BOOL moved;
 }
 
 @property (nonatomic, assign) id<IntervalScannerDelegate> delegate;
+@property (nonatomic, assign) Location *location;
 
-- (id) initWithDelegate:(id) aDelegate;
+- (id) initWithLocation:(Location *)loc Delegate:(id) aDelegate;
 - (void) startScan;
 
 @end

@@ -41,6 +41,7 @@
 - (void) scanFinished:(NSMutableArray *) measurements;
 - (Measurement *) scanWiFi;
 - (NSMutableDictionary *) joinDictionary:(NSMutableDictionary *) dict withMeasurement:(Measurement *) m;
+- (NSString *) fixBSSID:(NSString *) bssid;
 
 @end
 
@@ -248,7 +249,7 @@ static CGFloat threashold = 2.0f;
 #if TARGET_IPHONE_SIMULATOR
 	Measurement *demo_measurement = [[MeasurementHome newObject] retain];
 	WifiReading *r1 = [[WifiReadingHome newObject] retain];
-	[r1 setBssid:@"0:ff:11:22:33:44"];
+	[r1 setBssid:[self fixBSSID:@"0:ff:11:22:33:44"]];
 	[r1 setSsid:@"SSID"];
 	[r1 setRssi:[NSNumber numberWithInt:-24+rand()%25]];
 	[r1 setWepEnabled:[NSNumber numberWithBool:NO]];
@@ -281,7 +282,7 @@ static CGFloat threashold = 2.0f;
 		WifiReading *reading = [[WifiReadingHome newObject] retain];
 		
 		[reading setSsid:[nw objectForKey:@"SSID_STR"]];
-		[reading setBssid:[nw objectForKey:@"BSSID"]];
+		[reading setBssid:[self fixBSSID:[nw objectForKey:@"BSSID"]]];
 		[reading setRssi:[nw objectForKey:@"RSSI"]];
 		[reading setIsInfrastructure:[NSNumber numberWithBool:[[nw objectForKey:@"AP_MODE"] isEqual:[NSNumber numberWithInt:2]]]];
 		
@@ -309,6 +310,26 @@ static CGFloat threashold = 2.0f;
 	[locRemoteHome getLocationWithMeasurement:measurement]; 
 	
 }
+
+- (NSString *)fixBSSID:(NSString *)bssid {
+	
+	NSArray *parts = [bssid componentsSeparatedByString:@":"];
+	NSString *str = [NSString string];
+	
+	for (uint i=0; i < parts.count; i++) {
+		if (i > 0) {
+			str = [str stringByAppendingString:@":"];
+		}
+		NSString *s = [parts objectAtIndex:i];
+		if (s && s.length == 1) {
+			str = [str stringByAppendingString:@"0"];
+		} 
+		str = [str stringByAppendingString:s];
+	}
+	
+	return str;
+}
+
 
 #pragma mark -
 #pragma mark RemoteEntityHomeRemoteDelegate
