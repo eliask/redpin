@@ -25,17 +25,16 @@ import org.redpin.server.standalone.util.Log;
 
 public class SVMSupport {
 
-	final static String DIRECTORY = "";
-	final static String TRAIN = DIRECTORY + "train.1";
-	final static String TEST = DIRECTORY + "test.1";
-	final static String TEMP = DIRECTORY + "temp";
-	final static String TRAIN_SCALE = DIRECTORY + "train.1.scale";
-	final static String TEST_SCALE = DIRECTORY + "test.1.scale";
-	final static String RANGE = DIRECTORY + "range1";
-	final static String OUT = DIRECTORY + "out";
-	final static String MODEL = DIRECTORY + "train.1.scale.model";	
-	final static String TRAIN_SCRIPT = DIRECTORY + "train.pl";
-	final static String PREDICT_SCRIPT = DIRECTORY + "predict.pl";
+	public final static String TRAIN = "train.1";
+	public final static String TEST = "test.1";
+	public final static String TEMP = "temp";
+	public final static String TRAIN_SCALE = "train.1.scale";
+	public final static String TEST_SCALE = "test.1.scale";
+	public final static String RANGE = "range1";
+	public final static String OUT = "out";
+	public final static String MODEL = "train.1.scale.model";	
+	public final static String TRAIN_SCRIPT = "train.sh";
+	public final static String PREDICT_SCRIPT = "predict.sh";
 	
 	/**
 	 * Train

@@ -26,9 +26,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Writer;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -36,6 +38,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 
 import org.redpin.server.standalone.db.DatabaseConnection;
+import org.redpin.server.standalone.svm.SVMSupport;
 
 /**
  * Configuration class which represents all configuration settings. 
@@ -74,6 +77,17 @@ public class Configuration {
 	public static DatabaseTypes DatabaseType = DatabaseTypes.SQLITE;
 	public static String DatabaseLocation = "redpin.db";
 	public static String DatabaseDriver = "org.sqlite.JDBC";
+	
+	public static String LibSVMDirectory = "libsvm-2.9";
+	
+	private static final String train_script = "#!/bin/sh \n"+
+										LibSVMDirectory +"/svm-scale -l -1 -u 1 -s range1 train.1 > train.1.scale \n" +
+										LibSVMDirectory +"/svm-train -c 32 -t 0 train.1.scale > train.1.scale.model";
+
+	private static final String predict_script = "#!/bin/sh \n"+
+	LibSVMDirectory +"/svm-scale -r range1 test.1 > test.1.scale \n" +
+	LibSVMDirectory +"/svm-predict test.1.scale train.1.scale.model out";
+
 	
 	
 	// initialization
@@ -169,6 +183,36 @@ public class Configuration {
 		if((DatabaseType == DatabaseTypes.SQLITE) && (!new File(DatabaseLocation).exists())) {
 			Log.getLogger().fine("No database file found, now importing database schema");
 			importSQLiteSchema();
+		}
+		
+		dir = new File(LibSVMDirectory);
+		if(dir.isDirectory() && dir.exists()) {
+		
+			File trainPl = new File(SVMSupport.TRAIN_SCRIPT);
+			try {
+				if(!trainPl.exists()) {
+					Writer w = new FileWriter(trainPl);
+					w.write(train_script);
+					w.flush();
+					w.close();				
+					trainPl.setExecutable(true);
+				}
+			} catch (Exception e) {
+				Log.getLogger().fine("could not create " + SVMSupport.PREDICT_SCRIPT);
+			}
+			
+			File predictPl = new File(SVMSupport.PREDICT_SCRIPT);
+			try {
+				if(!predictPl.exists()) {
+					Writer w = new FileWriter(predictPl);
+					w.write(predict_script);
+					w.flush();
+					w.close();				
+					predictPl.setExecutable(true);
+				}
+			} catch (Exception e) {
+				Log.getLogger().fine("could not create " + SVMSupport.PREDICT_SCRIPT);
+			}
 		}
 		
 	}
