@@ -32,18 +32,15 @@ public class CategorizerFactory {
 	 * @param dataset
 	 */
 	public synchronized static void buildCategories(){
-		LocationCategorizer().clear();
-		BSSIDCategorizer().clear();
-		
 		List<Fingerprint> dataset = HomeFactory.getFingerprintHome().getAll();
 		for (Fingerprint f : dataset) {
 			if (f == null || f.getLocation() == null || f.getMeasurement() == null) continue;
 			String locationTag = f.getLocation().getSymbolicID();
-			pLocationCategorizer.AddCategory(locationTag);
+			LocationCategorizer().AddCategory(locationTag);
 			Measurement m = (Measurement)f.getMeasurement();
 			for (WiFiReading r : m.getWiFiReadings()) {
 				if (r != null && r.getBssid() != null) {
-					pBSSIDCategorizer.AddCategory(r.getBssid());
+					BSSIDCategorizer().AddCategory(r.getBssid());
 				}
 			}
 		}

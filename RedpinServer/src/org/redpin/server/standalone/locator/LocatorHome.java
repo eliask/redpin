@@ -21,25 +21,26 @@
  */
 package org.redpin.server.standalone.locator;
 
-import org.redpin.server.standalone.db.HomeFactory;
+//import org.redpin.server.standalone.db.HomeFactory;
 
 public class LocatorHome {
 	
 	private static ILocator locator = null;
-	private static int INITIAL_SAMPLES_REQUIRED = 100;
+	//private static int INITIAL_SAMPLES_REQUIRED = 100;
 	
 	public synchronized static ILocator getLocator() {
 		if(locator == null) {
-			locator = new RedpinLocator();
+			//locator = new RedpinLocator();
+			locator = new SVMLocator();
 		}
-		
+		/*
 		if (locator instanceof RedpinLocator) {
 			int numberofsamples = HomeFactory.getFingerprintHome().getCount();
 			if (numberofsamples >= INITIAL_SAMPLES_REQUIRED) {
 				locator = new SVMLocator();		//locator is changed only once 
 			}
 		}
-		
+		*/
 		return locator;
 	}
 	

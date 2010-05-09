@@ -81,12 +81,12 @@ public class Configuration {
 	public static String LibSVMDirectory = "libsvm-2.9";
 	
 	private static final String train_script = "#!/bin/sh \n"+
-										LibSVMDirectory +"/svm-scale -l -1 -u 1 -s range1 train.1 > train.1.scale \n" +
-										LibSVMDirectory +"/svm-train -c 32 -t 0 train.1.scale > train.1.scale.model";
+										LibSVMDirectory +"/svm-scale -l -1 -u 1 -s " + SVMSupport.RANGE + " " + SVMSupport.TRAIN + " > " + SVMSupport.TRAIN_SCALE + "$1\n" +
+										LibSVMDirectory +"/svm-train -c 512 -t 0 " + SVMSupport.TRAIN_SCALE + "$1";
 
-	private static final String predict_script = "#!/bin/sh \n"+
-	LibSVMDirectory +"/svm-scale -r range1 test.1 > test.1.scale \n" +
-	LibSVMDirectory +"/svm-predict test.1.scale train.1.scale.model out";
+	//private static final String predict_script = "#!/bin/sh \n"+
+	//LibSVMDirectory +"/svm-scale -r range1 test.1 > test.1.scale \n" +
+	//LibSVMDirectory +"/svm-predict test.1.scale train.1.scale.model out";
 
 	
 	
@@ -198,9 +198,10 @@ public class Configuration {
 					trainPl.setExecutable(true);
 				}
 			} catch (Exception e) {
-				Log.getLogger().fine("could not create " + SVMSupport.PREDICT_SCRIPT);
+				Log.getLogger().fine("could not create " + SVMSupport.TRAIN_SCRIPT);
 			}
 			
+			/*
 			File predictPl = new File(SVMSupport.PREDICT_SCRIPT);
 			try {
 				if(!predictPl.exists()) {
@@ -213,6 +214,7 @@ public class Configuration {
 			} catch (Exception e) {
 				Log.getLogger().fine("could not create " + SVMSupport.PREDICT_SCRIPT);
 			}
+			*/
 		}
 		
 	}

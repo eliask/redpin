@@ -32,44 +32,44 @@ public class SVMSupport {
 	public final static String TEST_SCALE = "test.1.scale";
 	public final static String RANGE = "range1";
 	public final static String OUT = "out";
-	public final static String MODEL = "train.1.scale.model";	
+	public final static String MODEL_EXT = ".model";	
 	public final static String TRAIN_SCRIPT = "train.sh";
-	public final static String PREDICT_SCRIPT = "predict.sh";
+	public static int ACTIVE_MODEL = 0;
 	
 	/**
 	 * Train
 	 * @param setupdata
 	 */
-	public static synchronized void train() 
+	public static void train() 
 	{
-		System.out.println("Starting SVM train.");
-		System.out.println("Building categories...");
+		Log.getLogger().log(Level.FINE, "Starting SVM train.");
+		Log.getLogger().log(Level.FINE, "Building categories...");
 		CategorizerFactory.buildCategories();
 		
 		List<Measurement> setupdata = HomeFactory.getMeasurementHome().getAll();
 		if (setupdata == null || setupdata.size() == 0) return;
 		
-		System.out.println("Transforming data to the format of an SVM package...");
+		Log.getLogger().log(Level.FINE, "Transforming data to the format of an SVM package...");
 		transformToSVMFormat(setupdata, TRAIN, false);
 		
-		System.out.println("Creating the model...");
-		if (!runScript(TRAIN_SCRIPT)) {
+		Log.getLogger().log(Level.FINE, "Creating the model...");
+		int nextModel = Math.abs(ACTIVE_MODEL - 1);
+		if (!runScript(TRAIN_SCRIPT, new String[] {nextModel+""})) {
 			String[] scaleargs = {"-l","-1","-u","1","-s",RANGE,TRAIN}; 		
-			String[] args={"-t","0","-c","512",TRAIN_SCALE+"",TEMP+""};
+			String[] args={"-t","0","-c","512",TRAIN_SCALE+nextModel,TRAIN_SCALE+nextModel+MODEL_EXT};
 			svm_train t = new svm_train();
 			svm_scale s = new svm_scale();
 			try {        	     	
-				s.run(scaleargs, TRAIN_SCALE);
+				s.run(scaleargs, TRAIN_SCALE+nextModel);
 				t.run(args);
-				File f = new File(TEMP);
-				//lock.lock(); not needed because method is synchronized
-				f.renameTo(new File(MODEL)); // change to model file shall be done atomically 
-				//lock.unlock(); nod needed
 			} catch (IOException e) {
 				Log.getLogger().log(Level.SEVERE, "Failed to create SVM model: " + e.getMessage());
 			} 
 		}
-		System.out.println("SVM train finished..");
+		synchronized(SVMSupport.class) {
+			ACTIVE_MODEL = nextModel;
+		}
+		Log.getLogger().log(Level.FINE, "SVM train finished..");
 	}
 	
 	/**
@@ -77,27 +77,21 @@ public class SVMSupport {
 	 * @param m
 	 * @return
 	 */
-	public synchronized static String predict(final Measurement m) 
-	{
-		File modelfile = new File(MODEL);
+	public static synchronized String predict(final Measurement m) 
+	{		
+		File modelfile = new File(TRAIN_SCALE+ACTIVE_MODEL+MODEL_EXT);
 		File outputfile = new File(OUT);
 		Vector<Measurement> testMeasurements = new Vector<Measurement>();
 		testMeasurements.add(m);
 		transformToSVMFormat(testMeasurements, TEST, true);
 		
-		try {
+		try {				
+			String[] scaleargs = {"-r", RANGE, TEST};
+			svm_scale s = new svm_scale();
+			s.run(scaleargs, TEST_SCALE);
 			
-			if(!runScript(PREDICT_SCRIPT)){
-				
-				String[] scaleargs = {"-r", RANGE, TEST};
-				svm_scale s = new svm_scale();
-				s.run(scaleargs, TEST_SCALE);
-			
-				String[] args={TEST_SCALE,modelfile+"",outputfile+""};
-				//lock.lock();
-				svm_predict.main(args);	
-				//lock.unlock();
-			}		
+			String[] args={TEST_SCALE,modelfile+"",outputfile+""};
+			svm_predict.main(args);			
 					
 		} catch (FileNotFoundException e) {
 			Log.getLogger().log(Level.SEVERE, "predict failed due to FileNotFoundException: " + e.getMessage());
@@ -106,6 +100,7 @@ public class SVMSupport {
 		}
 		
 		return OUT;
+		
 	}
 	
 	
@@ -134,7 +129,7 @@ public class SVMSupport {
 				for (WiFiReading r : m.getWiFiReadings()) {
 					if (r != null && r.getBssid() != null) {
 						Integer id = CategorizerFactory.BSSIDCategorizer().GetCategoryID(r.getBssid());
-						if (id != -1) {
+						if (id != -1 && !rssis.contains(id)) {
 							rssis.put(id, r.getRssi());
 							sarray.add(id);
 						}
@@ -164,9 +159,12 @@ public class SVMSupport {
 	 * @param scriptName
 	 * @return true in case of a successful run
 	 */
-	private static synchronized boolean runScript(String scriptName)
+	private static synchronized boolean runScript(String scriptName, String[] args)
 	{
 		String command = "./" + scriptName;
+		for (String arg : args){
+			command += " " + arg;
+		}
     	try {
     		Process p = Runtime.getRuntime().exec(command);
     		int exitvalue = p.waitFor();
