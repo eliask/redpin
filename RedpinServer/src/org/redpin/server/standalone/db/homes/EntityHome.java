@@ -356,6 +356,9 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	 */
 	@Override
 	public T get(T e) {
+		if (e == null || e.getId() == null || e.getId() == -1) {
+			return null;
+		}
 		return getById(e.getId());
 	}
 	
@@ -386,12 +389,23 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	@Override
 	public List<T> get(List<T> list) {
 		
-		List<Integer> l = new ArrayList<Integer>(list.size());
+		if (list == null) {
+			return new ArrayList<T>();
+		}
+		List<Integer> ids = new ArrayList<Integer>(list.size());
 		for(T entity: list) {
-			l.add(entity.getId());
+			if (entity.getId() != null && entity.getId() != -1) {
+				ids.add(entity.getId());
+			}
+		}	
+		
+		if (ids.isEmpty()) {
+			return new ArrayList<T>();
 		}
 		
-		return getById(l);
+		
+		
+		return getById(ids);
 	}
 	
 	/**
@@ -402,6 +416,9 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	 */
 	@Override
 	public List<T> getById(List<Integer> ids) {
+		if (ids == null || ids.isEmpty()) {
+			return new ArrayList<T>();
+		}
 		String constrain = getTableIdCol() + " IN  (" + implode(ids.toArray()) + ")";
 		return get(constrain);
 	}	
@@ -434,7 +451,7 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 			
 			return res > 0;
 		} catch (SQLException e) {
-			log.log(Level.SEVERE, "remove map failed: " + e.getMessage(), e);
+			log.log(Level.SEVERE, "remove failed: " + e.getMessage(), e);
 		} finally {
 			try {
 				db.getConnection().setAutoCommit(true);
@@ -456,7 +473,7 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	 */
 	@Override
 	public boolean remove(T e) {
-		if (e == null || e.getId() == -1) {
+		if (e == null || e.getId() == null || e.getId()  == -1) {
 			return true;
 		}
 		String constraint = getTableIdCol() + " = " + e.getId();
@@ -471,10 +488,19 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	 */
 	@Override
 	public boolean remove(List<T> list) {
+		if (list == null) {
+			return true;
+		}
 		List<Integer> ids = new ArrayList<Integer>(list.size());
 		for(T entity: list) {
-			ids.add(entity.getId());
+			if (entity.getId() != null && entity.getId() != -1) {
+				ids.add(entity.getId());
+			}
 		}	
+		
+		if (ids.isEmpty()) {
+			return true;
+		}
 		
 		String constrain = getTableIdCol() + " IN  (" + implode(ids.toArray()) + ")";
 		
@@ -508,14 +534,6 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 			ps = db.getConnection().prepareStatement(getUpdateSQL());
 			int c = fillInStatement(ps, e);
 			ps.setInt(c + 1, e.getId());
-			/*
-			ps.setString(1, loc.getSymbolicID());
-			ps.setInt(2, ((Map)loc.getMap()).getId());
-			ps.setInt(3, loc.getMapXcord());
-			ps.setInt(4, loc.getMapYcord());
-			ps.setInt(5, loc.getAccuracy());
-			ps.setInt(6, loc.getId());
-			*/
 			int numcol = ps.executeUpdate();
 			res = numcol == 1;		
 			

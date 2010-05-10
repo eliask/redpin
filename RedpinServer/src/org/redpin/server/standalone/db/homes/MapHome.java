@@ -127,7 +127,7 @@ public class MapHome extends EntityHome<Map> {
 		  					   " WHERE " + HomeFactory.getBluetoothReadingHome().getTableIdCol() + readingInMeasurementCnst;
 		 
 		String sql_rinm = "DELETE FROM readinginmeasurement WHERE " + measurementsCnst;
-		String sql_fp = "DELETE FROM " + HomeFactory.getFingerprintHome().getTableName() + " WHERE " + fingerprintsCnst;
+		String sql_fp = "DELETE FROM " + HomeFactory.getFingerprintHome().getTableName() + " WHERE " + locationCnst;
 		
 		String sql_l = "DELETE FROM " + HomeFactory.getLocationHome().getTableName() + " WHERE " + mapCnst;
 		String sql_map = "DELETE FROM " + getTableName() + " WHERE " + mapCnst;

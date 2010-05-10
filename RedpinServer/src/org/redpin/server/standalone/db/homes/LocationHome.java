@@ -252,7 +252,7 @@ public class LocationHome extends EntityHome<Location> {
 		  					   " WHERE " + HomeFactory.getBluetoothReadingHome().getTableIdCol() + readingInMeasurementCnst;
 		 
 		String sql_rinm = "DELETE FROM readinginmeasurement WHERE " + measurementsCnst;
-		String sql_fp = "DELETE FROM " + HomeFactory.getFingerprintHome().getTableName() + " WHERE " + fingerprintsCnst;
+		String sql_fp = "DELETE FROM " + HomeFactory.getFingerprintHome().getTableName() + " WHERE " + locationCnst;
 	
 		String sql_loc = "DELETE FROM " + getTableName() + " WHERE " + locationCnst;
 		Statement stat = null;
