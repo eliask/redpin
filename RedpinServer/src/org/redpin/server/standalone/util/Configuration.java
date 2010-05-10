@@ -63,7 +63,6 @@ public class Configuration {
 	public enum LoggerFormat {PLAIN, XML};
 	
 	// default settings
-	//public static String ServerHost = "localhost";
 	public static Integer ServerPort = 8000;
 	public static String ImageUploadPath = "mapuploads/";
 	public static LoggerFormat LogFormat = LoggerFormat.PLAIN; //or xml
@@ -80,14 +79,12 @@ public class Configuration {
 	
 	public static String LibSVMDirectory = "libsvm-2.9";
 	
-	private static final String train_script = "#!/bin/sh \n"+
-										LibSVMDirectory +"/svm-scale -l -1 -u 1 -s " + SVMSupport.RANGE + " " + SVMSupport.TRAIN + " > " + SVMSupport.TRAIN_SCALE + "$1\n" +
-										LibSVMDirectory +"/svm-train -c 512 -t 0 " + SVMSupport.TRAIN_SCALE + "$1";
-
-	//private static final String predict_script = "#!/bin/sh \n"+
-	//LibSVMDirectory +"/svm-scale -r range1 test.1 > test.1.scale \n" +
-	//LibSVMDirectory +"/svm-predict test.1.scale train.1.scale.model out";
-
+	
+	private static String generateTrainScript(String dir) {
+		return "#!/bin/sh \n"+
+		dir +"/svm-scale -l -1 -u 1 -s " + SVMSupport.RANGE + " " + SVMSupport.TRAIN + " > " + SVMSupport.TRAIN_SCALE + "$1\n" +
+		dir +"/svm-train -c 512 -t 0 " + SVMSupport.TRAIN_SCALE + "$1";
+	}
 	
 	
 	// initialization
@@ -99,7 +96,6 @@ public class Configuration {
 				FileInputStream reader = new FileInputStream( f);
 				p.load(reader);
 				
-				//ServerHost = p.getProperty("host", ServerHost);
 				ServerPort = new Integer(p.getProperty("port", ServerPort.toString()));
 				ImageUploadPath = p.getProperty("image.upload.path", ImageUploadPath);
 				if(ImageUploadPath.charAt(ImageUploadPath.length()-1) == '/') {
@@ -161,6 +157,7 @@ public class Configuration {
 				}
 				
 				
+				LibSVMDirectory = p.getProperty("libsvm.dir", LibSVMDirectory);
 				
 				
 			} catch (Exception e) {
@@ -192,7 +189,7 @@ public class Configuration {
 			try {
 				if(!trainPl.exists()) {
 					Writer w = new FileWriter(trainPl);
-					w.write(train_script);
+					w.write(generateTrainScript(LibSVMDirectory));
 					w.flush();
 					w.close();				
 					trainPl.setExecutable(true);
@@ -200,21 +197,6 @@ public class Configuration {
 			} catch (Exception e) {
 				Log.getLogger().fine("could not create " + SVMSupport.TRAIN_SCRIPT);
 			}
-			
-			/*
-			File predictPl = new File(SVMSupport.PREDICT_SCRIPT);
-			try {
-				if(!predictPl.exists()) {
-					Writer w = new FileWriter(predictPl);
-					w.write(predict_script);
-					w.flush();
-					w.close();				
-					predictPl.setExecutable(true);
-				}
-			} catch (Exception e) {
-				Log.getLogger().fine("could not create " + SVMSupport.PREDICT_SCRIPT);
-			}
-			*/
 		}
 		
 	}
