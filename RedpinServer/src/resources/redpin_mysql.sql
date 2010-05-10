@@ -1,6 +1,8 @@
 CREATE DATABASE IF NOT EXISTS redpin;
 USE redpin;
 
+SET FOREIGN_KEY_CHECKS = 0;
+
 DROP TABLE IF EXISTS `bluetoothreading`;
 CREATE TABLE `bluetoothreading` (
   `bluetoothReadingId` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -16,7 +18,9 @@ CREATE TABLE `fingerprint` (
   `fingerprintId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `locationId` int(10) unsigned DEFAULT NULL,
   `measurementId` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`fingerprintId`)
+  PRIMARY KEY (`fingerprintId`),
+  CONSTRAINT `location` FOREIGN KEY (`locationId`) REFERENCES `location` (`locationId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `measurement` FOREIGN KEY (`measurementId`) REFERENCES `measurement` (`measurementId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `gsmreading`;
@@ -41,7 +45,8 @@ CREATE TABLE `location` (
   `accuracy` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`locationId`),
   KEY `symbolicId` (`symbolicId`),
-  KEY `map` (`mapId`)
+  KEY `map` (`mapId`),
+  CONSTRAINT `map` FOREIGN KEY (`mapId`) REFERENCES `map` (`mapId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `map`;
@@ -62,12 +67,13 @@ CREATE TABLE `measurement` (
 DROP TABLE IF EXISTS `readinginmeasurement`;
 CREATE TABLE `readinginmeasurement` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `measurementId` int(10) NOT NULL,
-  `readingId` int(10) NOT NULL,
+  `measurementId` int(10) unsigned NOT NULL,
+  `readingId` int(10) unsigned NOT NULL,
   `readingClassName` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `measurement` (`measurementId`),
-  KEY `reading` (`readingId`)
+  KEY `reading` (`readingId`),
+  CONSTRAINT `measurementFk` FOREIGN KEY (`measurementId`) REFERENCES `measurement` (`measurementId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `wifireading`;
@@ -80,3 +86,5 @@ CREATE TABLE `wifireading` (
   `isInfrastructure` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`wifiReadingId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+SET FOREIGN_KEY_CHECKS = 1;

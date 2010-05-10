@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ *  (c) Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
  * 
  *  www.redpin.org
  */
@@ -409,28 +409,29 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 			db.getConnection().setAutoCommit(false);
 			stat = db.getConnection().createStatement();
 			if (db.getConnection().getMetaData().supportsBatchUpdates()) {
+				
 				stat.addBatch(sql_wifi);
 				stat.addBatch(sql_gsm);
 				stat.addBatch(sql_bluetooth);
 				stat.addBatch(sql_rinm);
-				stat.addBatch(sql_m);
 				stat.addBatch(sql_fp);
+				stat.addBatch(sql_m);
 				int results[] = stat.executeBatch();
 				if (results != null && results.length > 0) {
-					res = results[results.length - 1];
+					res = results[results.length - 2];
 				}
 			} else {
 				stat.executeUpdate(sql_wifi);
 				stat.executeUpdate(sql_gsm);
 				stat.executeUpdate(sql_bluetooth);
 				stat.executeUpdate(sql_rinm);
-				stat.executeUpdate(sql_m);
 				res = stat.executeUpdate(sql_fp);
+				stat.executeUpdate(sql_m);
 			}
 			db.getConnection().commit();
 			return res > 0;
 		} catch (SQLException e) {
-			log.log(Level.SEVERE, "remove map failed: " + e.getMessage(), e);
+			log.log(Level.SEVERE, "remove fp failed: " + e.getMessage(), e);
 		} finally {
 			try {
 				db.getConnection().setAutoCommit(true);
