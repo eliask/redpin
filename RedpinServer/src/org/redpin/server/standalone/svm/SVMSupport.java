@@ -34,7 +34,8 @@ public class SVMSupport {
 	public final static String OUT = "out";
 	public final static String MODEL_EXT = ".model";	
 	public final static String TRAIN_SCRIPT = "train.sh";
-	public static int ACTIVE_MODEL = 0;
+	private static int ACTIVE_MODEL = 0;
+	private static boolean trained = false;
 	
 	/**
 	 * Train
@@ -70,6 +71,7 @@ public class SVMSupport {
 			ACTIVE_MODEL = nextModel;
 		}
 		Log.getLogger().log(Level.FINE, "SVM train finished..");
+		trained = true;
 	}
 	
 	/**
@@ -100,9 +102,11 @@ public class SVMSupport {
 		}
 		
 		return OUT;
-		
 	}
 	
+	public static boolean isTrained() {
+		return trained;
+	}
 	
 	/**
 	 * Function transforms data (measurements) to the format of an SVM package. 
