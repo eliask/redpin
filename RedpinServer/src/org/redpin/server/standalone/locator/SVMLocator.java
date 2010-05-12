@@ -44,7 +44,10 @@ public class SVMLocator implements ILocator {
 			log.log(Level.SEVERE, "locate failed due to FileNotFoundException: " + e.getMessage());
 		} catch (IOException e) {
 			log.log(Level.SEVERE, "locate failed due to IOException: " + e.getMessage());
+		} catch (NumberFormatException e) {
+			log.log(Level.SEVERE, "locate failed due to NumberFormatException: " + e.getMessage());
 		}
+
 
 		return l;
 	}	
