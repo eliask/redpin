@@ -85,6 +85,7 @@ public class svm_predict {
 			sumvy += v*target;
 			++total;
 		}
+		/*		
 		if(svm_type == svm_parameter.EPSILON_SVR ||
 		   svm_type == svm_parameter.NU_SVR)
 		{
@@ -97,6 +98,7 @@ public class svm_predict {
 		else
 			System.out.print("Accuracy = "+(double)correct/total*100+
 				 "% ("+correct+"/"+total+") (classification)\n");
+		*/
 	}
 
 	private static void exit_with_help()

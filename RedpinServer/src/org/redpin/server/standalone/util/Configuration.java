@@ -85,7 +85,7 @@ public class Configuration {
 	private static String generateTrainScript(String dir) {
 		return "#!/bin/sh \n"+
 		dir +"/svm-scale -l -1 -u 1 -s " + SVMSupport.RANGE + " " + SVMSupport.TRAIN + " > " + SVMSupport.TRAIN_SCALE + "$1\n" +
-		dir +"/svm-train -c 512 -t 0 " + SVMSupport.TRAIN_SCALE + "$1";
+		dir +"/svm-train -c 512 -t 0 -q " + SVMSupport.TRAIN_SCALE + "$1";
 	}
 	
 	

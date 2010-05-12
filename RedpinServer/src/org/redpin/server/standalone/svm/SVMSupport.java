@@ -56,8 +56,8 @@ public class SVMSupport {
 		Log.getLogger().log(Level.FINE, "Creating the model...");
 		int nextModel = Math.abs(ACTIVE_MODEL - 1);
 		if (!runScript(TRAIN_SCRIPT, new String[] {nextModel+""})) {
-			String[] scaleargs = {"-l","-1","-u","1","-s",RANGE,TRAIN}; 		
-			String[] args={"-t","0","-c","512",TRAIN_SCALE+nextModel,TRAIN_SCALE+nextModel+MODEL_EXT};
+			String[] scaleargs = {"-l","-1","-u","1","-s",RANGE,TRAIN};
+			String[] args={"-t","0","-c","512","-q",TRAIN_SCALE+nextModel,TRAIN_SCALE+nextModel+MODEL_EXT};
 			svm_train t = new svm_train();
 			svm_scale s = new svm_scale();
 			try {        	     	
