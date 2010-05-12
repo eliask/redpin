@@ -39,6 +39,7 @@ import java.util.logging.Level;
 
 import org.redpin.server.standalone.db.DatabaseConnection;
 import org.redpin.server.standalone.svm.SVMSupport;
+import org.redpin.server.standalone.svm.TrainSVMTimerTask;
 
 /**
  * Configuration class which represents all configuration settings. 
@@ -66,7 +67,7 @@ public class Configuration {
 	public static Integer ServerPort = 8000;
 	public static String ImageUploadPath = "mapuploads/";
 	public static LoggerFormat LogFormat = LoggerFormat.PLAIN; //or xml
-	public static Level LogLevel = Level.ALL;
+	public static Level LogLevel = Level.WARNING;
 	public static String LogFile = "redpin.log";
 	
 	
@@ -78,6 +79,7 @@ public class Configuration {
 	public static String DatabaseDriver = "org.sqlite.JDBC";
 	
 	public static String LibSVMDirectory = "libsvm-2.9";
+	public static long SVMTrainRate = TrainSVMTimerTask.DEFAULT_TRAIN_RATE;
 	
 	
 	private static String generateTrainScript(String dir) {
@@ -96,7 +98,10 @@ public class Configuration {
 				FileInputStream reader = new FileInputStream( f);
 				p.load(reader);
 				
-				ServerPort = new Integer(p.getProperty("port", ServerPort.toString()));
+				try {
+					ServerPort = new Integer(p.getProperty("port", ServerPort.toString()));
+				} catch (NumberFormatException e) {}
+				
 				ImageUploadPath = p.getProperty("image.upload.path", ImageUploadPath);
 				if(ImageUploadPath.charAt(ImageUploadPath.length()-1) == '/') {
 					ImageUploadPath = ImageUploadPath.substring(0, ImageUploadPath.length()-1);
@@ -115,8 +120,7 @@ public class Configuration {
 				String level = "";
 				try {
 					level = p.getProperty("log.level", LogLevel.getName());
-					LogLevel = Level.parse(level);
-					
+					LogLevel = Level.parse(level);					
 				} catch(IllegalArgumentException e) {
 					Log.getLogger().log(Level.CONFIG, "No such log format type " + format +": " + e.getMessage(), e);
 				}
@@ -157,7 +161,11 @@ public class Configuration {
 				}
 				
 				
-				LibSVMDirectory = p.getProperty("libsvm.dir", LibSVMDirectory);
+				LibSVMDirectory = p.getProperty("svm.libdir", LibSVMDirectory);
+				try {
+					SVMTrainRate = Long.parseLong(p.getProperty("svm.trainrate", SVMTrainRate+""));
+				} catch (NumberFormatException e) {}
+				
 				
 				
 			} catch (Exception e) {
