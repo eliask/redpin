@@ -36,21 +36,10 @@
 @property (nonatomic, retain) NSNumber * mapXcord;
 @property (nonatomic, retain) NSNumber * accuracy;
 @property (nonatomic, retain) Map * map;
-@property (nonatomic, retain) NSSet* fingerprints;
 
 - (id) proxyForJson;
 + (Location *) fromJSON:(NSDictionary *) dict;
 
 @end
-
-
-@interface Location (CoreDataGeneratedAccessors)
-- (void)addFingerprintsObject:(Fingerprint *)value;
-- (void)removeFingerprintsObject:(Fingerprint *)value;
-- (void)addFingerprints:(NSSet *)value;
-- (void)removeFingerprints:(NSSet *)value;
-
-@end
-
 
 

@@ -36,7 +36,6 @@
 @dynamic mapXcord;
 @dynamic accuracy;
 @dynamic map;
-@dynamic fingerprints;
 
 - (id) proxyForJson {
 	NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:6];
