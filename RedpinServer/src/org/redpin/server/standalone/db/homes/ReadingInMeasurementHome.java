@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.redpin.server.standalone.core.ReadingInMeasurement;
@@ -14,7 +13,6 @@ public class ReadingInMeasurementHome extends EntityHome<ReadingInMeasurement> {
 	private static final String[] TableCols = {"measurementId", "readingId", "readingClassName"};
 	private static final String TableName = "readinginmeasurement"; 
 	private static final String TableIdCol = "id";
-	//private static final String insertReadingInMeasurement = " INSERT INTO readinginmeasurement (measurementId,readingId,readingClassName) VALUES (?,?,?) ";
 	
 	public ReadingInMeasurementHome() {
 		super();
@@ -44,6 +42,9 @@ public class ReadingInMeasurementHome extends EntityHome<ReadingInMeasurement> {
 		return TableName;
 	}
 
+	/**
+	 * @see EntityHome#parseResultRow(ResultSet, int)
+	 */
 	@Override
 	public ReadingInMeasurement parseResultRow(ResultSet rs, int fromIndex)
 			throws SQLException {
@@ -68,12 +69,6 @@ public class ReadingInMeasurementHome extends EntityHome<ReadingInMeasurement> {
 	public int fillInStatement(PreparedStatement ps, ReadingInMeasurement t, int fromIndex) throws SQLException {
 		return fillInStatement(ps, new Object[] {t.getMeasurementId(), t.getReadingId(), t.getReadingClassName()}, new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR}, fromIndex);
 	}
-	/*
-	@Override
-	public String getInsertSQL() {
-		return insertReadingInMeasurement;
-	}
-	*/
-
+	
 
 }

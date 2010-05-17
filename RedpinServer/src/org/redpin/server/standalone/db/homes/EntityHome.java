@@ -26,18 +26,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.redpin.server.standalone.core.Location;
-import org.redpin.server.standalone.core.Map;
 import org.redpin.server.standalone.db.DatabaseConnection;
-import org.redpin.server.standalone.db.HomeFactory;
 import org.redpin.server.standalone.db.IEntity;
 import org.redpin.server.standalone.util.Configuration;
 import org.redpin.server.standalone.util.Log;
@@ -128,6 +124,10 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 		return insertSQL;
 	}
 	
+	/**
+	 * 
+	 * @return prepared UPDATE sql string
+	 */	
 	protected String getUpdateSQL() {
 
 		if (updateSQL == null) {
@@ -147,6 +147,10 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 		return updateSQL;
 	}
 	
+	/**
+	 * 
+	 * @return prepared SELECT sql string
+	 */
 	protected String getSelectSQL() {
 
 		if (selectSQL == null) {
@@ -155,10 +159,18 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 		return selectSQL;
 	}
 	
+	/**
+	 * 
+	 * @return SQL ORDER BY string
+	 */
 	protected String getOrder() {
 		return "";
 	}
 	
+	/**
+	 * 
+	 * @return prepared DELETE sql string
+	 */
 	protected String getDeleteSQL() {
 
 		if (deleteSQL == null) {
@@ -178,13 +190,10 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	 * @return All table columns excluding the primary key column
 	 */
 	abstract protected String[] getTableCols();
-	
-	
-	
-	
+
 	
 	/**
-	 * This function restores an entity from a database row
+	 * @see EntityHome#parseResultRow(ResultSet, int)
 	 * 
 	 * @param rs {@link ResultSet}
 	 * @return Restored entity from database row
@@ -195,6 +204,7 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	}
 		
 	/**
+	 * This function restores an entity from a database row
 	 * 
 	 * @param rs {@link ResultSet}
 	 * @param fromIndex index from where the parsing starts 
@@ -203,16 +213,27 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	 */
 	public abstract T parseResultRow(final ResultSet rs, int fromIndex) throws SQLException;
 	
-	
+	/**
+	 * @see EntityHome#fillInStatement(PreparedStatement, Object[], int[], int)
+	 * 
+	 * @param ps {@link PreparedStatement}
+	 * @param values entity values 
+	 * @param sqlTypes corresponding SQL {@link Types} for values
+	 * @return number of filled in values
+	 * @throws SQLException
+	 */
 	protected int fillInStatement(PreparedStatement ps, Object[] values, int[] sqlTypes) throws SQLException {
 		return fillInStatement(ps, values, sqlTypes, 1);
 	}
 	
 	/**
+	 * Fills values into the {@link PreparedStatement} starting at fromIndex
 	 * 
 	 * @param ps {@link PreparedStatement}
-	 * @param values
-	 * @param sqlTypes
+	 * @param values entity values 
+	 * @param sqlTypes corresponding SQL {@link Types} for values
+	 * @param fromIndex index from where the filling in starts
+	 * @return number of filled in values
 	 * @throws SQLException
 	 */
 	protected int fillInStatement(PreparedStatement ps, Object[] values, int[] sqlTypes, int fromIndex) throws SQLException {
@@ -223,31 +244,41 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 		return values.length;
 	}
 	
-	protected int fillInStatement(PreparedStatement ps, T t) throws SQLException {
-		return fillInStatement(ps, t, 1);
+	/**
+	 * @see EntityHome#fillInStatement(PreparedStatement, IEntity, int)
+	 * 
+	 * @param ps {@link PreparedStatement}
+	 * @param e Entity
+	 * @return number of filled in values
+	 * @throws SQLException
+	 */
+	protected int fillInStatement(PreparedStatement ps, T e) throws SQLException {
+		return fillInStatement(ps, e, 1);
 	}
 	
 	/**
-	 * 
+	 * Fills entity values into the {@link PreparedStatement} starting at fromIndex  
 	 * @param ps {@link PreparedStatement}
-	 * @param t
+	 * @param e Entity
+	 * @return number of filled in values
 	 * @throws SQLException
 	 */
-	protected abstract int fillInStatement(PreparedStatement ps, T t, int fromIndex) throws SQLException;
+	protected abstract int fillInStatement(PreparedStatement ps, T e, int fromIndex) throws SQLException;
+	
 	
 	/**
 	 * 
 	 * @param vps Vector<{@link PreparedStatement}>
-	 * @param t
+	 * @param e entity
 	 * @return primary key for the new entry
 	 * @throws SQLException
 	 */
-	public int executeInsertUpdate(Vector<PreparedStatement> vps, T t) throws SQLException {
+	public int executeInsertUpdate(Vector<PreparedStatement> vps, T e) throws SQLException {
 		int id =  getPrimaryKeyId();
-		//t.setId(id);
+
 		PreparedStatement ps  = getPreparedStatement(getInsertSQL());
 		ps.setInt(1, id);
-		fillInStatement(ps, t, 2);
+		fillInStatement(ps, e, 2);
 		vps.add(ps);
 		ps.executeUpdate();
 		return id;
@@ -316,11 +347,17 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	
 	/* get */
 	
-	protected List<T> get(String constrain) {
+	/**
+	 * Gets entities from database matching a contrain
+	 * 
+	 * @param constraint SQL WHERE constraint
+	 * @return {@link List} of entities matching the constraint
+	 */
+	protected List<T> get(String constraint) {
 		List<T> res = new ArrayList<T>();
 		
 		String sql = getSelectSQL();
-		if (constrain != null && constrain.length() > 0) sql += " WHERE " + constrain;
+		if (constraint != null && constraint.length() > 0) sql += " WHERE " + constraint;
 		String order = getOrder();
 		if (order != null && order.length() > 0) sql += " ORDER BY " + order;
 		
@@ -380,6 +417,7 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 		}
 		return list.get(0);
 	}
+	
 	/**
 	 * Get a {@link List} of entities
 	 * 
@@ -419,8 +457,8 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 		if (ids == null || ids.isEmpty()) {
 			return new ArrayList<T>();
 		}
-		String constrain = getTableIdCol() + " IN  (" + implode(ids.toArray()) + ")";
-		return get(constrain);
+		String constraint = getTableIdCol() + " IN  (" + implode(ids.toArray()) + ")";
+		return get(constraint);
 	}	
 	
 	/**
@@ -436,9 +474,15 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	
 	/* remove */
 	
-	protected boolean remove(String constrain) {
+	/**
+	 * Removes entities from database matching a constraint
+	 * 
+	 * @param constraint SQL WHERE constraint
+	 * @return True if successful
+	 */
+	protected boolean remove(String constraint) {
 		String sql = getDeleteSQL();
-		if (constrain != null && constrain.length() > 0) sql += " WHERE " + constrain;
+		if (constraint != null && constraint.length() > 0) sql += " WHERE " + constraint;
 		
 		log.finest(sql);
 		
@@ -462,9 +506,7 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 		}
 		return false;
 	}
-	
-	
-	
+		
 	/**
 	 * Removes an entity
 	 * 
@@ -502,9 +544,9 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 			return true;
 		}
 		
-		String constrain = getTableIdCol() + " IN  (" + implode(ids.toArray()) + ")";
+		String constraint = getTableIdCol() + " IN  (" + implode(ids.toArray()) + ")";
 		
-		return remove(constrain);
+		return remove(constraint);
 	}
 	
 	

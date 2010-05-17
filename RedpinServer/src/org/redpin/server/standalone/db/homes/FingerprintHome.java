@@ -27,7 +27,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -37,7 +36,6 @@ import org.redpin.server.standalone.core.Measurement;
 import org.redpin.server.standalone.core.Vector;
 import org.redpin.server.standalone.db.DatabaseConnection;
 import org.redpin.server.standalone.db.HomeFactory;
-import org.redpin.server.standalone.util.Log;
 
 /**
  * @see EntityHome
@@ -115,6 +113,17 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 		return f;
 	}
 	
+	/**
+	 * fromIndex has no effect
+	 * 
+	 * @see EntityHome#parseResultRow(ResultSet, int)
+	 */
+	@Override
+	public Fingerprint parseResultRow(ResultSet rs, int fromIndex)
+			throws SQLException {
+		return parseResultRow(rs, 1);
+	}
+	
 	
 	/**
 	 * @see EntityHome#getAll()
@@ -124,6 +133,15 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 		return getFingerprints(-1, -1, -1);
 	}
 	
+	/**
+	 * get {@link Fingerprint}s depending on different constraints. 
+	 * -1 is used for no constraint
+	 * 
+	 * @param fingerprintId {@link Fingerprint} primary key
+	 * @param locationId {@link Location} primary key
+	 * @param measurementId {@link Measurement} primary key
+	 * @return {@link List} of {@link Fingerprint} matching the constraints
+	 */
 	private List<Fingerprint> getFingerprints(Integer fingerprintId, Integer locationId, Integer measurementId) { 
 		String cnst = "";
 		if (fingerprintId != -1) cnst += getTableName() + "." + getTableIdCol() + " = " + fingerprintId;
@@ -133,41 +151,40 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 	}
 	
 	
-	
+	/**
+	 * @see EntityHome#getSelectSQL()
+	 */
 	@Override
 	protected String getSelectSQL() {
 		return selectFingerprints;
 	}
 	
+	/**
+	 * @see EntityHome#getOrder()
+	 */
 	@Override
 	protected String getOrder() {
 		return orderFingerprints;
 	}
-	
-	/*
-	@Override
-	protected List<Fingerprint> get(String constrain) { 
 		
-		List<Fingerprint> res = new ArrayList<Fingerprint>();
+	/**
+	 * get the total number of Fingerprints
+	 * 
+	 * @return the number of Fingerprints
+	 */
+	public int getCount() {
+		int res = 0;
 		
-		String sql = selectFingerprints; 
-		if (constrain != null && constrain.length() > 0) sql += " WHERE " + constrain;
-		sql += orderFingerprints;
-		
+		String sql = "SELECT COUNT(*) FROM " + TableName;
 		log.finest(sql);
 		ResultSet rs = null;
 		Statement stat = null;
 		try {
-			stat = db.getConnection().createStatement();
+			stat = DatabaseConnection.getInstance().getConnection().createStatement();
 			rs = stat.executeQuery(sql);
-			do {
-				if (rs.isAfterLast()) break;
-				if (!rs.isBeforeFirst() || rs.next()) { 
-					res.add(parseResultRow(rs));
-				}
-			} while(!rs.isAfterLast());
+			res = rs.getInt(1);
 		} catch (SQLException e) {
-			log.log(Level.SEVERE, "getFingerprints failed: " + e.getMessage(), e);
+			log.log(Level.SEVERE, "getCount failed: " + e.getMessage(), e);
 		} finally {
 			try {
 				if (rs != null) rs.close();
@@ -179,38 +196,10 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 		
 		return res;
 	}
-	*/
-	
-	/**
-	 * get the total number of Fingerprints
-	 * 
-	 * @return the number of Fingerprints
-	 */
-	public int getCount() {
-		int res = 0;
-		
-		String sql = "SELECT COUNT(*) FROM " + TableName;
-		Log.getLogger().finest(sql);
-		ResultSet rs = null;
-		Statement stat = null;
-		try {
-			stat = DatabaseConnection.getInstance().getConnection().createStatement();
-			rs = stat.executeQuery(sql);
-			res = rs.getInt(1);
-		} catch (SQLException e) {
-			Log.getLogger().log(Level.SEVERE, "getNum failed: " + e.getMessage(), e);
-		} finally {
-			try {
-				if (rs != null) rs.close();
-				if (stat != null) stat.close();
-			} catch (SQLException es) {
-				Log.getLogger().log(Level.WARNING, "failed to close database resources: " + es.getMessage(), es);
-			}
-		}
-		
-		return res;
-	}
 
+	/**
+	 * @see EntityHome#add(org.redpin.server.standalone.db.IEntity)
+	 */
 	@Override
 	public synchronized Fingerprint add(Fingerprint fprint) {
 		Connection conn = db.getConnection();
@@ -259,11 +248,7 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 	}
 
 	
-	@Override
-	public Fingerprint parseResultRow(ResultSet rs, int fromIndex)
-			throws SQLException {
-		return parseResultRow(rs, 1);
-	}
+	
 	
 	
 	/**
@@ -303,70 +288,9 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 		return res == null || res.size() == 0 ? null : res.get(0);
 	}
 	
-	/*
-	@Override
-	public boolean remove(Fingerprint fp) {
-		
-		String fingerprintsCnst = getTableIdCol() + " = " + fp.getId() + " OR " + getTableCols()[0] + " = " + ((Location)fp.getLocation()).getId();
-		String measurementsCnst = HomeFactory.getMeasurementHome().getTableIdCol() + " = " + ((Measurement)fp.getMeasurement()).getId() + 
-								  " OR " + HomeFactory.getMeasurementHome().getTableIdCol() + 
-								  " IN (SELECT " + getTableCols()[1] + " FROM " + getTableName() + " WHERE (" + fingerprintsCnst + ")) ";
-		String readingInMeasurementCnst = " IN (SELECT readingId FROM readinginmeasurement WHERE (" + measurementsCnst + ")) ";
-		
-		String sql_l = "DELETE FROM " + HomeFactory.getLocationHome().getTableName() + " WHERE " + HomeFactory.getLocationHome().getTableIdCol() + " = " + ((Location)fp.getLocation()).getId();
-		String sql_m = " DELETE FROM " + HomeFactory.getMeasurementHome().getTableName() + " WHERE " + measurementsCnst;
-		String sql_wifi = " DELETE FROM " + HomeFactory.getWiFiReadingHome().getTableName() + 
-						  " WHERE " + HomeFactory.getWiFiReadingHome().getTableIdCol() + readingInMeasurementCnst;
-		String sql_gsm = " DELETE FROM " + HomeFactory.getGSMReadingHome().getTableName() + 
-		  				 " WHERE " + HomeFactory.getGSMReadingHome().getTableIdCol() + readingInMeasurementCnst;
-		String sql_bluetooth = " DELETE FROM " + HomeFactory.getBluetoothReadingHome().getTableName() + 
-		  					   " WHERE " + HomeFactory.getBluetoothReadingHome().getTableIdCol() + readingInMeasurementCnst;
-		 
-		String sql_rinm = "DELETE FROM readinginmeasurement WHERE " + measurementsCnst;
-		String sql_fp = "DELETE FROM " + getTableName() + " WHERE " + fingerprintsCnst;
-		Statement stat = null;
-		int res = -1;
-		try {
-			db.getConnection().setAutoCommit(false);
-			stat = db.getConnection().createStatement();
-			if (db.getConnection().getMetaData().supportsBatchUpdates()) {
-				stat.addBatch(sql_wifi);
-				stat.addBatch(sql_gsm);
-				stat.addBatch(sql_bluetooth);
-				stat.addBatch(sql_rinm);
-				stat.addBatch(sql_m);
-				stat.addBatch(sql_l);
-				stat.addBatch(sql_fp);
-				int results[] = stat.executeBatch();
-				if (results != null && results.length > 0) {
-					res = results[results.length - 1];
-				}
-			} else {
-				stat.executeUpdate(sql_wifi);
-				stat.executeUpdate(sql_gsm);
-				stat.executeUpdate(sql_bluetooth);
-				stat.executeUpdate(sql_rinm);
-				stat.executeUpdate(sql_m);
-				stat.executeUpdate(sql_l);
-				res = stat.executeUpdate(sql_fp);
-			}
-			db.getConnection().commit();
-			return res > 0;
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "remove fingerprint failed: " + e.getMessage(), e);
-		} finally {
-			try {
-				db.getConnection().setAutoCommit(true);
-				if (stat != null) stat.close();
-			} catch (SQLException es) {
-				log.log(Level.WARNING, "failed to close statement: " + es.getMessage(), es);
-			}
-		}
-		return false;
-	}
-	*/
-
-
+	/**
+	 * @see EntityHome#fillInStatement(PreparedStatement, org.redpin.server.standalone.db.IEntity, int)
+	 */
 	@Override
 	public int fillInStatement(PreparedStatement ps, Fingerprint t, int fromIndex) throws SQLException {
 		return fillInStatement(ps, new Object[] {((Location)t.getLocation()).getId(), ((Measurement)t.getMeasurement()).getId()}, 
@@ -374,10 +298,13 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 				fromIndex);
 	}
 
+	/**
+	 * @see EntityHome#remove(org.redpin.server.standalone.db.IEntity)
+	 */
 	@Override
-	protected boolean remove(String constrain) {
+	protected boolean remove(String constraint) {
 
-		String fingerprintsCnst = (constrain != null && constrain.length() > 0) ? constrain : "1=1";
+		String fingerprintsCnst = (constraint != null && constraint.length() > 0) ? constraint : "1=1";
 		
 		String measurementsCnst = HomeFactory.getMeasurementHome().getTableIdCol() + " IN (SELECT " + HomeFactory.getFingerprintHome().getTableCols()[1] + 
 																					 " FROM " + HomeFactory.getFingerprintHome().getTableName() + 
@@ -443,10 +370,5 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 		return false;
 		
 	}
-
-	
-
-	
-
 	
 }

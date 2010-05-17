@@ -22,9 +22,7 @@
 package org.redpin.server.standalone.net;
 
 import org.redpin.server.standalone.core.Location;
-import org.redpin.server.standalone.core.Fingerprint;
 import org.redpin.server.standalone.db.HomeFactory;
-import org.redpin.server.standalone.db.homes.FingerprintHome;
 import org.redpin.server.standalone.db.homes.LocationHome;
 import org.redpin.server.standalone.json.GsonFactory;
 import org.redpin.server.standalone.net.Response.Status;

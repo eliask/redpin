@@ -26,11 +26,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.redpin.server.standalone.core.Fingerprint;
 import org.redpin.server.standalone.core.Location;
 import org.redpin.server.standalone.core.Map;
 import org.redpin.server.standalone.db.HomeFactory;
@@ -43,7 +41,6 @@ import org.redpin.server.standalone.db.HomeFactory;
  *
  */
 public class LocationHome extends EntityHome<Location> {
-	
 	
 	
 	private static final String[] TableCols = {"symbolicId", "mapId", "mapXCord", "mapYCord", "accuracy"};
@@ -103,15 +100,20 @@ public class LocationHome extends EntityHome<Location> {
 	
 	/**
 	 * 
-	 * @param id - map id
-	 * @return locations for the map with id; or all locations if map id is -1
+	 * @param id {@link Map} primary key
+	 * @return {@link List} of {@link Location} for the {@link Map} with id; or all locations if map id is -1
 	 */
 	public List<Location> getListByMapId(Integer id) {	
-		String constrain = ""; 
-		if (id != -1) constrain += " location.mapId = " + id;
-		return get(constrain);
+		String constraint = ""; 
+		if (id != -1) constraint += " location.mapId = " + id;
+		return get(constraint);
 	}
 	
+	/**
+	 * @see LocationHome#getListByMapId(Integer)
+	 * @param m {@link Map}
+	 * @return {@link List} of {@link Location} for the {@link Map}
+	 */
 	public List<Location> getListByMap(Map m) {	
 		return getListByMapId(m.getId());
 	}
@@ -125,10 +127,12 @@ public class LocationHome extends EntityHome<Location> {
 	}
 
 	/**
+	 * get fingerprints depending on different contraints.
+	 * -1 is used for no constraint
 	 * 
-	 * @param locationId
-	 * @param symbolicId
-	 * @return location either by locationId or by symbolicId 
+	 * @param locationId {@link Location} primary key
+	 * @param symbolicId Symbolic ID of {@link Location}
+	 * @return {@link Location} either by primary key or by symbolicId 
 	 */
 	public Location getLocation(Integer locationId, String symbolicId) {
 		List<Location> list;
@@ -145,43 +149,10 @@ public class LocationHome extends EntityHome<Location> {
 		
 		
 	}
-	
-	
 
 	/**
-	 * updates location
+	 * @see EntityHome#fillInStatement(PreparedStatement, org.redpin.server.standalone.db.IEntity, int)
 	 */
-	/*
-	public boolean update(Location loc) {
-		
-		PreparedStatement ps = null;
-		boolean res = false;
-		try {
-			ps = db.getConnection().prepareStatement(updateLocation);
-			ps.setString(1, loc.getSymbolicID());
-			ps.setInt(2, ((Map)loc.getMap()).getId());
-			ps.setInt(3, loc.getMapXcord());
-			ps.setInt(4, loc.getMapYcord());
-			ps.setInt(5, loc.getAccuracy());
-			ps.setInt(6, loc.getId());
-			 
-			int numcol = ps.executeUpdate();
-			res = numcol == 1;		
-			
-		} catch (SQLException ex) {
-			log.log(Level.SEVERE, "update location failed: " + ex.getMessage(), ex);
-		} finally {
-			try {
-				if (ps != null) ps.close();
-			} catch (SQLException es) {
-				log.log(Level.WARNING, "failed to close ResultSet: " + es.getMessage(), es);
-			}
-		}
-		
-		return res;
-	}
-	*/
-
 	@Override
 	public int fillInStatement(PreparedStatement ps, Location t, int fromIndex)
 			throws SQLException {
@@ -192,44 +163,18 @@ public class LocationHome extends EntityHome<Location> {
 	}
 	
 	
-
+	/**
+	 * @see EntityHome#getSelectSQL()
+	 */
 	@Override
 	protected String getSelectSQL() {
 		return "SELECT " + getTableColNames() + ", " + HomeFactory.getMapHome().getTableColNames() + " FROM " + getTableName() + " INNER JOIN map ON location.mapId = map.mapId ";
 	}
 
-	/*
-	@Override
-	protected List<Location> get(String constrain) {
-		List<Location> res = new ArrayList<Location>();
-		
-		String sql = "SELECT " + getTableColNames() + ", " + HomeFactory.getMapHome().getTableColNames() + " FROM " + getTableName() + " INNER JOIN map ON location.mapId = map.mapId ";
-		if (constrain != null && constrain.length() > 0) sql += " WHERE " + constrain;
-		
-		log.finest(sql);
-		ResultSet rs = null;
-		Statement stat = null;
-		try {
-			stat = db.getConnection().createStatement();
-			rs = stat.executeQuery(sql);
-			while(rs.next()) {
-				res.add(parseResultRow(rs));
-			}
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "get failed: " + e.getMessage(), e);
-		} finally {
-			try {
-				if (rs != null) rs.close();
-				if (stat != null) stat.close();
-			} catch (SQLException es) {
-				log.log(Level.WARNING, "failed to close ResultSet: " + es.getMessage(), es);
-			}
-		}
-		
-		return res;
-	}
-	*/
 	
+	/**
+	 * @see EntityHome#remove(String)
+	 */
 	@Override
 	public boolean remove(String constrain) {
 		// remove all fingerprints for the location, then remove location
@@ -304,7 +249,4 @@ public class LocationHome extends EntityHome<Location> {
 		return false;
 
 	}
-	
-
-	
 }

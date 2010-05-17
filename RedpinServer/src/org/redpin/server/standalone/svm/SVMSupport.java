@@ -1,3 +1,24 @@
+/**
+ *  Filename: SVMSupport.java (in org.redpin.server.standalone.svm)
+ *  This file is part of the Redpin project.
+ * 
+ *  Redpin is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published
+ *  by the Free Software Foundation, either version 3 of the License, or
+ *  any later version.
+ *
+ *  Redpin is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  (c) Copyright ETH Zurich, Luba Rogoleva, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ * 
+ *  www.redpin.org
+ */
 package org.redpin.server.standalone.svm;
 
 import java.io.BufferedWriter;
@@ -22,7 +43,11 @@ import org.redpin.server.standalone.core.measure.WiFiReading;
 import org.redpin.server.standalone.db.HomeFactory;
 import org.redpin.server.standalone.util.Log;
 
-
+/**
+ *  
+ * @author Luba Rogoleva (lubar@student.ethz.ch)
+ *
+ */
 public class SVMSupport {
 
 	public final static String TRAIN = "train.1";
@@ -38,8 +63,7 @@ public class SVMSupport {
 	private static boolean trained = false;
 	
 	/**
-	 * Train
-	 * @param setupdata
+	 * Train SVM
 	 */
 	public static void train() 
 	{
@@ -76,8 +100,8 @@ public class SVMSupport {
 	
 	/**
 	 * Predict
-	 * @param m
-	 * @return
+	 * @param m {@link Measurement}
+	 * @return path to result file
 	 */
 	public static synchronized String predict(final Measurement m) 
 	{		
@@ -174,9 +198,9 @@ public class SVMSupport {
     		int exitvalue = p.waitFor();
     		if (exitvalue == 0) return true;
 		} catch (InterruptedException e) {
-			Log.getLogger().log(Level.WARNING, "runScript failed due to InterruptedException: " + e.getMessage());
+			Log.getLogger().log(Level.INFO, "runScript failed due to InterruptedException: " + e.getMessage());
 		} catch (IOException e) {
-			Log.getLogger().log(Level.WARNING, "runScript failed due to IOException: " + e.getMessage());
+			Log.getLogger().log(Level.INFO, "runScript failed due to IOException: " + e.getMessage());
 		}
 		return false;
 	}
@@ -184,8 +208,8 @@ public class SVMSupport {
 	
 	/**
 	 * Returns location category
-	 * @param m
-	 * @return
+	 * @param m {@link Measurement}
+	 * @return Location category id
 	 */
 	private static Integer getLocationCategory(Measurement m)
 	{

@@ -21,10 +21,6 @@
  */
 package org.redpin.server.standalone.db.homes.vector;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
-import org.redpin.server.standalone.core.Vector;
 import org.redpin.server.standalone.core.measure.GSMReading;
 import org.redpin.server.standalone.db.HomeFactory;
 import org.redpin.server.standalone.db.homes.EntityHome;
@@ -38,9 +34,7 @@ import org.redpin.server.standalone.db.homes.EntityHome;
  */
 public class GSMReadingVectorHome extends VectorHome<GSMReading> {
 	
-	private static final String className = GSMReading.class.getSimpleName(); //"org.redpin.core.measure.GSMReading";
-	
-	
+	private static final String className = GSMReading.class.getSimpleName();	
 
 	@Override
 	public String getContainedObjectClassName() {

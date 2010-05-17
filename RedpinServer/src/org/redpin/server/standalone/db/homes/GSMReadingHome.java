@@ -25,7 +25,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.redpin.server.standalone.core.measure.GSMReading;
@@ -96,6 +95,9 @@ public class GSMReadingHome extends EntityHome<GSMReading> {
 		return reading;
 	}
 
+	/**
+	 * @see EntityHome#fillInStatement(PreparedStatement, org.redpin.server.standalone.db.IEntity, int)
+	 */
 	@Override
 	public int fillInStatement(PreparedStatement ps, GSMReading t, int fromIndex)
 			throws SQLException {

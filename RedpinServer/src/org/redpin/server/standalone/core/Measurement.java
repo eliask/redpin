@@ -78,6 +78,7 @@ public class Measurement extends org.redpin.base.core.Measurement implements IMe
 	/**
 	 * @return Bluetooth readings vector
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Vector<BluetoothReading> getBluetoothReadings() {
 		return (Vector<BluetoothReading>) super.getBluetoothReadings();
@@ -86,6 +87,7 @@ public class Measurement extends org.redpin.base.core.Measurement implements IMe
 	/**
 	 * @return GSM readings vector
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Vector<GSMReading> getGsmReadings() {
 		return (Vector<GSMReading>) super.getGsmReadings();
@@ -94,6 +96,7 @@ public class Measurement extends org.redpin.base.core.Measurement implements IMe
 	/**
 	 * @return WiFi readings vector
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Vector<WiFiReading> getWiFiReadings() {
 		return (Vector<WiFiReading>) super.getWiFiReadings();

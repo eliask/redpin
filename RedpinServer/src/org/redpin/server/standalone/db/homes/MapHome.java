@@ -27,11 +27,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
-import java.util.List;
 import java.util.logging.Level;
 
-import org.redpin.server.standalone.core.Fingerprint;
-import org.redpin.server.standalone.core.Location;
 import org.redpin.server.standalone.core.Map;
 import org.redpin.server.standalone.db.HomeFactory;
 
@@ -98,14 +95,12 @@ public class MapHome extends EntityHome<Map> {
 	}
 
 	/**
-	 * delete map from the database
-	 * @param m
-	 * @return true if map has been successfully deleted
+	 * @see EntityHome#remove(String)
 	 */
 	@Override
-	public boolean remove(String constrain) {
+	public boolean remove(String constraint) {
 		// remove all locations and fingerprints for the map, then remove map
-		String mapCnst = (constrain != null && constrain.length() > 0) ? constrain : "1=1";
+		String mapCnst = (constraint != null && constraint.length() > 0) ? constraint : "1=1";
 		String locationCnst = HomeFactory.getLocationHome().getTableIdCol() + " IN (SELECT " + HomeFactory.getLocationHome().getTableIdCol() + 
 																				 " FROM " + HomeFactory.getLocationHome().getTableName() + 
 																				 " WHERE " + mapCnst + ")";
@@ -185,39 +180,8 @@ public class MapHome extends EntityHome<Map> {
 	}
 
 	/**
-	 * insert map into the database
-	 * @param map
-	 * @return map
+	 * @see EntityHome#fillInStatement(PreparedStatement, org.redpin.server.standalone.db.IEntity, int)
 	 */
-	/*
-	public Map add(Map map) {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-
-		try {
-			ps =  getPreparedStatement(getInsertSQL());
-			map.setId(getPrimaryKeyId());
-			fillInStatement(ps, map);
-			ps.executeUpdate();
-			rs = getGeneratedKey(ps);
-			if(rs != null && rs.next()) {
-				map.setId(rs.getInt(1));
-			}
-			
-		} catch (SQLException ex) {
-			log.log(Level.SEVERE, "add map failed: " + ex.getMessage(), ex);
-		} finally {
-			try {
-				if (rs != null) rs.close();
-				if (ps != null) ps.close();
-			} catch (SQLException es) {
-				log.log(Level.WARNING, "failed to close db resources: " + es.getMessage(), es);
-			}
-		}
-		
-		return map;
-	}
-	*/
 	@Override
 	public int fillInStatement(PreparedStatement ps, Map t, int fromIndex)
 			throws SQLException {

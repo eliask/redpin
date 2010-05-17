@@ -21,10 +21,6 @@
  */
 package org.redpin.server.standalone.db.homes.vector;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
-import org.redpin.server.standalone.core.Vector;
 import org.redpin.server.standalone.core.measure.BluetoothReading;
 import org.redpin.server.standalone.db.HomeFactory;
 import org.redpin.server.standalone.db.homes.EntityHome;
@@ -38,7 +34,7 @@ import org.redpin.server.standalone.db.homes.EntityHome;
  */
 public class BluetoothReadingVectorHome extends VectorHome<BluetoothReading> {
 
-	private static final String className = BluetoothReading.class.getSimpleName(); //"org.redpin.core.measure.BluetoothReading";
+	private static final String className = BluetoothReading.class.getSimpleName();
 	
 	/**
 	 * @see VectorHome#getContainedObjectClassName()

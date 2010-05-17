@@ -24,15 +24,11 @@ package org.redpin.server.standalone.db.homes.vector;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.redpin.server.standalone.core.Measurement;
 import org.redpin.server.standalone.core.ReadingInMeasurement;
-//import org.redpin.server.standalone.core.Vector;
-import org.redpin.server.standalone.db.DatabaseConnection;
 import org.redpin.server.standalone.db.HomeFactory;
 import org.redpin.server.standalone.db.IEntity;
 import org.redpin.server.standalone.db.homes.EntityHome;
@@ -49,11 +45,7 @@ import org.redpin.server.standalone.util.Log;
 
 abstract public class VectorHome<E extends IEntity<Integer>>  {
 	
-	
-	
-	
 	private Logger log;
-
 
 	public VectorHome() {
 		this.log = Log.getLogger();
@@ -97,7 +89,14 @@ abstract public class VectorHome<E extends IEntity<Integer>>  {
 		return v;
 	}
 	
-	
+	/**
+	 * execute an insert for all readings in the given vector
+	 * 
+	 * @param vps {@link PreparedStatement} {@link Vector}
+	 * @param v entity {@link Vector}
+	 * @param foreignKeyId foreign key
+	 * @throws SQLException
+	 */
 	public void executeUpdate(Vector<PreparedStatement> vps, Vector<E> v, int foreignKeyId) throws SQLException {
 		for (E reading : v) {
 			int readingId = getObjectHome().executeInsertUpdate(vps, reading);			

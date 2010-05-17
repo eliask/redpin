@@ -27,11 +27,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.redpin.server.standalone.core.Location;
 import org.redpin.server.standalone.core.Measurement;
 import org.redpin.server.standalone.core.Vector;
 import org.redpin.server.standalone.db.HomeFactory;

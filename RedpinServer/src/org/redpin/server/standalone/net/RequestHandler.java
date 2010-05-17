@@ -33,7 +33,6 @@ import org.redpin.server.standalone.net.Response.Status;
 import org.redpin.server.standalone.util.Configuration;
 import org.redpin.server.standalone.util.Log;
 
-
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

@@ -154,6 +154,7 @@ public class RedpinLocator implements ILocator {
 		return loc;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public int measurementSimilarityLevel(org.redpin.base.core.Measurement t,
 			org.redpin.base.core.Measurement o) {

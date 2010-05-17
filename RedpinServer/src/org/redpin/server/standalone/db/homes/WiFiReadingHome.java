@@ -25,7 +25,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.redpin.server.standalone.core.measure.WiFiReading;
@@ -95,7 +94,9 @@ public class WiFiReadingHome extends EntityHome<WiFiReading> {
 		
 		return reading;
 	}
-
+	/**
+	 * @see EntityHome#fillInStatement(PreparedStatement, org.redpin.server.standalone.db.IEntity, int)
+	 */
 	@Override
 	public int fillInStatement(PreparedStatement ps, WiFiReading t, int fromIndex)
 			throws SQLException {

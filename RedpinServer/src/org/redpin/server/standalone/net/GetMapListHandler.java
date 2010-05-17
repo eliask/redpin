@@ -23,8 +23,6 @@ package org.redpin.server.standalone.net;
 
 import java.util.List;
 
-
-
 import org.redpin.server.standalone.core.Map;
 import org.redpin.server.standalone.db.HomeFactory;
 import org.redpin.server.standalone.db.homes.MapHome;

@@ -21,11 +21,6 @@
  */
 package org.redpin.server.standalone.db.homes.vector;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.List;
-
-import org.redpin.server.standalone.core.Vector;
 import org.redpin.server.standalone.core.measure.WiFiReading;
 import org.redpin.server.standalone.db.HomeFactory;
 import org.redpin.server.standalone.db.homes.EntityHome;
@@ -39,7 +34,7 @@ import org.redpin.server.standalone.db.homes.EntityHome;
  */
 public class WiFiReadingVectorHome extends VectorHome<WiFiReading> {
 
-	private static final String className = WiFiReading.class.getSimpleName(); //"org.redpin.core.measure.WiFiReading";
+	private static final String className = WiFiReading.class.getSimpleName();
 	
 	/**
 	 * @see VectorHome#getContainedObjectClassName()
@@ -56,7 +51,5 @@ public class WiFiReadingVectorHome extends VectorHome<WiFiReading> {
 	public EntityHome<WiFiReading> getObjectHome() {
 		return HomeFactory.getWiFiReadingHome();
 	}
-
-
 	
 }
