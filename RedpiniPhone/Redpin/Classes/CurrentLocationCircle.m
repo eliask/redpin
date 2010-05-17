@@ -25,7 +25,7 @@
 #import "LocationMarker.h"
 
 #define DIAMETER_ACCOURACY_PROPORTION 10.0f
-#define DEFAULT_SIZE 100.0f
+#define DEFAULT_SIZE 50.0f
 #define MIN_SIZE 50.0f
 #define MAX_SIZE 150.0f
 #define MAX_ACCOURACY 10.0f
