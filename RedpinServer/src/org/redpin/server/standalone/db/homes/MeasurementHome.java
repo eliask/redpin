@@ -86,14 +86,20 @@ public class MeasurementHome extends EntityHome<Measurement> {
 				m.setId(rs.getInt(fromIndex));
 				m.setTimestamp(rs.getLong(fromIndex + 1));
 				String readingClassName = rs.getString(fromIndex + 2);
-				if (readingClassName.equals(HomeFactory.getWiFiReadingVectorHome().getContainedObjectClassName())) {
-					m.setWiFiReadings(HomeFactory.getWiFiReadingVectorHome().parseResultRow(rs, fromIndex + 3));
-				} else if (readingClassName.equals(HomeFactory.getGSMReadingVectorHome().getContainedObjectClassName())) {
-					m.setGSMReadings(HomeFactory.getGSMReadingVectorHome().parseResultRow(rs, fromIndex + 3 + HomeFactory.getWiFiReadingHome().getTableCols().length + 1));
-				} else if (readingClassName.equals(HomeFactory.getBluetoothReadingVectorHome().getContainedObjectClassName())) {
-					m.setBluetoothReadings(HomeFactory.getBluetoothReadingVectorHome().parseResultRow(rs, fromIndex + 3 + HomeFactory.getGSMReadingHome().getTableCols().length + 1 + HomeFactory.getWiFiReadingHome().getTableCols().length + 1));
-				} else {
+				
+				if (readingClassName == null) {
+					// there are no readings in measurement
 					rs.next();
+				} else {					
+					if (readingClassName.equals(HomeFactory.getWiFiReadingVectorHome().getContainedObjectClassName())) {
+						m.setWiFiReadings(HomeFactory.getWiFiReadingVectorHome().parseResultRow(rs, fromIndex + 3));
+					} else if (readingClassName.equals(HomeFactory.getGSMReadingVectorHome().getContainedObjectClassName())) {
+						m.setGSMReadings(HomeFactory.getGSMReadingVectorHome().parseResultRow(rs, fromIndex + 3 + HomeFactory.getWiFiReadingHome().getTableCols().length + 1));
+					} else if (readingClassName.equals(HomeFactory.getBluetoothReadingVectorHome().getContainedObjectClassName())) {
+						m.setBluetoothReadings(HomeFactory.getBluetoothReadingVectorHome().parseResultRow(rs, fromIndex + 3 + HomeFactory.getGSMReadingHome().getTableCols().length + 1 + HomeFactory.getWiFiReadingHome().getTableCols().length + 1));
+					} else {
+						rs.next();
+					}
 				}
 			}
 		} catch (SQLException e) {

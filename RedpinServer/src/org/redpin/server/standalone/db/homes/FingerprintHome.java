@@ -55,7 +55,7 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 	 												 HomeFactory.getGSMReadingHome().getTableColNames() + ", " + HomeFactory.getBluetoothReadingHome().getTableColNames()  +
 	 												 " FROM " + TableName + " INNER JOIN location ON fingerprint.locationId = location.locationId " +
 	 												 " INNER JOIN map ON location.mapId = map.mapId INNER JOIN measurement ON fingerprint.measurementId = measurement.measurementId " + 
-	 												 " INNER JOIN readinginmeasurement ON readinginmeasurement.measurementId = measurement.measurementId " +
+	 												 " LEFT OUTER JOIN readinginmeasurement ON readinginmeasurement.measurementId = measurement.measurementId " +
 	 												 " LEFT OUTER JOIN wifireading ON wifireading.wifiReadingId = readinginmeasurement.readingId " +
 	 												 " LEFT OUTER JOIN gsmreading ON gsmreading.gsmReadingId = readinginmeasurement.readingId " +
 	 												 " LEFT OUTER JOIN bluetoothreading ON bluetoothreading.bluetoothReadingId = readinginmeasurement.readingId ";
