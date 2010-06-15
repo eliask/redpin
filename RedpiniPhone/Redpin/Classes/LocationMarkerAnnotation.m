@@ -110,7 +110,10 @@
 	CGSize size = [labelText sizeWithFont:[UIFont boldSystemFontOfSize:[UIFont labelFontSize]]];
 	
 	UILabel *label = nil;
-	if(size.width < 250) {
+	if (size.width < 100) {
+		label = [[UILabel alloc] initWithFrame:CGRectMake(10,-7, 100, 40)];
+	}
+	else if(size.width < 250) {
 		label = [[UILabel alloc] initWithFrame:CGRectMake(10,-7, size.width, 40)];
 	} else {
 		label = [[UILabel alloc] initWithFrame:CGRectMake(10, -7, 250, 40)];

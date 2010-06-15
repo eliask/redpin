@@ -327,7 +327,10 @@
 		return;
 	}
 	
-	[self.tableView beginUpdates];
+	if (self.tableView.editing) {	
+		[self.tableView beginUpdates];
+	}
+
 }
 
 
@@ -336,6 +339,10 @@
 	//prevent automatic updates on searching and filter, because indexPath does not match, instead reload data
 	if(searching || currentMap) {
 		[self.tableView reloadData];
+		return;
+	}
+	
+	if(!self.tableView.editing) {
 		return;
 	}
 	
@@ -369,6 +376,7 @@
 
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
+	
 	if(searching || currentMap) {
 		[self.tableView reloadData];
 		return;
@@ -391,7 +399,13 @@
 		return;
 	}
 	
-	[self.tableView endUpdates];
+	
+	if (self.tableView.editing) {	
+		[self.tableView endUpdates];
+	} else {
+		[self.tableView reloadData];
+	}
+
 }
 
 #pragma mark -

@@ -275,6 +275,8 @@
 #pragma mark -
 #pragma mark Fetched results controller
 
+
+
 - (NSFetchedResultsController *)fetchedResultsController {
     if (fetchedResultsController == nil) {
 		[self setFetchedResultsController: [MapHome defaultFetchedResultsController]];
@@ -291,14 +293,21 @@
 		return;
 	}
 	
-	[self.tableView beginUpdates];
+	if (self.tableView.editing) {	
+		[self.tableView beginUpdates];
+	}
 }
 
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
 	
+	
 	if(searching) {
 		[self.tableView reloadData];
+		return;
+	}
+	
+	if(!self.tableView.editing) {
 		return;
 	}
 	
@@ -314,7 +323,10 @@
 			break;
 			
 		case NSFetchedResultsChangeUpdate:
+			NSLog(@"indexPath: %@", indexPath);
+            
 			[self configureCell:(MapTableViewCell *)[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+			
 			break;
 			
 		case NSFetchedResultsChangeMove:
@@ -348,8 +360,13 @@
 		return;
 	}
 	
-	[self.tableView endUpdates];
+	if (self.tableView.editing) {	
+		[self.tableView endUpdates];
+	} else {
+		[self.tableView reloadData];
+	}
 }
+
 
 
 #pragma mark -
