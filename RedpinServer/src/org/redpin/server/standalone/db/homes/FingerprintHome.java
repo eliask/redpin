@@ -27,6 +27,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -159,6 +160,49 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 		return selectFingerprints;
 	}
 	
+	@Override
+	protected List<Fingerprint> get(String constraint) {
+		List<Fingerprint> res = new ArrayList<Fingerprint>();
+		
+		String sql = getSelectSQL();
+		if (constraint != null && constraint.length() > 0) sql += " WHERE " + constraint;
+		String order = getOrder();
+		if (order != null && order.length() > 0) sql += " ORDER BY " + order;
+		
+		
+		log.finest(sql);
+		ResultSet rs = null;
+		Statement stat = null;
+		try {
+			stat = db.getConnection().createStatement();
+			rs = stat.executeQuery(sql);
+			
+			while(!rs.isAfterLast()) {
+				/*
+				 * only advance cursor the first time, because the reading vector homes (WiFiReadingVectorHome#parseResultRow(), ...)
+				 * do advance the cursor one row to far to know whether there are all reading of that type fetched.
+				 * If we advance the cursor one more time here, we miss one row.
+				 * Unfortunately we can't go one row back (would be a cleaner solution) because the SQLite driver does only support forward cursors
+				 */
+				if(rs.isBeforeFirst()) {
+					rs.next();
+				}
+				res.add(parseResultRow(rs));
+			}
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, "get failed: " + e.getMessage(), e);
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (stat != null) stat.close();
+			} catch (SQLException es) {
+				log.log(Level.WARNING, "failed to close ResultSet: " + es.getMessage(), es);
+			}
+		}
+		
+		return res;
+	}
+	
 	/**
 	 * @see EntityHome#getOrder()
 	 */
@@ -166,16 +210,42 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 	protected String getOrder() {
 		return orderFingerprints;
 	}
-		
+	
 	/**
-	 * get the total number of Fingerprints
-	 * 
+	 * Gets the number of fingerprints for a {@link Location} id
+	 * @param constraint SQL WHERE constraint
 	 * @return the number of Fingerprints
 	 */
-	public int getCount() {
+	public int getCount(Integer locationId) {
+		if (locationId == null || locationId == -1) {
+			return -1;
+		}
+		return getCount(getTableName() + "." + getTableCols()[0] + " = " + locationId);
+	}
+	
+	/**
+	 * Gets the number of fingerprints for a {@link Location}
+	 * @param constraint SQL WHERE constraint
+	 * @return the number of Fingerprints
+	 */
+	public int getCount(Location location) {
+		if (location == null || location.getId() == 0 || location.getId().intValue() == -1) {
+			return -1;
+		}
+		return getCount(location.getId());
+	}
+	
+	/**
+	 * Gets the total number of fingerprints matching a constraint
+	 * @param constraint SQL WHERE constraint
+	 * @return the number of Fingerprints
+	 */
+	protected int getCount(String constraint) {
 		int res = 0;
 		
 		String sql = "SELECT COUNT(*) FROM " + TableName;
+		if (constraint != null && constraint.length() > 0) sql += " WHERE " + constraint;
+		
 		log.finest(sql);
 		ResultSet rs = null;
 		Statement stat = null;
@@ -195,6 +265,15 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 		}
 		
 		return res;
+	}
+		
+	/**
+	 * get the total number of Fingerprints
+	 * 
+	 * @return the number of Fingerprints
+	 */
+	public int getCount() {
+		return getCount((String)null);
 	}
 
 	/**

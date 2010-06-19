@@ -28,6 +28,7 @@ import org.redpin.server.standalone.db.HomeFactory;
 import org.redpin.server.standalone.db.homes.FingerprintHome;
 import org.redpin.server.standalone.json.GsonFactory;
 import org.redpin.server.standalone.net.Response.Status;
+import org.redpin.server.standalone.svm.SVMSupport;
 import org.redpin.server.standalone.util.Log;
 
 import com.google.gson.JsonElement;
@@ -40,6 +41,8 @@ import com.google.gson.JsonElement;
  */
 public class SetFingerprintHandler implements IHandler {
 
+	private static final int INSTANT_TRAIN_THREASHOLD = 20;
+	
 	FingerprintHome fingerprintHome;
 	
 	public SetFingerprintHandler() {
@@ -66,8 +69,25 @@ public class SetFingerprintHandler implements IHandler {
 		} else {
 			res = new Response(Status.ok, null, fprint);
 			Log.getLogger().finer("fingerprint set: " + fprint);
+			
+			
+			Location loc = (Location)fprint.getLocation();
+			int count = fingerprintHome.getCount(loc);
+			
+			if (count < INSTANT_TRAIN_THREASHOLD) {
+				Log.getLogger().fine("Training model (fp count for loc " + loc.getSymbolicID() + ": " + count);
+				Thread trainer = new Thread(new Runnable() {				
+					@Override
+					public void run() {
+						SVMSupport.train();					
+					}
+				});
+				trainer.start();			
+			}
+			
 		}
 		
+				
 		
 		return res;
 	}

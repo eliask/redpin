@@ -348,7 +348,7 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 	/* get */
 	
 	/**
-	 * Gets entities from database matching a contrain
+	 * Gets entities from database matching a constraint
 	 * 
 	 * @param constraint SQL WHERE constraint
 	 * @return {@link List} of entities matching the constraint

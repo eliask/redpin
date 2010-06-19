@@ -83,23 +83,36 @@ public class MeasurementHome extends EntityHome<Measurement> {
 		
 		try {
 			if (!rs.isAfterLast()) {
-				m.setId(rs.getInt(fromIndex));
+				int mId = rs.getInt(fromIndex);
+				m.setId(mId);
 				m.setTimestamp(rs.getLong(fromIndex + 1));
 				String readingClassName = rs.getString(fromIndex + 2);
 				
 				if (readingClassName == null) {
 					// there are no readings in measurement
 					rs.next();
-				} else {					
-					if (readingClassName.equals(HomeFactory.getWiFiReadingVectorHome().getContainedObjectClassName())) {
-						m.setWiFiReadings(HomeFactory.getWiFiReadingVectorHome().parseResultRow(rs, fromIndex + 3));
-					} else if (readingClassName.equals(HomeFactory.getGSMReadingVectorHome().getContainedObjectClassName())) {
-						m.setGSMReadings(HomeFactory.getGSMReadingVectorHome().parseResultRow(rs, fromIndex + 3 + HomeFactory.getWiFiReadingHome().getTableCols().length + 1));
-					} else if (readingClassName.equals(HomeFactory.getBluetoothReadingVectorHome().getContainedObjectClassName())) {
-						m.setBluetoothReadings(HomeFactory.getBluetoothReadingVectorHome().parseResultRow(rs, fromIndex + 3 + HomeFactory.getGSMReadingHome().getTableCols().length + 1 + HomeFactory.getWiFiReadingHome().getTableCols().length + 1));
-					} else {
-						rs.next();
+				} else {	
+					while(!rs.isAfterLast() && mId == rs.getInt(fromIndex) ) {
+						readingClassName = rs.getString(fromIndex + 2);
+						if (HomeFactory.getWiFiReadingVectorHome().getContainedObjectClassName().equals(readingClassName)) {
+							m.setWiFiReadings(HomeFactory.getWiFiReadingVectorHome().parseResultRow(rs, fromIndex + 3));
+						} else if (HomeFactory.getGSMReadingVectorHome().getContainedObjectClassName().equals(readingClassName)) {
+							m.setGSMReadings(HomeFactory.getGSMReadingVectorHome().parseResultRow(rs, fromIndex + 3 + HomeFactory.getWiFiReadingHome().getTableCols().length + 1));
+						} else if (HomeFactory.getBluetoothReadingVectorHome().getContainedObjectClassName().equals(readingClassName)) {
+							m.setBluetoothReadings(HomeFactory.getBluetoothReadingVectorHome().parseResultRow(rs, fromIndex + 3 + HomeFactory.getGSMReadingHome().getTableCols().length + 1 + HomeFactory.getWiFiReadingHome().getTableCols().length + 1));
+						} else {
+							log.fine("Result row has no matching readingClassName " + readingClassName);
+							rs.next();
+						}
 					}
+					/*
+					 * adjust pointer to row because the last VectorHome read one row to far to see if readings are finished
+					 * Unfortunately not possible because SQLite JDBC driver only supports forward cursors.
+					 * See comment in FingerprintHome#get(String)
+					 * 
+					 * rs.previous();
+					 */
+					
 				}
 			}
 		} catch (SQLException e) {

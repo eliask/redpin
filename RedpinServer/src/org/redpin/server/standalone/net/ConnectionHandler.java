@@ -21,11 +21,11 @@
  */
 package org.redpin.server.standalone.net;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,21 +44,22 @@ import org.redpin.server.standalone.util.Log;
 public class ConnectionHandler implements Runnable {
 
 	private Socket socket;	
-	private BufferedReader in;
-	private BufferedWriter out;
+	private DataInputStream in;
+	private DataOutputStream out;
 	
 	private Logger log = Log.getLogger();
 	
 	public ConnectionHandler(Socket s) throws IOException {
-		socket = s;
-		in = new BufferedReader(new InputStreamReader(s.getInputStream()));
-		out = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+		socket = s;		
+		in = new DataInputStream(new BufferedInputStream(s.getInputStream()));
+		out = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()));
 	}
 	
 	/**
 	 * reads each request and passes it to the request handler. 
 	 * closes a connection if requested
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public void run() {
 		
@@ -70,19 +71,17 @@ public class ConnectionHandler implements Runnable {
 			ImageHandler imgHandler = new ImageHandler(in, out);
 			String line = in.readLine();
 			if(line != null) {
-				
 				if((line.indexOf("GET") == 0) || (line.indexOf("POST") == 0)) {
 					imgHandler.handle(line);
 				} else {
-					out.write(rhandler.request(line) + "\n");
+					out.write((rhandler.request(line) + "\n").getBytes("US-ASCII"));
 				}
-				out.flush();
-				
 			}
 
 			out.flush();
 
 			socket.close();
+
 			
 		} catch (IOException e) {
 			log.log(Level.SEVERE, "Connection Handler: ", e);

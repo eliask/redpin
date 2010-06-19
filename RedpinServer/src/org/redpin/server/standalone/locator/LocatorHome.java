@@ -21,7 +21,6 @@
  */
 package org.redpin.server.standalone.locator;
 
-import org.redpin.server.standalone.db.HomeFactory;
 import org.redpin.server.standalone.svm.SVMSupport;
 
 /**
@@ -34,7 +33,6 @@ import org.redpin.server.standalone.svm.SVMSupport;
 public class LocatorHome {
 	
 	private static ILocator locator = null;
-	private static int INITIAL_SAMPLES_REQUIRED = 10;
 	
 	public synchronized static ILocator getLocator() {
 		if(locator == null) {
@@ -42,8 +40,7 @@ public class LocatorHome {
 		}
 		
 		if (locator instanceof RedpinLocator) {
-			int numberofsamples = HomeFactory.getFingerprintHome().getCount();
-			if (numberofsamples >= INITIAL_SAMPLES_REQUIRED && SVMSupport.isTrained()) {
+			if (SVMSupport.isTrained()) {
 				locator = new SVMLocator();		//locator is changed only once 
 			}
 		}

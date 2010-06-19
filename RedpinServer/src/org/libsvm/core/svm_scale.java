@@ -350,12 +350,13 @@ public class svm_scale
 				System.out.print("\n");
 			}
 		}
+		/*
 		if (new_num_nonzeros > num_nonzeros)
 			System.err.print(
 			 "Warning: original #nonzeros " + num_nonzeros+"\n"
 			+"         new      #nonzeros " + new_num_nonzeros+"\n"
 			+"Use -l 0 if many original feature values are zeros\n");
-
+		*/
 		fp.close();
 	}
 
