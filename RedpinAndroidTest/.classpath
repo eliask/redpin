@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/RedpinAndroid"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="lib" path="lib/android-mock-0.0.1-SNAPSHOT.jar" sourcepath="lib/android-mock-0.0.1-SNAPSHOT-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Redpin"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
