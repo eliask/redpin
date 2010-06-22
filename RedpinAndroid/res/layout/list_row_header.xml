@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="22dip" android:background="@color/light_grey">
+        <TextView
+        	android:layout_height="22dip"
+            android:id="@+id/list_row_label"
+            android:paddingLeft="10dip"
+            android:textStyle="bold"
+            android:textSize="@dimen/font_size_for_row"
+            android:textColor="@color/solid_black"
+            android:background="@android:color/transparent" android:layout_width="match_parent" android:paddingRight="20dip" android:text="Label" android:gravity="center_vertical"/>
+        
+</RelativeLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/options_menu_search"
+          android:title="@string/options_menu_search_text" />
+    <item android:id="@+id/options_menu_main"
+          android:title="@string/options_menu_main_text" />
+    <item android:id="@+id/options_menu_listview"
+          android:title="@string/options_menu_listview_text"
+    	  android:icon="@drawable/menu_list_black" />
+    <item android:id="@+id/options_menu_add_map" 
+    	  android:title="@string/options_menu_add_map_text"
+    	  android:icon="@drawable/menu_addmap_black" />
+   	<item android:id="@+id/options_menu_locate" 
+    	  android:title="@string/options_menu_locate_text"
+    	  android:icon="@drawable/menu_locate_me_black" />
+</menu>

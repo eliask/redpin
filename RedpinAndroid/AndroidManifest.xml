@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="org.redpin.android"
+      android:versionCode="1"
+      android:versionName="1.0">
+    <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true" android:theme="@android:style/Theme.Light.NoTitleBar">
+        
+        <provider android:name=".provider.RedpinContentProvider" android:authorities="org.redpin.android.provider"></provider>
+
+		<activity android:name=".ui.list.MainListActivity" />
+		<activity android:name=".ui.NewMapActivity" android:launchMode="singleTask" />
+    	<activity android:name=".ui.list.LocationListActivity" android:launchMode="singleTask"></activity>
+		<activity android:name=".ui.list.MapListActivity" android:launchMode="singleTask"></activity>
+		<activity android:name=".ui.Preferences" android:launchMode="singleTask" />
+<activity android:name=".ui.list.SearchListActivity"></activity>
+<activity android:name=".ui.MapViewActivity" android:launchMode="singleTask" android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+</activity>
+
+	<service android:name=".net.InternetConnectionManager" />
+
+	<service android:name=".net.wifi.WifiSniffer">
+		<intent-filter>
+			<action android:name="com.org.redpin.android.core.WIFI_SERVICE" />
+		</intent-filter>
+	</service><service android:name=".net.SynchronizationManager"></service>
+
+
+</application>
+
+<!-- enables WiFi, if disabled, for the duration of a location request -->
+<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+<!-- used to obtain information about the WiFi environment -->
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+<!-- used to obtain cell tower ID -->
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_UPDATES" />
+<!-- used to access GPS location, for XPS functionality -->
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.WAKE_LOCK" />
+
+<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+<uses-sdk android:targetSdkVersion="8" android:minSdkVersion="7"></uses-sdk>
+</manifest>
+
