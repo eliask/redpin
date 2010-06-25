@@ -36,9 +36,9 @@ import org.redpin.android.net.home.FingerprintRemoteHome;
 import org.redpin.android.net.home.LocationRemoteHome;
 import org.redpin.android.net.home.RemoteEntityHomeCallback;
 import org.redpin.android.net.wifi.WifiSniffer;
-import org.redpin.android.ui.components.MapView;
 import org.redpin.android.ui.list.MainListActivity;
 import org.redpin.android.ui.list.SearchListActivity;
+import org.redpin.android.ui.mapview.MapView;
 import org.redpin.android.util.ExceptionHandler;
 import org.redpin.android.util.ExceptionReporter;
 
@@ -321,7 +321,9 @@ public class MapViewActivity extends Activity {
 	 * Stops the sniffer and unregisters the receiver
 	 */
 	private void stopWifiSniffer() {
-		mWifiService.stopMeasuring();
+		if (mWifiService != null) {
+			mWifiService.stopMeasuring();
+		}
 		unbindService(mWifiConnection);
 		unregisterReceiver(wifiReceiver);
 		Log.i(TAG, "Stopped WifiSniffer");

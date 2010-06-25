@@ -6,7 +6,7 @@
 	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:orientation="vertical" android:layout_width="match_parent"
 		android:layout_height="44dip" android:id="@+id/list_topbar"
-		android:background="@color/solid_black">
+		android:background="@drawable/blackbar_glossy">
 		<TextView android:layout_width="match_parent"
 			android:layout_height="wrap_content" android:layout_centerInParent="true"
 			android:text="@string/default_list_text" android:id="@+id/list_view_topbar_text"

@@ -19,13 +19,14 @@
  * 
  *  www.redpin.org
  */
-package org.redpin.android.ui.components;
+package org.redpin.android.ui.mapview;
 
 import org.redpin.android.R;
 import org.redpin.android.core.Location;
 import org.redpin.android.net.home.LocationRemoteHome;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,7 +49,9 @@ public class LocationMarker extends Button implements OnClickListener {
 
 	private Location location;
 	int markerX, markerY;
+	
 	static int size = 44;
+	static boolean densityCalculated = false;
 
 	private FrameLayout.LayoutParams layout;
 	boolean clicked = false;
@@ -57,6 +60,8 @@ public class LocationMarker extends Button implements OnClickListener {
 	private float mLastMotionY;
 	private int unscaledX;
 	private int unscaledY;
+	
+	private float scale;
 	private ViewGroup container;
 
 	private LocationMarkerAnnotation annotation;
@@ -77,10 +82,10 @@ public class LocationMarker extends Button implements OnClickListener {
 	public LocationMarker(Context context, Location l, ViewGroup container) {
 		super(context);
 		this.container = container;
-		setLocation(l);
 		initView(context);
+		setLocation(l);
 	}
-
+	
 	/**
 	 * Initiates the {@link LocationMarker}
 	 * 
@@ -95,8 +100,18 @@ public class LocationMarker extends Button implements OnClickListener {
 		setEnabled(false);
 		setOnClickListener(this);
 		
-		density = getContext().getResources().getDisplayMetrics().density;
-		size = (int) (size*density);
+		if(!densityCalculated) {
+			density = getContext().getResources().getDisplayMetrics().density;
+			size = (int) (size*density);
+			LocationMarker.densityCalculated = true;
+		}
+		
+		setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT, Gravity.NO_GRAVITY));
+
+		setWidth(size);
+		setHeight(size);
+		
 		
 
 	}
@@ -113,6 +128,10 @@ public class LocationMarker extends Button implements OnClickListener {
 		markerY = location.getMapYcord() - size / 2;
 		unscaledX = markerX;
 		unscaledY = markerY;
+		
+		System.out.println("Unscaled Marker: "+ unscaledX+","+unscaledY);
+		
+		positionChanged();
 	}
 
 	/**
@@ -136,8 +155,8 @@ public class LocationMarker extends Button implements OnClickListener {
 	 * Updates the coordinates
 	 */
 	private void updateLocationCords() {
-		location.setMapXcord(markerX + size / 2);
-		location.setMapYcord(markerY + size / 2);
+		location.setMapXcord(unscaledX + size / 2);
+		location.setMapYcord(unscaledY + size / 2);
 	}
 
 	/**
@@ -224,7 +243,7 @@ public class LocationMarker extends Button implements OnClickListener {
 			return;
 		}
 
-		if (clicked) {
+		if (clicked && enabled) {
 			setBackgroundResource(R.drawable.purple_map_pin_big);
 		} else {
 			setBackgroundResource(R.drawable.red_map_pin_big);
@@ -327,10 +346,13 @@ public class LocationMarker extends Button implements OnClickListener {
 			break;
 
 		case MotionEvent.ACTION_MOVE:
+			
 			isDragging = true;
 
 			final float scrollX = mLastMotionX - x;
 			final float scrollY = mLastMotionY - y;
+			
+			
 			System.out.println("move by " + scrollX + "," + scrollY);
 			moveMarkerBy((int) scrollX, (int) scrollY);
 
@@ -362,7 +384,12 @@ public class LocationMarker extends Button implements OnClickListener {
 	 * that the {@link LocationMarker} position changed
 	 */
 	public void positionChanged() {
-		positionChanged = true;
+		layout = (android.widget.FrameLayout.LayoutParams) getLayoutParams();
+		layout.setMargins(markerX, markerY, 0, 0);
+		setLayoutParams(layout);
+		
+				
+		//positionChanged = true;
 		if (annotation != null) {
 			annotation.markerPositionChanged = true;
 		}
@@ -382,12 +409,17 @@ public class LocationMarker extends Button implements OnClickListener {
 	private void moveMarkerBy(int distanceX, int distanceY) {
 		markerX -= distanceX;
 		markerY -= distanceY;
+		
+		unscaledX = (int) (markerX / scale);
+		unscaledY = (int) (markerY / scale);
+		
+		System.out.println("Marker: "+ markerX+","+markerY);
+		System.out.println("Unscaled Marker: "+ unscaledX+","+unscaledY);
 
 		positionChanged();
 		requestLayout();
 	}
 
-	private float currentScale = 1.0f;
 
 	public float[] getPosition() {
 		return new float[] { markerX, markerY };
@@ -398,6 +430,24 @@ public class LocationMarker extends Button implements OnClickListener {
 		markerY = (int) xy[1];
 		positionChanged();
 		requestLayout();
+	}
+	
+	public void onScaleChanged(float newScale) {
+		if (newScale == 0)
+			return;
+		
+		scale = newScale;
+		float offsetX = 40;
+		float offsetY = 40;
+		/*
+		markerX = (int) ((unscaledX * scale) -size/2);
+		markerY = (int) ((unscaledY * scale) -size/2);
+		*/
+		
+		markerX = (int) (((unscaledX+size/2) * scale) -size/2);
+		markerY = (int) (((unscaledY+size/2) * scale) -size/2);
+		positionChanged();
+		
 	}
 
 	public void onScaleChanged(WebView view, float oldScale, float newScale) {
@@ -420,7 +470,7 @@ public class LocationMarker extends Button implements OnClickListener {
 		 * 
 		 * sa.setDuration(1000); sa.setFillAfter(true);
 		 */
-		currentScale = newScale;
+		//currentScale = newScale;
 
 		/*
 		 * markerX = (int) ((float)markerX * newScale); markerY = (int)

@@ -19,7 +19,7 @@
  * 
  *  www.redpin.org
  */
-package org.redpin.android.ui.components;
+package org.redpin.android.ui.mapview;
 
 import org.redpin.android.R;
 import org.redpin.android.core.Location;
@@ -132,9 +132,14 @@ public class LocationMarkerAnnotation extends EditText implements
 	 */
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+		
 		if (actionId == EditorInfo.IME_ACTION_DONE) {
 			System.out.println("Done");
+			//setCursorVisible(false);
 			clearFocus();
+			
+			setSelected(false);
+			
 			Location location = marker.getLocation();
 			String newSId = getText().toString();
 			if (!location.getSymbolicID().equals(newSId)) {

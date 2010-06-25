@@ -19,7 +19,7 @@
  * 
  *  www.redpin.org
  */
-package org.redpin.android.ui.components;
+package org.redpin.android.ui.mapview;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +31,8 @@ import org.redpin.android.db.EntityHomeFactory;
 import org.redpin.android.net.DownloadImageTask;
 import org.redpin.android.net.DownloadImageTask.DownloadImageTaskCallback;
 import org.redpin.android.provider.RedpinContract;
+import org.redpin.android.ui.mapview.ZoomAndScrollImageView.ZoomAndScrollViewListener;
+
 
 import android.app.AlertDialog;
 import android.content.ContentUris;
@@ -46,6 +48,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
@@ -55,6 +58,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.FrameLayout.LayoutParams;
 
 /**
  * {@link MapView} displays a {@link Map} on the screen and its {@link Location}
@@ -63,20 +67,25 @@ import android.widget.TextView;
  * @author Pascal Brogle (broglep@student.ethz.ch)
  * 
  */
-public class MapView extends WebView implements DownloadImageTaskCallback,
-		OnGestureListener, OnDoubleTapListener {
+public class MapView extends FrameLayout implements DownloadImageTaskCallback, ZoomAndScrollViewListener {
 
+	private ZoomAndScrollImageView imageView;
+	
 	private FrameLayout contentView;
 	private TextView loadingView;
-	private GestureDetector gestureDetector;
-
+	
 	private Map currentMap;
 	private Location currentLocation;
 	private HashMap<Location, LocationMarker> locationMarker = new HashMap<Location, LocationMarker>();
 	private LocationMarker requestedCenterMarker;
+	
 	private boolean loadPending;
 	private int[] requestedScroll;
 	private Uri currentUri;
+
+	private int imageWidth;
+
+	private int imageHeight;
 
 	private final static long FADE_DURATION = 500;
 	private static final String TAG = MapView.class.getSimpleName();
@@ -128,71 +137,21 @@ public class MapView extends WebView implements DownloadImageTaskCallback,
 	 */
 	protected void initView(Context context) {
 
-		setInitialScale(100);
-		getSettings().setBuiltInZoomControls(false);
-		getSettings().setJavaScriptEnabled(true);
-
-		gestureDetector = new GestureDetector(context, this);
+		
+		
+		
+		imageView = new ZoomAndScrollImageView(context);
+		imageView.setListener(this);
+		addView(imageView);
+		
 
 		contentView = new FrameLayout(context);
 		contentView.setLayoutParams(new FrameLayout.LayoutParams(
 				FrameLayout.LayoutParams.MATCH_PARENT,
 				FrameLayout.LayoutParams.MATCH_PARENT));
-
-		setWebViewClient(new WebViewClient() {
-
-			@Override
-			public void onPageFinished(WebView view, String url) {
-				super.onPageFinished(view, url);
-				loadPending = false;
-				showLocationMarkers();
-				processRequestScroll();
-				processRequestMarkerOnCenter();
-			}
-
-			@Override
-			public void onScaleChanged(WebView view, float oldScale,
-					float newScale) {
-				Matrix newMatrix = new Matrix();
-
-				newMatrix.setScale(newScale, newScale);
-
-				Matrix oldMatrix = new Matrix();
-
-				oldMatrix.setScale(1.0f / oldScale, 1.0f / oldScale);
-				// oldMatrix.invert(oldMatrix);
-
-				/*
-				 * ScaleAnimation sa = new ScaleAnimation(1, newScale, 1,
-				 * newScale); //sa.setDuration(1000);
-				 * contentView.startAnimation(sa);
-				 */
-
-				for (LocationMarker marker : locationMarker.values()) {
-
-					Log
-							.e(TAG, "webview: " + getScrollX() + ", "
-									+ getScrollY());
-					Log.e(TAG, "contentview: " + contentView.getScrollX()
-							+ ", " + contentView.getScrollY());
-					/*
-					 * float[] dst,dst2, src; src = marker.getPosition(); dst =
-					 * new float[2]; dst2 = new float[2];
-					 * 
-					 * oldMatrix.mapPoints(dst, marker.getPosition());
-					 * newMatrix.mapPoints(dst2, dst);
-					 * System.out.println("From ");
-					 * System.out.println(Arrays.toString(src));
-					 * System.out.println("To ");
-					 * System.out.println(Arrays.toString(dst2));
-					 * marker.setPosition(dst2);
-					 */
-					marker.onScaleChanged(view, oldScale, newScale);
-				}
-
-			}
-
-		});
+		
+		
+		
 
 		addView(contentView);
 
@@ -206,7 +165,11 @@ public class MapView extends WebView implements DownloadImageTaskCallback,
 		loadingView.setBackgroundColor(Color.WHITE);
 		contentView.addView(loadingView);
 
+		
+
+
 	}
+
 
 	/**
 	 * Shows an {@link LocationMarker}
@@ -250,14 +213,12 @@ public class MapView extends WebView implements DownloadImageTaskCallback,
 		return currentLocation;
 	}
 
-	@Override
 	public String getUrl() {
 		if (currentUri == null)
 			return null;
 
 		return currentUri.toString();
 	}
-
 	/**
 	 * 
 	 * @return Fade out {@link Animation}
@@ -299,18 +260,23 @@ public class MapView extends WebView implements DownloadImageTaskCallback,
 	 */
 	@Override
 	public void onImageDownloaded(String url, String path) {
-		
+		loadPending = false;
 		Bitmap bm = BitmapFactory.decodeFile(path);
-		int w = bm.getWidth();
-		int h = bm.getHeight();
-		bm.recycle();
-
+		imageWidth = bm.getWidth();
+		imageHeight = bm.getHeight();
+		
+		contentView.setLayoutParams(new LayoutParams(imageWidth, imageHeight));
+		/*
 		ViewGroup.LayoutParams params = contentView.getLayoutParams();
 		params.width = w;
 		params.height = h;
 		contentView.setLayoutParams(params);
+		*/
+		imageView.setImageBitmap(bm);
 
-		loadUrl("file:/" + path);
+		showLocationMarkers();
+		processRequestMarkerOnCenter();
+		processRequestScroll();
 
 		loadingView.startAnimation(fadeOut());
 		loadingView.setVisibility(INVISIBLE);
@@ -319,6 +285,7 @@ public class MapView extends WebView implements DownloadImageTaskCallback,
 	
 	@Override
 	public void onImageDownloadFailure(String url) {
+		loadPending = false;
 		new AlertDialog.Builder(getContext()).setMessage(
 					getContext().getString(R.string.map_download_failed))
 					.show();
@@ -327,14 +294,13 @@ public class MapView extends WebView implements DownloadImageTaskCallback,
 	}
 
 	/**
-	 * Workaround because {@link WebView#scrollTo(int, int)} has a bug and jumps
-	 * back to (0,0)
-	 * 
+	 *  
 	 * @param x
 	 * @param y
 	 */
-	protected void javascriptScrollTo(int x, int y) {
-		loadUrl("javascript:window.scrollTo(" + x + ", " + y + ")");
+	protected void doScrollTo(int x, int y) {
+		System.out.println("ScrollTo:" + x +","+y);
+		imageView.scrollTo(x, y);
 	}
 
 	/**
@@ -378,18 +344,25 @@ public class MapView extends WebView implements DownloadImageTaskCallback,
 	public void addNewLocation(Location newLocation) {
 		if (newLocation == null)
 			return;
-
-		// Calculate current center of screen
-		int offsetX = getScrollX();
-		int offsetY = getScrollY();
+		
 
 		int w = getWidth();
 		int h = getHeight();
+		
+		float[] point = new float[] {0,0};
+		lastMatrix.mapPoints(point);
+		int offsetX = (int) ((-point[0]+ (w / 2)) / lastScale);
+		int offsetY = (int) ((-point[1]+ (h / 2)) / lastScale);
+		
+		
+		
 
-		newLocation.setMapXcord(offsetX + w / 2);
-		newLocation.setMapYcord(offsetY + h / 2);
+		newLocation.setMapXcord(offsetX);
+		newLocation.setMapYcord(offsetY);
+		
 
 		LocationMarker marker = addMarkerForLocation(newLocation);
+		marker.onScaleChanged(lastScale);
 		marker.showAnnotation();
 		marker.setVisibility(VISIBLE);
 		marker.beginEdit();
@@ -428,6 +401,8 @@ public class MapView extends WebView implements DownloadImageTaskCallback,
 	 *            {@link LocationMarker} to be centered on the screen
 	 */
 	public void centerMarker(LocationMarker marker) {
+		
+		//imageView.setZoom(1.0f, true);
 		Location location = marker.getLocation();
 		int w = getMeasuredWidth();
 		int h = getMeasuredHeight();
@@ -437,7 +412,7 @@ public class MapView extends WebView implements DownloadImageTaskCallback,
 		// due to a bug javascriptScrollTo has to be used
 		// scrollTo(left, top);
 
-		javascriptScrollTo(left, top);
+		doScrollTo(left, top);
 
 	}
 
@@ -473,7 +448,7 @@ public class MapView extends WebView implements DownloadImageTaskCallback,
 			return;
 		}
 
-		javascriptScrollTo(requestedScroll[0], requestedScroll[1]);
+		doScrollTo(requestedScroll[0], requestedScroll[1]);
 		requestedScroll = null;
 	}
 	/**
@@ -486,7 +461,7 @@ public class MapView extends WebView implements DownloadImageTaskCallback,
 		if (loadPending || forceDelay) {
 			requestedScroll = new int[] { x, y };
 		} else {
-			javascriptScrollTo(x, y);
+			doScrollTo(x, y);
 		}
 	}
 
@@ -664,6 +639,49 @@ public class MapView extends WebView implements DownloadImageTaskCallback,
 		modifiable = enabled;
 	}
 
+	Matrix lastMatrix = new Matrix();
+	float lastScale;
+	
+	@Override
+	public void onMatrixChange(Matrix matrix) {
+		lastMatrix = matrix;
+		float[] values = new float[9];
+		matrix.getValues(values);
+		float scale = values[Matrix.MSCALE_X];
+		lastScale = scale;
+		
+		
+		
+		
+		float[] point = new float[] {0,0};
+		matrix.mapPoints(point);
+		contentView.scrollTo((int)- point[0], (int)- point[1]);
+		
+		for (LocationMarker m : locationMarker.values()) {
+			m.onScaleChanged(scale);
+		}
+		
+		ViewGroup.LayoutParams params = contentView.getLayoutParams();
+		params.width = (int) (imageWidth*scale);
+		params.height = (int) (imageHeight*scale);
+		contentView.setLayoutParams(params);
+	}
+	
+
+	@Override
+	public void onSingleTab(MotionEvent e) {
+		for (LocationMarker l: locationMarker.values()) {
+			if(l.clicked) {
+				l.onClick(this);
+			}
+			
+		}		
+	}
+
+
+
+	
+	
 	/*
 	 * @Override protected void onRestoreInstanceState(Parcelable state) { if
 	 * (!(state instanceof SavedState)) { super.onRestoreInstanceState(state);
@@ -725,98 +743,6 @@ public class MapView extends WebView implements DownloadImageTaskCallback,
 	 * 
 	 * }
 	 */
-
-	/** Gesture detector **/
-
-	/**
-	 * Hands over the {@link MotionEvent} to the {@link GestureDetector}.
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean onTouchEvent(MotionEvent ev) {
-		gestureDetector.onTouchEvent(ev);
-		return super.onTouchEvent(ev);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean onDown(MotionEvent e) {
-		for (LocationMarker l: locationMarker.values()) {
-			if(l.clicked) {
-				l.onClick(this);
-			}
-			
-		}
-		return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-			float velocityY) {
-		return false;
-	}
-
-	/**
-	 * Zooms out on long press. {@inheritDoc}
-	 */
-	@Override
-	public void onLongPress(MotionEvent e) {
-		zoomOut();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-			float distanceY) {
-		return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void onShowPress(MotionEvent e) {
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean onSingleTapUp(MotionEvent e) {
-		return false;
-	}
-
-	/**
-	 * Zoom out on double tap. {@inheritDoc}
-	 */
-	@Override
-	public boolean onDoubleTap(MotionEvent e) {
-		zoomIn();
-		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean onDoubleTapEvent(MotionEvent e) {
-		return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean onSingleTapConfirmed(MotionEvent e) {
-		return false;
-	}
 
 	
 

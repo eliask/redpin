@@ -19,7 +19,7 @@
  * 
  *  www.redpin.org
  */
-package org.redpin.android.ui.components;
+package org.redpin.android.ui.mapview;
 
 import org.redpin.android.core.Location;
 
