@@ -9,12 +9,8 @@
 /* Begin PBXBuildFile section */
 		1D3623260D0F684500981E51 /* RedpinAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* RedpinAppDelegate.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
-		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
-		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		1EF73D90112ADCAB009ACE7C /* IntervalScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF73D8F112ADCAB009ACE7C /* IntervalScanner.m */; };
 		28860B770F44E54D00985440 /* Redpin.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 28860B760F44E54D00985440 /* Redpin.xcdatamodel */; };
-		28860BE50F44EE6400985440 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28860BE40F44EE6400985440 /* CoreData.framework */; };
-		2892E4100DC94CBA00A64D0F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */; };
 		2899E5600DE3E45000AC0155 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2899E55F0DE3E45000AC0155 /* RootViewController.xib */; };
 		28AD73600D9D9599002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD735F0D9D9599002E5188 /* MainWindow.xib */; };
 		28C286E10D94DF7D0034E888 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C286E00D94DF7D0034E888 /* RootViewController.m */; };
@@ -72,11 +68,16 @@
 		7889451910554B6E0089B426 /* current_location.png in Resources */ = {isa = PBXBuildFile; fileRef = 7889451810554B6E0089B426 /* current_location.png */; };
 		7889455A1055777F0089B426 /* annotation.png in Resources */ = {isa = PBXBuildFile; fileRef = 788945591055777F0089B426 /* annotation.png */; };
 		788945D110557F860089B426 /* CurrentLocationCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = 788945D010557F860089B426 /* CurrentLocationCircle.m */; };
+		7896335D11D45E1A00A42A65 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7896335C11D45E1A00A42A65 /* SystemConfiguration.framework */; };
+		7896336111D45E2200A42A65 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7896336011D45E2200A42A65 /* CFNetwork.framework */; };
+		7896336511D45E3200A42A65 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7896336411D45E3200A42A65 /* UIKit.framework */; };
+		7896336911D45E4700A42A65 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7896336811D45E4700A42A65 /* Foundation.framework */; };
+		7896336D11D45E4F00A42A65 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7896336C11D45E4F00A42A65 /* CoreGraphics.framework */; };
+		7896337111D45E5500A42A65 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7896337011D45E5500A42A65 /* CoreData.framework */; };
 		7896964A102A454D0016D2C1 /* purple_map_pin_big.png in Resources */ = {isa = PBXBuildFile; fileRef = 78969648102A454D0016D2C1 /* purple_map_pin_big.png */; };
 		7896964B102A454D0016D2C1 /* red_map_pin_big.png in Resources */ = {isa = PBXBuildFile; fileRef = 78969649102A454D0016D2C1 /* red_map_pin_big.png */; };
 		789784A0104700190089CE22 /* InternetConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7897849F104700190089CE22 /* InternetConnectionManager.m */; };
 		789784B21047004B0089CE22 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 789784B11047004B0089CE22 /* Reachability.m */; };
-		789784C7104700E00089CE22 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 789784C6104700E00089CE22 /* SystemConfiguration.framework */; };
 		789787E51047499B0089CE22 /* SynchronizationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 789787E41047499B0089CE22 /* SynchronizationManager.m */; };
 		78978E361047A3E70089CE22 /* red_map_pin_big_cur.png in Resources */ = {isa = PBXBuildFile; fileRef = 78978E351047A3E70089CE22 /* red_map_pin_big_cur.png */; };
 		78978E591047A8620089CE22 /* purple_map_pin_big_cur.png in Resources */ = {isa = PBXBuildFile; fileRef = 78978E581047A8620089CE22 /* purple_map_pin_big_cur.png */; };
@@ -90,7 +91,6 @@
 		78CAAA3E103B3CF400959892 /* ImageUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CAAA3D103B3CF400959892 /* ImageUploader.m */; };
 		78D87D56103DB1F9008E0B9E /* AsyncSocket Documentation.html in Resources */ = {isa = PBXBuildFile; fileRef = 78D87D53103DB1F9008E0B9E /* AsyncSocket Documentation.html */; };
 		78D87D57103DB1F9008E0B9E /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D87D55103DB1F9008E0B9E /* AsyncSocket.m */; };
-		78D87D6E103DB680008E0B9E /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78D87D6D103DB680008E0B9E /* CFNetwork.framework */; };
 		78DAD93F1021BDFC007EF9A4 /* LocationMarker.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DAD93E1021BDFC007EF9A4 /* LocationMarker.m */; };
 		78DAD9FC1021D1BD007EF9A4 /* red_map_pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 78DAD9FB1021D1BD007EF9A4 /* red_map_pin.png */; };
 		78E61D86102182A00068F16A /* MapListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78E61D85102182A00068F16A /* MapListTableViewController.m */; };
@@ -99,16 +99,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623240D0F684500981E51 /* RedpinAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RedpinAppDelegate.h; sourceTree = "<group>"; };
 		1D3623250D0F684500981E51 /* RedpinAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RedpinAppDelegate.m; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* Redpin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Redpin.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1EF73D8E112ADCAB009ACE7C /* IntervalScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntervalScanner.h; sourceTree = "<group>"; };
 		1EF73D8F112ADCAB009ACE7C /* IntervalScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntervalScanner.m; sourceTree = "<group>"; };
 		28860B760F44E54D00985440 /* Redpin.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = Redpin.xcdatamodel; sourceTree = "<group>"; };
-		28860BE40F44EE6400985440 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		2899E55F0DE3E45000AC0155 /* RootViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
 		28A0AAE50D9B0CCF005BE974 /* Redpin_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Redpin_Prefix.pch; sourceTree = "<group>"; };
 		28AD735F0D9D9599002E5188 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
@@ -214,13 +210,18 @@
 		788945591055777F0089B426 /* annotation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = annotation.png; sourceTree = "<group>"; };
 		788945CF10557F860089B426 /* CurrentLocationCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentLocationCircle.h; sourceTree = "<group>"; };
 		788945D010557F860089B426 /* CurrentLocationCircle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentLocationCircle.m; sourceTree = "<group>"; };
+		7896335C11D45E1A00A42A65 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		7896336011D45E2200A42A65 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		7896336411D45E3200A42A65 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		7896336811D45E4700A42A65 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		7896336C11D45E4F00A42A65 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		7896337011D45E5500A42A65 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		78969648102A454D0016D2C1 /* purple_map_pin_big.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = purple_map_pin_big.png; sourceTree = "<group>"; };
 		78969649102A454D0016D2C1 /* red_map_pin_big.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_map_pin_big.png; sourceTree = "<group>"; };
 		7897849E104700190089CE22 /* InternetConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InternetConnectionManager.h; sourceTree = "<group>"; };
 		7897849F104700190089CE22 /* InternetConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InternetConnectionManager.m; sourceTree = "<group>"; };
 		789784B01047004B0089CE22 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		789784B11047004B0089CE22 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
-		789784C6104700E00089CE22 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		789787E31047499B0089CE22 /* SynchronizationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynchronizationManager.h; sourceTree = "<group>"; };
 		789787E41047499B0089CE22 /* SynchronizationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SynchronizationManager.m; sourceTree = "<group>"; };
 		78978E351047A3E70089CE22 /* red_map_pin_big_cur.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_map_pin_big_cur.png; sourceTree = "<group>"; };
@@ -238,7 +239,6 @@
 		78D87D53103DB1F9008E0B9E /* AsyncSocket Documentation.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "AsyncSocket Documentation.html"; sourceTree = "<group>"; };
 		78D87D54103DB1F9008E0B9E /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
 		78D87D55103DB1F9008E0B9E /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
-		78D87D6D103DB680008E0B9E /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		78DAD93D1021BDFC007EF9A4 /* LocationMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LocationMarker.h; path = ../LocationMarker.h; sourceTree = "<group>"; };
 		78DAD93E1021BDFC007EF9A4 /* LocationMarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LocationMarker.m; path = ../LocationMarker.m; sourceTree = "<group>"; };
 		78DAD9FB1021D1BD007EF9A4 /* red_map_pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_map_pin.png; sourceTree = "<group>"; };
@@ -254,12 +254,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
-				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
-				2892E4100DC94CBA00A64D0F /* CoreGraphics.framework in Frameworks */,
-				28860BE50F44EE6400985440 /* CoreData.framework in Frameworks */,
-				78D87D6E103DB680008E0B9E /* CFNetwork.framework in Frameworks */,
-				789784C7104700E00089CE22 /* SystemConfiguration.framework in Frameworks */,
+				7896335D11D45E1A00A42A65 /* SystemConfiguration.framework in Frameworks */,
+				7896336111D45E2200A42A65 /* CFNetwork.framework in Frameworks */,
+				7896336511D45E3200A42A65 /* UIKit.framework in Frameworks */,
+				7896336911D45E4700A42A65 /* Foundation.framework in Frameworks */,
+				7896336D11D45E4F00A42A65 /* CoreGraphics.framework in Frameworks */,
+				7896337111D45E5500A42A65 /* CoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,12 +347,12 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				789784C6104700E00089CE22 /* SystemConfiguration.framework */,
-				78D87D6D103DB680008E0B9E /* CFNetwork.framework */,
-				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
-				1D30AB110D05D00D00671497 /* Foundation.framework */,
-				2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */,
-				28860BE40F44EE6400985440 /* CoreData.framework */,
+				7896335C11D45E1A00A42A65 /* SystemConfiguration.framework */,
+				7896336011D45E2200A42A65 /* CFNetwork.framework */,
+				7896336411D45E3200A42A65 /* UIKit.framework */,
+				7896336811D45E4700A42A65 /* Foundation.framework */,
+				7896336C11D45E4F00A42A65 /* CoreGraphics.framework */,
+				7896337011D45E5500A42A65 /* CoreData.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -827,7 +827,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
-				SDKROOT = iphoneos3.0;
+				SDKROOT = iphoneos4.0;
 			};
 			name = Debug;
 		};
@@ -858,7 +858,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
-				SDKROOT = iphoneos3.0;
+				SDKROOT = iphoneos4.0;
 			};
 			name = Release;
 		};
