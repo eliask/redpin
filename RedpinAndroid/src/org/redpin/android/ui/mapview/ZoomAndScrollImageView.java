@@ -17,6 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -33,6 +34,7 @@ import android.view.animation.Transformation;
 import android.widget.ImageView;
 import android.widget.Scroller;
 import android.widget.ZoomButtonsController;
+import android.widget.RemoteViews.ActionException;
 import android.widget.ZoomButtonsController.OnZoomListener;
 
 public class ZoomAndScrollImageView extends View implements OnZoomListener, OnDoubleTapListener, OnGestureListener, OnScaleGestureListener {
@@ -40,6 +42,8 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener, OnDo
 	private static final String TAG = ZoomAndScrollImageView.class.getSimpleName();
 
 	private static final float ZOOM_STEP = 0.5f;
+
+	private static final float DPAD_MOVEMENT_STEP = 20;
 
 	static float MAX_ZOOM = 4.0f;
 	static float MIN_ZOOM = 1f;
@@ -85,6 +89,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener, OnDo
 	}
 
 	private void init(Context context) {
+		setFocusable(true);
 		scroller = new Scroller(context);
 		gestureDetector = new GestureDetector(context, this);
 		scaleGestureDetector = new ScaleGestureDetector(context, this);
@@ -119,7 +124,6 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener, OnDo
 		int h = getHeight();
 		
 		MIN_ZOOM = Math.max(w/contentWidth, h/contentHeight);
-		//System.out.println("News minzoom:" + MIN_ZOOM);
 	}
 	
 	public void setContentSize(int width, int height) {
@@ -139,21 +143,11 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener, OnDo
 
 	private void notifyMatrix(Matrix m) {
 		if(listener != null) {
-			listener.onMatrixChange(m);
+			listener.onMatrixChange(m, this);
 		}
 		
 	}
 	
-	
-	/*
-	private void notifyOnScroll() {
-		if(listener != null) {
-			listener.onScroll(currentX, currentY);
-		}
-
-	}
-	*/
-
 	@Override
 	public void scrollBy(int x, int y) {
 		
@@ -163,23 +157,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener, OnDo
 	public void scrollTo(int x, int y) {
 		currentX = -x;
 		currentY = -y;
-		/*
-		float maxW = contentWidth - getWidth();
-		float maxH = contentHeight - getHeight();
-		if (currentX < 0) {
-			currentX = 0;
-		} else if (currentX > maxW) {
-			currentX = maxW;
-		}
-		
-		if (currentY < 0) {
-			currentY = 0;
-		} else if (currentY > maxH) {
-			currentX = maxH;
-		}
-		
-		System.out.println("CurrentXY: " + currentX + "," + currentY);
-		*/
+
 		currentX = Math.max(getWidth() - contentWidth, Math.min(0, currentX));
 		currentY = Math.max(getHeight() - contentHeight, Math.min(0, currentY));
 		
@@ -202,8 +180,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener, OnDo
 		currentY -= (e.getY() - getHeight() / 2) / scale;
 		
 		currentX = Math.max(getWidth() - contentWidth, Math.min(0, currentX));
-		currentY = Math.max(getHeight() - contentHeight, Math.min(0, currentY));
-		//notifyOnScroll();
+
 
 		zoomedIn = !zoomedIn;
 		
@@ -293,8 +270,9 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener, OnDo
 	}
 
 	public void changeZoom(float amount, float fromX, float toX, float fromY, float toY) {
-		myTranslation.start(amount, fromX, toX, fromY, toY);
 		
+		myTranslation.start(amount, fromX, toX, fromY, toY);
+
 	}
 	
 	public void setZoom(float zoom, boolean adjust) {
@@ -410,8 +388,86 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener, OnDo
 		float y = -destination[1] / scale;
 		return Math.round(computeVerticalScrollRange() * y / contentHeight);
 	}
+
 	
-	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		boolean handeled = false;
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_DPAD_LEFT:			
+			currentX += DPAD_MOVEMENT_STEP / scale;
+			currentX = Math.max(getWidth() - contentWidth, Math.min(0, currentX));			
+			
+			invalidate();
+			handeled = true;
+			break;
+		case KeyEvent.KEYCODE_DPAD_RIGHT:
+			currentX -= DPAD_MOVEMENT_STEP / scale;									
+			currentX = Math.max(getWidth() - contentWidth, Math.min(0, currentX));
+			
+			invalidate();
+			handeled = true;
+			break;
+		case KeyEvent.KEYCODE_DPAD_UP:
+
+			currentY += DPAD_MOVEMENT_STEP / scale;
+			currentY = Math.max(getHeight() - contentHeight, Math.min(0, currentY));
+			
+			invalidate();
+			handeled = true;
+			break;
+		case KeyEvent.KEYCODE_DPAD_DOWN:		
+			
+			currentY -= DPAD_MOVEMENT_STEP / scale;
+			currentY = Math.max(getHeight() - contentHeight, Math.min(0, currentY));
+			
+			invalidate();
+			handeled = true;
+			break;
+			
+		case KeyEvent.KEYCODE_DPAD_CENTER:
+			zoomedIn = !zoomedIn;
+			changeZoom(zoomedIn ? 1 : -1, currentX, currentX, currentX,  currentY);	
+			handeled = true;
+			break;
+		default:
+			break;
+		}
+		
+		
+		return handeled;
+	}
+
+	@Override
+	public boolean onTrackballEvent(MotionEvent e) {
+		
+		boolean handeled = false;
+		
+		switch (e.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			zoomedIn = !zoomedIn;
+			changeZoom(zoomedIn ? 1 : -1, currentX, currentX, currentX,  currentY);	
+			handeled = true;
+			break;
+
+		case MotionEvent.ACTION_MOVE:
+			currentX -= e.getX()*DPAD_MOVEMENT_STEP / scale;
+			currentY -= e.getY()*DPAD_MOVEMENT_STEP / scale;
+						
+			currentX = Math.max(getWidth() - contentWidth, Math.min(0, currentX));
+			currentY = Math.max(getHeight() - contentHeight, Math.min(0, currentY));
+			
+			handeled = true;
+			invalidate();
+			break;
+			
+		default:
+			break;
+		}	
+		
+		return handeled;
+	}
+
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -441,6 +497,22 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener, OnDo
 		
 		public ZoomAndTranslate() {   
             setDuration(DURATION);
+            setAnimationListener(new AnimationListener() {
+				
+				@Override
+				public void onAnimationStart(Animation animation) {
+					notifyScaleBegin();
+				}
+				
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+				}
+				
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					notifyScaleEnd();					
+				}
+			});
         }
         public void start(float amount, float fromX, float toX, float fromY, float toY) {
         	this.fromX = fromX;
@@ -448,8 +520,8 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener, OnDo
         	this.fromY = fromY;
         	this.toY = toY;
         	
-	        translateInterpolator = new LinearInterpolator();// new DecelerateInterpolator();
-	        zoomInterpolator = new LinearInterpolator();// AccelerateDecelerateInterpolator();
+	        translateInterpolator = new DecelerateInterpolator(); //new LinearInterpolator();// new DecelerateInterpolator();
+	        zoomInterpolator = new AccelerateDecelerateInterpolator(); // new LinearInterpolator();// AccelerateDecelerateInterpolator();
 	        mFrom = scale;
 	        mTo = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, scale + amount));
 	            
@@ -471,7 +543,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener, OnDo
 	}
 	@Override
 	public boolean onScale(ScaleGestureDetector detector) {
-		Log.i(TAG, "onScale, factor:" + detector.getScaleFactor());
+		//Log.i(TAG, "onScale, factor:" + detector.getScaleFactor());
 		float factor = detector.getScaleFactor();
 		
 		scale *= factor;
@@ -484,24 +556,41 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener, OnDo
 
 	@Override
 	public boolean onScaleBegin(ScaleGestureDetector detector) {
+		notifyScaleBegin();
 		Log.i(TAG, "onScale Begin");
 		return true;
 	}
 
+	private void notifyScaleBegin() {
+		if (listener != null) {
+			listener.onScaleBegin(this);
+		}
+	}
+
 	@Override
 	public void onScaleEnd(ScaleGestureDetector detector) {
+		
+		notifyScaleEnd();
 		Log.i(TAG, "onScale End");
 		System.out.println("End scale: " + scale);
 
 	}
 	
+	private void notifyScaleEnd() {
+		if (listener != null) {
+			listener.onScaleEnd(this);
+		}
+	}
+
 	public void setListener(ZoomAndScrollViewListener l) {
 		listener = l;
 	}
 	
 	
 	public interface ZoomAndScrollViewListener {
-		public void onMatrixChange(Matrix m);
+		public void onMatrixChange(Matrix m, ZoomAndScrollImageView view);
+		public void onScaleBegin(ZoomAndScrollImageView view);
+		public void onScaleEnd(ZoomAndScrollImageView view);
 
 		public void onSingleTab(MotionEvent e);
 	}

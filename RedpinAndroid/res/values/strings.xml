@@ -7,7 +7,7 @@
     
     <string name="redpin_authority">org.redpin.android.provider</string>
     
-    <string name="default_map_text">Map</string>
+    <string name="default_map_text"></string>
     <string name="loading_text">Loading...</string>
     <string name="options_menu_search_text">Search</string>
     <string name="options_menu_add_map_text">Add map</string>
@@ -44,7 +44,7 @@
     
     <string name="host_preferences">Host</string>
     <string name="port_preferences">Port</string>
-    <string name="preferences_category">Server details</string>
+    <string name="preferences_category">Server preferences</string>
     
     <string-array name="main_list_items">
         <item>Maps</item>
@@ -56,8 +56,13 @@
     
     
     
-<string name="map_download_failed">Download of map failed</string>
-<string name="taking_measurement">Taking measurement.\nPlease wait...</string>
-<string name="map_view_no_map_selected">No map selected</string>
-<string name="map_view_title">Map View</string>
+	<string name="map_download_failed">Download of map failed</string>
+	<string name="taking_measurement">Taking measurement.\nPlease wait...</string>
+	<string name="map_view_no_map_selected">No map selected</string>
+	<string name="map_view_title">Map View</string>
+	<string name="settings_view_credits">Credits:</string>
+	<string name="settings_view_credits_value">Luba Rogoleva\nPascal Brogle\nArno Fiva</string>
+	<string name="settings_view_copyright">Copyright:</string>
+	<string name="settings_view_copyright_value">ETH Zürich 2010</string>
+	<string name="settings_view_server_preferences">Server preferences</string>
 </resources>

@@ -45,7 +45,7 @@ import android.util.Log;
  * @author Luba Rogoleva (lubar@student.ethz.ch)
  * 
  */
-public class Preferences extends PreferenceActivity implements
+public class ServerPreferences extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 
 	/**
@@ -57,7 +57,7 @@ public class Preferences extends PreferenceActivity implements
 	 */
 	public final static String PORT_PREFERENCE_KEY = "port_text_preference";
 
-	private String TAG = Preferences.class.getSimpleName();
+	private String TAG = ServerPreferences.class.getSimpleName();
 	private static boolean initialized = false;
 
 	/**

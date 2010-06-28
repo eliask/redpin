@@ -134,7 +134,6 @@ public class LocationMarkerAnnotation extends EditText implements
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 		
 		if (actionId == EditorInfo.IME_ACTION_DONE) {
-			System.out.println("Done");
 			//setCursorVisible(false);
 			clearFocus();
 			

@@ -148,15 +148,18 @@ public class MapViewActivity extends Activity {
 	}
 
 	/**
-	 * Starts the preferences screen
+	 * Starts the setting screen
 	 * 
 	 * @param target {@link View} that called this method
 	 */
-	public void Button_Preferences(View target) {
+	public void button_Settings(View target) {
+		Intent intent = new Intent(this, SettingsActivity.class);
+		startActivity(intent);
+		/*
 		Intent intent = new Intent();
 		intent.setType(Intent.ACTION_VIEW);
-		intent.setClassName(this, Preferences.class.getName());
-		this.startActivity(intent);
+		//intent.setClassName(this, Preferences.class.getName());
+		this.startActivity(intent);*/
 	}
 
 	private static final String pref_url = "url";
@@ -485,6 +488,16 @@ public class MapViewActivity extends Activity {
 			startActivity(search);
 			return true;
 		}
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean onSearchRequested() {
+		Intent search = new Intent(this, SearchListActivity.class);
+		startActivity(search);
 		return false;
 	}
 

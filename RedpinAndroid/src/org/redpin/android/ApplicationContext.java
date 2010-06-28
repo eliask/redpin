@@ -37,7 +37,11 @@ public class ApplicationContext {
 	 * @param context Application {@link Context}
 	 */
 	public static void init(Context context) {
-		applicationContext = context;
+		synchronized (ApplicationContext.class) {
+			applicationContext = context;
+			ApplicationContext.class.notifyAll();
+		}
+		
 	}
 	
 	/**
@@ -45,9 +49,21 @@ public class ApplicationContext {
 	 * @return application {@link Context} or throws IllegalStateException in case the {@link Context} is not yet available
 	 */
 	public static Context get() throws IllegalStateException {
+		//prevent monitor locking after initialization
 		if(applicationContext == null) {
-			throw new IllegalStateException("ApplicationContext was not initialised"); 
-		}
+			
+			synchronized (ApplicationContext.class) {
+				try {
+					if(applicationContext == null) {
+						ApplicationContext.class.wait();
+					}
+				} catch (InterruptedException e) {
+				}		
+			}
+			if(applicationContext == null) {
+				throw new IllegalStateException("ApplicationContext was not initialised"); 
+			}
+		}		
 		
 		return applicationContext;
 	}

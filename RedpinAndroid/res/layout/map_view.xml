@@ -17,7 +17,7 @@
         	android:layout_height="wrap_content"
         	android:id="@+id/logo"
         	android:layout_marginLeft="5dip"
-        	android:onClick="Button_Preferences"
+        	android:onClick="button_Settings"
         	android:layout_marginTop="5dip" android:layout_alignParentLeft="true"/>
         	
 	    <TextView android:layout_height="wrap_content"

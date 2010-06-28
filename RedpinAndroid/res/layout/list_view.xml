@@ -22,10 +22,8 @@
 		<EditText android:id="@+id/filter" 
 			android:layout_width="match_parent" 
 			android:layout_marginLeft="2dip"
-			android:layout_marginTop="2dip"
-			android:layout_height="44dip" 
-			android:singleLine="true"
-			android:hint="@string/list_view_hint_search_text" android:imeOptions="actionDone"/>
+			android:hint="@string/list_view_hint_search_text" android:layout_height="40dip" android:layout_marginTop="4dip" android:layout_marginRight="2dip" android:imeOptions="actionSearch"/>
+		<View android:background="@color/light_grey" android:layout_height="1dip" android:layout_width="match_parent"></View>
 	</LinearLayout>
 			
 	<LinearLayout android:layout_width="match_parent"

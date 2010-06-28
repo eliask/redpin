@@ -41,6 +41,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -50,6 +52,8 @@ import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
+import android.widget.CursorAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -63,7 +67,7 @@ import android.widget.AdapterView.OnItemClickListener;
  * 
  */
 public class LocationListActivity extends ListActivity implements
-		OnItemClickListener, OnCreateContextMenuListener {
+		OnItemClickListener, OnCreateContextMenuListener, TextWatcher {
 
 	private LocationHome locHome;
 	private String TAG = LocationListActivity.class.getSimpleName();
@@ -94,6 +98,12 @@ public class LocationListActivity extends ListActivity implements
 		registerForContextMenu(lv);
 		lv.setClickable(true);
 		lv.setOnItemClickListener(this);
+		
+		View searchView = (View) findViewById(R.id.filter_layout);
+		searchView.setVisibility(View.VISIBLE);
+		EditText filter = (EditText) findViewById(R.id.filter);
+		filter.addTextChangedListener(this);
+		
 		show();
 	}
 
@@ -265,4 +275,29 @@ public class LocationListActivity extends ListActivity implements
 		}
 		
 	};
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void afterTextChanged(Editable s) {
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count,
+			int after) {		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		CursorAdapter adapter = (CursorAdapter) getListAdapter();
+		adapter.getFilter().filter(s);		
+	}
 }

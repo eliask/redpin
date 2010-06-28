@@ -182,21 +182,6 @@ public class LocationMarker extends Button implements OnClickListener {
 
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public LayoutParams getLayoutParams() {
-		if (layout == null || positionChanged) {
-			layout = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-					LayoutParams.WRAP_CONTENT, Gravity.NO_GRAVITY);
-			layout.setMargins(markerX, markerY, 0, 0);
-			positionChanged = false;
-		}
-		return layout;
-
-	}
-
 	private boolean enabled = false;
 
 	/**
@@ -204,11 +189,14 @@ public class LocationMarker extends Button implements OnClickListener {
 	 */
 	@Override
 	public void setEnabled(boolean b) {
-
-		if (enabled == b)
-			return;
-
-		enabled = b;
+		//if (enabled == b)
+		//	return;
+		
+		if (isCurrentLocation) {
+			enabled = false;
+		} else {
+			enabled = b;
+		}
 
 		if (annotation != null) {
 			annotation.setEnabled(enabled);
@@ -407,78 +395,60 @@ public class LocationMarker extends Button implements OnClickListener {
 	 *            Distance in Y direction
 	 */
 	private void moveMarkerBy(int distanceX, int distanceY) {
-		markerX -= distanceX;
-		markerY -= distanceY;
+		
+		setMarkerXY( markerX - distanceX,  markerY - distanceY);
 		
 		unscaledX = (int) (markerX / scale);
 		unscaledY = (int) (markerY / scale);
 		
 		System.out.println("Marker: "+ markerX+","+markerY);
 		System.out.println("Unscaled Marker: "+ unscaledX+","+unscaledY);
-
-		positionChanged();
-		requestLayout();
 	}
 
 
 	public float[] getPosition() {
 		return new float[] { markerX, markerY };
 	}
-
-	public void setPosition(float[] xy) {
-		markerX = (int) xy[0];
-		markerY = (int) xy[1];
-		positionChanged();
-		requestLayout();
-	}
-	
+		
 	public void onScaleChanged(float newScale) {
 		if (newScale == 0)
 			return;
 		
 		scale = newScale;
-		float offsetX = 40;
-		float offsetY = 40;
-		/*
-		markerX = (int) ((unscaledX * scale) -size/2);
-		markerY = (int) ((unscaledY * scale) -size/2);
-		*/
 		
-		markerX = (int) (((unscaledX+size/2) * scale) -size/2);
-		markerY = (int) (((unscaledY+size/2) * scale) -size/2);
-		positionChanged();
-		
+		int x,y;		
+		 
+		x = (int) ((((float)(unscaledX+size/2)) * scale) -size/2);
+		y = (int) ((((float)(unscaledY+size/2)) * scale) -size/2);
+		setMarkerXY(x,y);
+				
 	}
 
-	public void onScaleChanged(WebView view, float oldScale, float newScale) {
+	int lastMarkerX = -1;
+	int lastMarkerY = -1;
+	private void setMarkerXY(int x, int y) {
+		System.out.println("Marker XY:" + x +","+y);
+		int oldX = markerX;
+		int oldY = markerY;
+		markerX = x;
+		markerY = y;
+		
+		
+		double distance = Math.pow(lastMarkerX - markerX, 2) + Math.pow(lastMarkerY - markerY,2);
+		
+		
+		//if(distance > Math.pow(5/scale, 2)) {
+			System.out.println("Distance to last moving: " + distance);
+			positionChanged();
+			requestLayout();
+			
+			lastMarkerX = oldX;
+			lastMarkerY = oldY;
 
-		/*
-		 * Matrix matrix = new Matrix(); matrix.setScale(newScale, newScale);
-		 * 
-		 * float[] pos = new float[] {markerX, markerY}; matrix.mapPoints(pos);
-		 * markerX = (int) pos[0]; markerY = (int) pos[1];
-		 */
-		/*
-		 * System.out.println("Old Scale: " +oldScale + " new: " + newScale);
-		 * System.out.println("(" +markerX+ "," +markerY+ ")"); markerX *=
-		 * newScale; markerY *= newScale; System.out.println("(" +markerX+ ","
-		 * +markerY+ ")");
-		 * 
-		 * TranslateAnimation sa = new TranslateAnimation((markerX*newScale) -
-		 * markerX, (markerX*newScale) - markerX, (markerY) - markerY,
-		 * (markerY*newScale) - markerY);
-		 * 
-		 * sa.setDuration(1000); sa.setFillAfter(true);
-		 */
-		//currentScale = newScale;
-
-		/*
-		 * markerX = (int) ((float)markerX * newScale); markerY = (int)
-		 * ((float)markerY * newScale);
-		 */
-		// startAnimation(sa);
-		// requestLayout();
-
+		//} else {
+			//System.out.println("Distance to low, not changing");
+		//}
+		
 	}
 
 	/**

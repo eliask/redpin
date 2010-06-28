@@ -47,6 +47,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,7 @@ import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
@@ -144,6 +146,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 		imageView.setListener(this);
 		addView(imageView);
 		
+		
 
 		contentView = new FrameLayout(context);
 		contentView.setLayoutParams(new FrameLayout.LayoutParams(
@@ -156,6 +159,12 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 		addView(contentView);
 
 		loadingView = new TextView(getContext());
+		
+		
+		
+		loadingView.setLayoutParams(new FrameLayout.LayoutParams(
+				FrameLayout.LayoutParams.MATCH_PARENT,
+				FrameLayout.LayoutParams.MATCH_PARENT));
 		loadingView.setGravity(Gravity.CENTER);
 		loadingView.setTextColor(R.color.light_grey);
 		loadingView.setTextSize(30);
@@ -163,7 +172,9 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 		loadingView.setText(R.string.loading_text);
 		loadingView.setVisibility(INVISIBLE);
 		loadingView.setBackgroundColor(Color.WHITE);
-		contentView.addView(loadingView);
+		
+				
+		addView(loadingView);
 
 		
 
@@ -238,6 +249,12 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 		fadeIn.setDuration(FADE_DURATION);
 		return fadeIn;
 	}
+	
+	@Override
+	public boolean onTrackballEvent(MotionEvent e) {
+		System.out.println(e);
+		return false;
+	}
 
 	/**
 	 * Shows the map image.
@@ -247,7 +264,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 	 */
 	protected void showImage(String url) {
 
-		loadPending = true;
+		loadPending = true;		
 		loadingView.startAnimation(fadeIn());
 		loadingView.setVisibility(VISIBLE);
 
@@ -273,7 +290,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 		contentView.setLayoutParams(params);
 		*/
 		imageView.setImageBitmap(bm);
-
+		//imageView.requestFocus();
 		showLocationMarkers();
 		processRequestMarkerOnCenter();
 		processRequestScroll();
@@ -293,6 +310,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 		
 	}
 
+	
 	/**
 	 *  
 	 * @param x
@@ -643,12 +661,15 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 	float lastScale;
 	
 	@Override
-	public void onMatrixChange(Matrix matrix) {
+	public void onMatrixChange(Matrix matrix, ZoomAndScrollImageView view) {
 		lastMatrix = matrix;
 		float[] values = new float[9];
 		matrix.getValues(values);
 		float scale = values[Matrix.MSCALE_X];
+
 		lastScale = scale;
+		
+		
 		
 		
 		
@@ -656,6 +677,9 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 		float[] point = new float[] {0,0};
 		matrix.mapPoints(point);
 		contentView.scrollTo((int)- point[0], (int)- point[1]);
+		
+		
+		//contentView.startAnimation(sa);
 		
 		for (LocationMarker m : locationMarker.values()) {
 			m.onScaleChanged(scale);
@@ -678,7 +702,34 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 		}		
 	}
 
+	@Override
+	public void onScaleBegin(ZoomAndScrollImageView view) {
+		contentView.setVisibility(INVISIBLE);		
+	}
 
+	@Override
+	public void onScaleEnd(ZoomAndScrollImageView view) {
+		Animation a = fadeIn();
+		a.setDuration(a.getDuration()/2);
+		contentView.startAnimation(a);	
+		contentView.setVisibility(VISIBLE);
+	}
+
+
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (imageView.onKeyDown(keyCode, event)) {
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public boolean dispatchTrackballEvent(MotionEvent event) {
+		imageView.dispatchTrackballEvent(event);
+		return true;
+	}
 
 	
 	
