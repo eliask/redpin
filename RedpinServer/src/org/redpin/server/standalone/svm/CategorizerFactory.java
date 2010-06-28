@@ -24,6 +24,7 @@ package org.redpin.server.standalone.svm;
 import java.util.List;
 
 import org.redpin.server.standalone.core.Fingerprint;
+import org.redpin.server.standalone.core.Location;
 import org.redpin.server.standalone.core.Measurement;
 import org.redpin.server.standalone.core.measure.WiFiReading;
 import org.redpin.server.standalone.db.HomeFactory;
@@ -61,7 +62,11 @@ public class CategorizerFactory {
 		List<Fingerprint> dataset = HomeFactory.getFingerprintHome().getAll();
 		for (Fingerprint f : dataset) {
 			if (f == null || f.getLocation() == null || f.getMeasurement() == null) continue;
-			String locationTag = f.getLocation().getSymbolicID();
+			
+			Integer id = ((Location)f.getLocation()).getId();
+			if (id == null) continue;
+			
+			String locationTag = id.toString();
 			LocationCategorizer().AddCategory(locationTag);
 			Measurement m = (Measurement)f.getMeasurement();
 			for (WiFiReading r : m.getWiFiReadings()) {

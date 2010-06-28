@@ -82,7 +82,16 @@ public class SVMLocator implements ILocator {
 	
 	private Location getByLocationTag(String tag) {
 		if (tag == null) return null;
-		return HomeFactory.getLocationHome().getLocation(-1, tag);
+		try {
+			int id = Integer.parseInt(tag);
+			
+			return HomeFactory.getLocationHome().getById(id);
+			
+		} catch (NumberFormatException e) {
+			log.log(Level.WARNING, "getByLocationTag failed: " +e.getMessage());
+		}
+		return null;
+		
 	}
 	
 	@Override

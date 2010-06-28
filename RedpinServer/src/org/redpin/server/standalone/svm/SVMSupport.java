@@ -219,8 +219,8 @@ public class SVMSupport {
 				
 		if (f != null) {
 			Location l = (Location) f.getLocation();
-			if (l != null && l.getSymbolicID() != null) {
-				return CategorizerFactory.LocationCategorizer().GetCategoryID(l.getSymbolicID());
+			if (l != null && l.getId() != null) {
+				return CategorizerFactory.LocationCategorizer().GetCategoryID(l.getId().toString());
 			}
 		}
 		return -1;

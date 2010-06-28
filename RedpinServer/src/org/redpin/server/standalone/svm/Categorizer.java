@@ -29,32 +29,30 @@ import java.util.Hashtable;
  *
  */
 public class Categorizer {
-	protected Hashtable<String, Integer> dictionary = new Hashtable<String, Integer>();
+	protected Hashtable<String, Integer> categoryToIdDictionary = new Hashtable<String, Integer>();
 	protected Integer ID = 0;
+	private Hashtable<Integer, String> idToCategoryDictionary = new Hashtable<Integer, String>();
 	
 	public void clear() {
 		ID = 0;
-		dictionary.clear();
+		categoryToIdDictionary.clear();
+		idToCategoryDictionary.clear();
 	}
 	
 	public Integer AddCategory(String name) {
-		if (dictionary.containsKey(name)) return dictionary.get(name);
+		if (categoryToIdDictionary.containsKey(name)) return categoryToIdDictionary.get(name);
 		ID++;
-		dictionary.put(name, ID);
+		categoryToIdDictionary.put(name, ID);
+		idToCategoryDictionary.put(ID, name);
 		return ID;
 	}
 	
 	public String GetCategory(Integer id) {
-		if (dictionary.contains(id)){
-			for (String key : dictionary.keySet()) {
-				if (dictionary.get(key).compareTo(id) == 0) return key;
-			}
-		}
-		return null;
+		return idToCategoryDictionary.get(id);
 	}
 	
 	public Integer GetCategoryID(String name) {
-		if (dictionary.containsKey(name)) return dictionary.get(name);
+		if (categoryToIdDictionary.containsKey(name)) return categoryToIdDictionary.get(name);
 		return -1;
 	}
 }
