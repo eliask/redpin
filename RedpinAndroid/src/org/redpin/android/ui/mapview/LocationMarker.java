@@ -1,5 +1,5 @@
 /**
- *  Filename: LocationMarker.java (in org.repin.android.ui.components)
+ *  Filename: LocationMarker.java (in org.repin.android.ui.mapview)
  *  This file is part of the Redpin project.
  * 
  *  Redpin is free software: you can redistribute it and/or modify
@@ -194,12 +194,13 @@ public class LocationMarker extends Button implements OnClickListener {
 		
 		if (isCurrentLocation) {
 			enabled = false;
+			showAnnotation();
 		} else {
 			enabled = b;
 		}
 
 		if (annotation != null) {
-			annotation.setEnabled(enabled);
+			annotation.setEnabled(b);
 		}
 
 	}
@@ -427,7 +428,7 @@ public class LocationMarker extends Button implements OnClickListener {
 	int lastMarkerX = -1;
 	int lastMarkerY = -1;
 	private void setMarkerXY(int x, int y) {
-		System.out.println("Marker XY:" + x +","+y);
+		//System.out.println("Marker XY:" + x +","+y);
 		int oldX = markerX;
 		int oldY = markerY;
 		markerX = x;
@@ -438,7 +439,7 @@ public class LocationMarker extends Button implements OnClickListener {
 		
 		
 		//if(distance > Math.pow(5/scale, 2)) {
-			System.out.println("Distance to last moving: " + distance);
+			//System.out.println("Distance to last moving: " + distance);
 			positionChanged();
 			requestLayout();
 			

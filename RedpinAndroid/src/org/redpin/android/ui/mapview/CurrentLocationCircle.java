@@ -1,5 +1,5 @@
 /**
- *  Filename: CurrentLocationCircle.java (in org.repin.android.ui.components)
+ *  Filename: CurrentLocationCircle.java (in org.repin.android.ui.mapview)
  *  This file is part of the Redpin project.
  * 
  *  Redpin is free software: you can redistribute it and/or modify

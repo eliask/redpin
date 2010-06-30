@@ -140,7 +140,7 @@ public class WifiSniffer extends Service {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if (mWifi.isWifiEnabled())
+			if (mWifi.isWifiEnabled() && !stop)
 				initiateSniff();
 		}
 
@@ -155,6 +155,14 @@ public class WifiSniffer extends Service {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			
+			//Do not listen to broadcast when not initiated scan
+			//When no network is available, broadcasts are sent every few seconds
+			if(stop) {
+				Log.d(TAG, "Received not requested scan result");
+				return;
+			}
+			
 			List<ScanResult> results = mWifi.getScanResults();
 			Measurement measurement = new Measurement();
 
@@ -198,7 +206,7 @@ public class WifiSniffer extends Service {
 			}
 				
 			if (stop) {
-				Log.i(TAG, "Scanning stopped, skiping scan");
+				Log.d(TAG, "Scanning stopped, skiping scan");
 				return;
 			}
 

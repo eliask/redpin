@@ -53,7 +53,9 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -61,6 +63,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.SlidingDrawer;
 import android.widget.TextView;
 
@@ -84,6 +87,7 @@ public class MapViewActivity extends Activity {
 	WiFiReading wfreading, wfreading2, wfreading3;
 	Vector<WiFiReading> vectorWifi;
 	Measurement measurement;
+	private RelativeLayout mapTopBar;
 
 	/**
 	 * {@inheritDoc}
@@ -115,6 +119,11 @@ public class MapViewActivity extends Activity {
 		setContentView(R.layout.map_view);
 		mapView = (MapView) findViewById(R.id.map_view_component);
 		mapName = (TextView) findViewById(R.id.map_name);
+		mapTopBar = (RelativeLayout) findViewById(R.id.map_topbar);
+		
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			mapTopBar.setVisibility(View.GONE);
+		}
 
 		addLocationButton = (ImageButton) findViewById(R.id.add_location_button);
 		addLocationButton.setOnClickListener(new View.OnClickListener() {
@@ -155,11 +164,6 @@ public class MapViewActivity extends Activity {
 	public void button_Settings(View target) {
 		Intent intent = new Intent(this, SettingsActivity.class);
 		startActivity(intent);
-		/*
-		Intent intent = new Intent();
-		intent.setType(Intent.ACTION_VIEW);
-		//intent.setClassName(this, Preferences.class.getName());
-		this.startActivity(intent);*/
 	}
 
 	private static final String pref_url = "url";
@@ -173,8 +177,9 @@ public class MapViewActivity extends Activity {
 		SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 		Editor edit = preferences.edit();
 		edit.putString(pref_url, mapView.getUrl());
-		edit.putInt(pref_scrollX, mapView.getScrollX());
-		edit.putInt(pref_scrollY, mapView.getScrollY());
+		int[] scroll = mapView.getScrollXY();
+		edit.putInt(pref_scrollX, scroll[0]);
+		edit.putInt(pref_scrollY, scroll[1]);
 		edit.commit();
 	}
 
@@ -246,7 +251,7 @@ public class MapViewActivity extends Activity {
 			mapName.setText(m.getMapName());
 		}
 
-		mapView.showLocation(mLocation, true);
+		mapView.showLocation(loc, true);
 	}
 
 	/**
@@ -424,7 +429,7 @@ public class MapViewActivity extends Activity {
 							public void onResponse(Response<?> response) {
 								progressDialog.hide();
 								Location l = (Location) response.getData();
-								mapView.showLocation(l, true);
+								showLocation(l);
 
 							}
 

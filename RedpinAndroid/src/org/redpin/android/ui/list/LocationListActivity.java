@@ -94,7 +94,7 @@ public class LocationListActivity extends ListActivity implements
 		}
 
 		ListView lv = getListView();
-		lv.setTextFilterEnabled(true);
+		//lv.setTextFilterEnabled(true);
 		registerForContextMenu(lv);
 		lv.setClickable(true);
 		lv.setOnItemClickListener(this);

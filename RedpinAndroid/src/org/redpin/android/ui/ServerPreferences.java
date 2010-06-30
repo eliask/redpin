@@ -1,5 +1,5 @@
 /**
- *  Filename: Preferences.java (in org.repin.android.ui)
+ *  Filename: ServerPreferences.java (in org.repin.android.ui)
  *  This file is part of the Redpin project.
  * 
  *  Redpin is free software: you can redistribute it and/or modify

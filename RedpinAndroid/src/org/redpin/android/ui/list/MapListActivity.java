@@ -100,7 +100,13 @@ public class MapListActivity extends ListActivity implements
 
 		setListAdapter(new MapCursorAdapter(this, getIntent().getData()));
 		ListView lv = getListView();
-		lv.setTextFilterEnabled(true);
+		
+		/*
+		 * Does pose problems with own search box. after user presses search, focus is transfered to the listview and the keyboard appears again
+		 * Possible fix is to use lv.setFocusableInTouchMode(true)
+		 */
+		//lv.setTextFilterEnabled(true);
+		
 		registerForContextMenu(lv);
 		lv.setClickable(true);
 		lv.setOnItemClickListener(this);

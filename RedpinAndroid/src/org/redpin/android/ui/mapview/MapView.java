@@ -1,5 +1,5 @@
 /**
- *  Filename: MapView.java (in org.repin.android.ui.components)
+ *  Filename: MapView.java (in org.repin.android.ui.mapview)
  *  This file is part of the Redpin project.
  * 
  *  Redpin is free software: you can redistribute it and/or modify
@@ -318,6 +318,22 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 	 */
 	protected void doScrollTo(int x, int y) {
 		System.out.println("ScrollTo:" + x +","+y);
+		imageView.scrollTo(x, y);
+	}
+	
+	
+	public int[] getScrollXY() {
+		float[] current = imageView.getCurrentXY();
+		return new int[] {-(int) current[0], -(int) current[1]};
+	}
+
+	@Override
+	public void scrollBy(int x, int y) {
+		imageView.scrollBy(x, y);
+	}
+
+	@Override
+	public void scrollTo(int x, int y) {
 		imageView.scrollTo(x, y);
 	}
 
