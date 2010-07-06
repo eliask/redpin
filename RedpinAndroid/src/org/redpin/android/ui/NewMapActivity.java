@@ -62,6 +62,7 @@ import android.widget.TextView.OnEditorActionListener;
  */
 public class NewMapActivity extends Activity implements UploadImageTaskCallback, DownloadImageTaskCallback {
 
+	@SuppressWarnings("unused")
 	private final static String TAG = NewMapActivity.class.getSimpleName();
 
 	private EditText inputUrl = null;

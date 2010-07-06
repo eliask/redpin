@@ -39,7 +39,6 @@ import org.redpin.android.net.wifi.WifiSniffer;
 import org.redpin.android.ui.list.MainListActivity;
 import org.redpin.android.ui.list.SearchListActivity;
 import org.redpin.android.ui.mapview.MapView;
-import org.redpin.android.util.ExceptionHandler;
 import org.redpin.android.util.ExceptionReporter;
 
 import android.app.Activity;
@@ -55,7 +54,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -64,7 +62,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-import android.widget.SlidingDrawer;
 import android.widget.TextView;
 
 /**

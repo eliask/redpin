@@ -52,6 +52,7 @@ public class SearchListActivity extends ListActivity implements
 		OnItemClickListener, TextWatcher {
 
 	private LocationHome locHome;
+	@SuppressWarnings("unused")
 	private String TAG = SearchListActivity.class.getSimpleName();
 	private static final String COLUMN_PLACEHOLDER = "_COLUMN_";
 	private static final String TEXT_PLACEHOLDER = "_TEXT_";

@@ -47,6 +47,12 @@ import android.widget.Scroller;
 import android.widget.ZoomButtonsController;
 import android.widget.ZoomButtonsController.OnZoomListener;
 
+/**
+ * ImageView that is capable of zooming and scrolling an image.
+ * 
+ * @author Pascal Brogle (broglep@student.ethz.ch)
+ * 
+ */
 public class ZoomAndScrollImageView extends View implements OnZoomListener,
 		OnDoubleTapListener, OnGestureListener, OnScaleGestureListener {
 
@@ -81,6 +87,17 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 	private Picture picture;
 
+	/**
+	 * Construct a new ZoomAndScrollImageView with layout parameters and a
+	 * default style.
+	 * 
+	 * @param context
+	 *            A Context object used to access application assets.
+	 * @param attrs
+	 *            An AttributeSet passed to our parent.
+	 * @param defStyle
+	 *            The default style resource ID.
+	 */
 	public ZoomAndScrollImageView(Context context, AttributeSet attrs,
 			int defStyle) {
 		super(context, attrs, defStyle);
@@ -88,16 +105,36 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 	}
 
+	/**
+	 * Construct a new ZoomAndScrollImageView with layout parameters.
+	 * 
+	 * @param context
+	 *            A Context object used to access application assets.
+	 * @param attrs
+	 *            An AttributeSet passed to our parent.
+	 */
 	public ZoomAndScrollImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init(context);
 	}
 
+	/**
+	 * Construct a new ZoomAndScrollImageView with a Context object.
+	 * 
+	 * @param context
+	 *            A Context object used to access application assets.
+	 */
 	public ZoomAndScrollImageView(Context context) {
 		super(context);
 		init(context);
 	}
 
+	/**
+	 * Initializes the view
+	 * 
+	 * @param context
+	 *            {@link Context}
+	 */
 	private void init(Context context) {
 		setFocusable(true);
 		scroller = new Scroller(context);
@@ -115,6 +152,12 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 	}
 
+	/**
+	 * Displays a bitmap
+	 * 
+	 * @param bitmap
+	 *            {@link Bitmap}
+	 */
 	public void setImageBitmap(Bitmap bitmap) {
 		setZoom(1.0f, false);
 		setContentSize(bitmap.getWidth(), bitmap.getHeight());
@@ -126,35 +169,66 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 		picture.endRecording();
 	}
 
+	/**
+	 * Displays a drawable
+	 * 
+	 * @param bDrawable
+	 *            {@link BitmapDrawable}
+	 */
 	public void setImageDrawable(BitmapDrawable bDrawable) {
 		setImageBitmap(bDrawable.getBitmap());
 	}
 
+	/**
+	 * Adjusts minimal zoom level depending on the image size
+	 */
 	public void adjustMinZoom() {
 		int w = getWidth();
 		int h = getHeight();
 		if (w == 0 || h == 0) {
 			return;
 		}
-		Log.d(TAG, "contentWH: " + contentWidth + "," + contentHeight);
-		Log.d(TAG, "WH: " + contentWidth + "," + contentHeight);
+
 		MIN_ZOOM = Math.max(w / contentWidth, h / contentHeight);
 	}
 
+	/**
+	 * Sets the image content size
+	 * 
+	 * @param width
+	 *            Image width
+	 * @param height
+	 *            Image height
+	 */
 	public void setContentSize(int width, int height) {
 		contentWidth = width;
 		contentHeight = height;
 		adjustMinZoom();
 	}
 
+	/**
+	 * 
+	 * @return Current zoom scale
+	 */
 	public float getScale() {
 		return scale;
 	}
 
+	/**
+	 * 
+	 * @param scale
+	 *            Desired zoom scale
+	 */
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
 
+	/**
+	 * Notifies the listener about the changed matrix
+	 * 
+	 * @param m
+	 *            Changed matrix
+	 */
 	private void notifyMatrix(Matrix m) {
 		if (listener != null) {
 			listener.onMatrixChange(m, this);
@@ -162,11 +236,17 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void scrollBy(int x, int y) {
 
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void scrollTo(int x, int y) {
 		currentX = -x;
@@ -178,11 +258,15 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 		invalidate();
 	}
 
+	/**
+	 * 
+	 * @return current x and y coordinate of the
+	 */
 	public float[] getCurrentXY() {
 		return new float[] { currentX, currentY };
 	}
 
-	/**
+	/*
 	 * {@link OnDoubleTapListener}
 	 */
 
@@ -219,7 +303,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 		return true;
 	}
 
-	/**
+	/*
 	 * {@link OnGestureListener}
 	 */
 	@Override
@@ -271,7 +355,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 		return false;
 	}
 
-	/**
+	/*
 	 * {@link OnZoomListener}
 	 */
 	@Override
@@ -306,7 +390,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 		invalidate();
 	}
 
-	/**
+	/*
 	 * {@link View}
 	 */
 	@Override
@@ -326,13 +410,10 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		boolean isAnimating = false;
-
 		if (myTranslation != null && myTranslation.hasStarted()
 				&& !myTranslation.hasEnded()) {
 			myTranslation.getTransformation(AnimationUtils
 					.currentAnimationTimeMillis(), null);
-			isAnimating = true;
 		}
 
 		int saveCount = canvas.save();
@@ -340,11 +421,8 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 		if (scroller.computeScrollOffset()) {
 			currentX = scroller.getCurrX();
 			currentY = scroller.getCurrY();
-			// notifyOnScroll();
 			invalidate();
 		}
-
-		// System.out.println("CurrentXY: " + currentX + "," + currentY);
 
 		int width = getWidth();
 		int height = getHeight();
@@ -498,18 +576,23 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 		return handeled;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		adjustMinZoom();
 	}
 
-	public interface OnDrawListener {
-		public void onDraw(Canvas canvas, Matrix matrix);
-	}
-
 	ZoomAndTranslate myTranslation = new ZoomAndTranslate();
 
+	/**
+	 * Animation that zoom and translates to a given position
+	 * 
+	 * @author Pascal Brogle (broglep@student.ethz.ch)
+	 * 
+	 */
 	class ZoomAndTranslate extends Animation {
 		private static final int DURATION = 1000;
 
@@ -543,6 +626,20 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 			});
 		}
 
+		/**
+		 * Starts the animation
+		 * 
+		 * @param amount
+		 *            Zoom amount
+		 * @param fromX
+		 *            From x coordinate
+		 * @param toX
+		 *            To x coordinate
+		 * @param fromY
+		 *            From y coordinate
+		 * @param toY
+		 *            To y coordinate
+		 */
 		public void start(float amount, float fromX, float toX, float fromY,
 				float toY) {
 			this.fromX = fromX;
@@ -551,12 +648,12 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 			this.toY = toY;
 
 			translateInterpolator = new DecelerateInterpolator(); // new
-																	// LinearInterpolator();//
-																	// new
-																	// DecelerateInterpolator();
+			// LinearInterpolator();//
+			// new
+			// DecelerateInterpolator();
 			zoomInterpolator = new AccelerateDecelerateInterpolator(); // new
-																		// LinearInterpolator();//
-																		// AccelerateDecelerateInterpolator();
+			// LinearInterpolator();//
+			// AccelerateDecelerateInterpolator();
 			mFrom = scale;
 			mTo = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, scale + amount));
 
@@ -565,6 +662,9 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 			getTransformation(t, null);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		protected void applyTransformation(float interpolatedTime,
 				Transformation t) {
@@ -580,6 +680,9 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean onScale(ScaleGestureDetector detector) {
 		// Log.i(TAG, "onScale, factor:" + detector.getScaleFactor());
@@ -592,6 +695,9 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean onScaleBegin(ScaleGestureDetector detector) {
 		notifyScaleBegin();
@@ -599,12 +705,18 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 		return true;
 	}
 
+	/**
+	 * Notifies the beginning of the scaling to the listener
+	 */
 	private void notifyScaleBegin() {
 		if (listener != null) {
 			listener.onScaleBegin(this);
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onScaleEnd(ScaleGestureDetector detector) {
 
@@ -614,6 +726,9 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 	}
 
+	/**
+	 * Notifies the ending of the scaling to the listener
+	 */
 	private void notifyScaleEnd() {
 		if (listener != null) {
 			listener.onScaleEnd(this);
@@ -624,13 +739,45 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 		listener = l;
 	}
 
+	/**
+	 * Listener-Interface for {@link ZoomAndScrollImageView}
+	 * 
+	 * @author Pascal Brogle (broglep@student.ethz.ch)
+	 * 
+	 */
 	public interface ZoomAndScrollViewListener {
+		/**
+		 * Called when a change in the drawing matrix occours
+		 * 
+		 * @param m
+		 *            New matrix
+		 * @param view
+		 *            View that calls the method
+		 */
 		public void onMatrixChange(Matrix m, ZoomAndScrollImageView view);
 
+		/**
+		 * Called when the user begins to scale
+		 * 
+		 * @param view
+		 *            View that calls the method
+		 */
 		public void onScaleBegin(ZoomAndScrollImageView view);
 
+		/**
+		 * Called when the user ends scaling
+		 * 
+		 * @param view
+		 *            View that calls the method
+		 */
 		public void onScaleEnd(ZoomAndScrollImageView view);
 
+		/**
+		 * Called when the user tabs the view
+		 * 
+		 * @param e
+		 *            MotionEvent
+		 */
 		public void onSingleTab(MotionEvent e);
 	}
 

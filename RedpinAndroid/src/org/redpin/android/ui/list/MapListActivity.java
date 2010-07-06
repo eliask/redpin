@@ -53,8 +53,6 @@ import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;

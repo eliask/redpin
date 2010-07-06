@@ -26,7 +26,6 @@ import org.redpin.android.core.Location;
 import org.redpin.android.net.home.LocationRemoteHome;
 
 import android.graphics.Color;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -53,7 +52,7 @@ public class LocationMarkerAnnotation extends EditText implements
 
 	int default_width = 150;
 	int default_height = 40;
-	
+
 	float density = 1;
 
 	/**
@@ -79,10 +78,10 @@ public class LocationMarkerAnnotation extends EditText implements
 		setGravity(Gravity.CENTER_HORIZONTAL);
 
 		setTextColor(Color.WHITE);
-		
+
 		density = getContext().getResources().getDisplayMetrics().density;
-		default_width = (int) (default_width*density);
-		default_height = (int) (default_height*density);
+		default_width = (int) (default_width * density);
+		default_height = (int) (default_height * density);
 
 		setWidth(default_width);
 		setMinWidth(default_width);
@@ -91,8 +90,6 @@ public class LocationMarkerAnnotation extends EditText implements
 		setMinHeight(default_height);
 		setMaxHeight(default_height);
 		setHeight(default_height);
-		
-		
 
 	}
 
@@ -118,7 +115,7 @@ public class LocationMarkerAnnotation extends EditText implements
 					+ ", " + getMeasuredHeight());
 
 			layout.setMargins(marker.markerX - w / 2 + LocationMarker.size / 2,
-					marker.markerY - (h + (int)(3*density)), 0, 0);
+					marker.markerY - (h + (int) (3 * density)), 0, 0);
 			markerPositionChanged = false;
 		}
 		return layout;
@@ -132,13 +129,13 @@ public class LocationMarkerAnnotation extends EditText implements
 	 */
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-		
+
 		if (actionId == EditorInfo.IME_ACTION_DONE) {
-			//setCursorVisible(false);
+			// setCursorVisible(false);
 			clearFocus();
-			
+
 			setSelected(false);
-			
+
 			Location location = marker.getLocation();
 			String newSId = getText().toString();
 			if (!location.getSymbolicID().equals(newSId)) {

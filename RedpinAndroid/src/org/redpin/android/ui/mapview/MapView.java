@@ -33,7 +33,6 @@ import org.redpin.android.net.DownloadImageTask.DownloadImageTaskCallback;
 import org.redpin.android.provider.RedpinContract;
 import org.redpin.android.ui.mapview.ZoomAndScrollImageView.ZoomAndScrollViewListener;
 
-
 import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.Context;
@@ -45,22 +44,14 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.GestureDetector.OnDoubleTapListener;
-import android.view.GestureDetector.OnGestureListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.FrameLayout.LayoutParams;
 
 /**
  * {@link MapView} displays a {@link Map} on the screen and its {@link Location}
@@ -69,18 +60,19 @@ import android.widget.FrameLayout.LayoutParams;
  * @author Pascal Brogle (broglep@student.ethz.ch)
  * 
  */
-public class MapView extends FrameLayout implements DownloadImageTaskCallback, ZoomAndScrollViewListener {
+public class MapView extends FrameLayout implements DownloadImageTaskCallback,
+		ZoomAndScrollViewListener {
 
 	private ZoomAndScrollImageView imageView;
-	
+
 	private FrameLayout contentView;
 	private TextView loadingView;
-	
+
 	private Map currentMap;
 	private Location currentLocation;
 	private HashMap<Location, LocationMarker> locationMarker = new HashMap<Location, LocationMarker>();
 	private LocationMarker requestedCenterMarker;
-	
+
 	private boolean loadPending;
 	private int[] requestedScroll;
 	private Uri currentUri;
@@ -93,7 +85,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 	private static final String TAG = MapView.class.getSimpleName();
 
 	/**
-	 * Construct a new WebView with a Context object.
+	 * Construct a new MapView with a Context object.
 	 * 
 	 * @param context
 	 *            A Context object used to access application assets.
@@ -132,36 +124,26 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 	}
 
 	/**
-	 * Initiate the MapView
+	 * Initializes the MapView
 	 * 
 	 * @param context
 	 *            {@link Context}
 	 */
 	protected void initView(Context context) {
 
-		
-		
-		
 		imageView = new ZoomAndScrollImageView(context);
 		imageView.setListener(this);
 		addView(imageView);
-		
-		
 
 		contentView = new FrameLayout(context);
 		contentView.setLayoutParams(new FrameLayout.LayoutParams(
 				FrameLayout.LayoutParams.MATCH_PARENT,
 				FrameLayout.LayoutParams.MATCH_PARENT));
-		
-		
-		
 
 		addView(contentView);
 
 		loadingView = new TextView(getContext());
-		
-		
-		
+
 		loadingView.setLayoutParams(new FrameLayout.LayoutParams(
 				FrameLayout.LayoutParams.MATCH_PARENT,
 				FrameLayout.LayoutParams.MATCH_PARENT));
@@ -172,15 +154,9 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 		loadingView.setText(R.string.loading_text);
 		loadingView.setVisibility(INVISIBLE);
 		loadingView.setBackgroundColor(Color.WHITE);
-		
-				
+
 		addView(loadingView);
-
-		
-
-
 	}
-
 
 	/**
 	 * Shows an {@link LocationMarker}
@@ -224,12 +200,17 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 		return currentLocation;
 	}
 
+	/**
+	 * 
+	 * @return uri of the current image
+	 */
 	public String getUrl() {
 		if (currentUri == null)
 			return null;
 
 		return currentUri.toString();
 	}
+
 	/**
 	 * 
 	 * @return Fade out {@link Animation}
@@ -249,7 +230,10 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 		fadeIn.setDuration(FADE_DURATION);
 		return fadeIn;
 	}
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean onTrackballEvent(MotionEvent e) {
 		System.out.println(e);
@@ -264,7 +248,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 	 */
 	protected void showImage(String url) {
 
-		loadPending = true;		
+		loadPending = true;
 		loadingView.startAnimation(fadeIn());
 		loadingView.setVisibility(VISIBLE);
 
@@ -281,16 +265,15 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 		Bitmap bm = BitmapFactory.decodeFile(path);
 		imageWidth = bm.getWidth();
 		imageHeight = bm.getHeight();
-		
+
 		contentView.setLayoutParams(new LayoutParams(imageWidth, imageHeight));
 		/*
-		ViewGroup.LayoutParams params = contentView.getLayoutParams();
-		params.width = w;
-		params.height = h;
-		contentView.setLayoutParams(params);
-		*/
+		 * ViewGroup.LayoutParams params = contentView.getLayoutParams();
+		 * params.width = w; params.height = h;
+		 * contentView.setLayoutParams(params);
+		 */
 		imageView.setImageBitmap(bm);
-		//imageView.requestFocus();
+		// imageView.requestFocus();
 		showLocationMarkers();
 		processRequestMarkerOnCenter();
 		processRequestScroll();
@@ -299,39 +282,34 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 		loadingView.setVisibility(INVISIBLE);
 
 	}
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onImageDownloadFailure(String url) {
 		loadPending = false;
 		new AlertDialog.Builder(getContext()).setMessage(
-					getContext().getString(R.string.map_download_failed))
-					.show();
-		
-		
+				getContext().getString(R.string.map_download_failed)).show();
+
 	}
 
-	
-	/**
-	 *  
-	 * @param x
-	 * @param y
-	 */
-	protected void doScrollTo(int x, int y) {
-		System.out.println("ScrollTo:" + x +","+y);
-		imageView.scrollTo(x, y);
-	}
-	
-	
 	public int[] getScrollXY() {
 		float[] current = imageView.getCurrentXY();
-		return new int[] {-(int) current[0], -(int) current[1]};
+		return new int[] { -(int) current[0], -(int) current[1] };
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void scrollBy(int x, int y) {
 		imageView.scrollBy(x, y);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void scrollTo(int x, int y) {
 		imageView.scrollTo(x, y);
@@ -378,22 +356,17 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 	public void addNewLocation(Location newLocation) {
 		if (newLocation == null)
 			return;
-		
 
 		int w = getWidth();
 		int h = getHeight();
-		
-		float[] point = new float[] {0,0};
+
+		float[] point = new float[] { 0, 0 };
 		lastMatrix.mapPoints(point);
-		int offsetX = (int) ((-point[0]+ (w / 2)) / lastScale);
-		int offsetY = (int) ((-point[1]+ (h / 2)) / lastScale);
-		
-		
-		
+		int offsetX = (int) ((-point[0] + (w / 2)) / lastScale);
+		int offsetY = (int) ((-point[1] + (h / 2)) / lastScale);
 
 		newLocation.setMapXcord(offsetX);
 		newLocation.setMapYcord(offsetY);
-		
 
 		LocationMarker marker = addMarkerForLocation(newLocation);
 		marker.onScaleChanged(lastScale);
@@ -435,8 +408,8 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 	 *            {@link LocationMarker} to be centered on the screen
 	 */
 	public void centerMarker(LocationMarker marker) {
-		
-		//imageView.setZoom(1.0f, true);
+
+		// imageView.setZoom(1.0f, true);
 		Location location = marker.getLocation();
 		int w = getMeasuredWidth();
 		int h = getMeasuredHeight();
@@ -446,7 +419,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 		// due to a bug javascriptScrollTo has to be used
 		// scrollTo(left, top);
 
-		doScrollTo(left, top);
+		scrollTo(left, top);
 
 	}
 
@@ -477,30 +450,40 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 		}
 	}
 
+	/**
+	 * Processes pending scroll request (if any)
+	 */
 	public void processRequestScroll() {
 		if (requestedScroll == null) {
 			return;
 		}
 
-		doScrollTo(requestedScroll[0], requestedScroll[1]);
+		scrollTo(requestedScroll[0], requestedScroll[1]);
 		requestedScroll = null;
 	}
+
 	/**
 	 * Scrolls to requested x,y position
-	 * @param x position
-	 * @param y position
-	 * @param forceDelay Whether scrolling should foreced to be delayed after the page loading
+	 * 
+	 * @param x
+	 *            position
+	 * @param y
+	 *            position
+	 * @param forceDelay
+	 *            Whether scrolling should forced to be delayed after the page
+	 *            loading
 	 */
 	public void requestScroll(int x, int y, boolean forceDelay) {
 		if (loadPending || forceDelay) {
 			requestedScroll = new int[] { x, y };
 		} else {
-			doScrollTo(x, y);
+			scrollTo(x, y);
 		}
 	}
 
 	/**
 	 * Requests that the view should be scrolled
+	 * 
 	 * @param x
 	 * @param y
 	 */
@@ -675,7 +658,10 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 
 	Matrix lastMatrix = new Matrix();
 	float lastScale;
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onMatrixChange(Matrix matrix, ZoomAndScrollImageView view) {
 		lastMatrix = matrix;
@@ -684,55 +670,58 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 		float scale = values[Matrix.MSCALE_X];
 
 		lastScale = scale;
-		
-		
-		
-		
-		
-		
-		float[] point = new float[] {0,0};
+
+		float[] point = new float[] { 0, 0 };
 		matrix.mapPoints(point);
-		contentView.scrollTo((int)- point[0], (int)- point[1]);
-		
-		
-		//contentView.startAnimation(sa);
-		
+		contentView.scrollTo((int) -point[0], (int) -point[1]);
+
+		// contentView.startAnimation(sa);
+
 		for (LocationMarker m : locationMarker.values()) {
 			m.onScaleChanged(scale);
 		}
-		
+
 		ViewGroup.LayoutParams params = contentView.getLayoutParams();
-		params.width = (int) (imageWidth*scale);
-		params.height = (int) (imageHeight*scale);
+		params.width = (int) (imageWidth * scale);
+		params.height = (int) (imageHeight * scale);
 		contentView.setLayoutParams(params);
 	}
-	
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onSingleTab(MotionEvent e) {
-		for (LocationMarker l: locationMarker.values()) {
-			if(l.clicked) {
+		for (LocationMarker l : locationMarker.values()) {
+			if (l.clicked) {
 				l.onClick(this);
 			}
-			
-		}		
+
+		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onScaleBegin(ZoomAndScrollImageView view) {
-		contentView.setVisibility(INVISIBLE);		
+		contentView.setVisibility(INVISIBLE);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onScaleEnd(ZoomAndScrollImageView view) {
 		Animation a = fadeIn();
-		a.setDuration(a.getDuration()/2);
-		contentView.startAnimation(a);	
+		a.setDuration(a.getDuration() / 2);
+		contentView.startAnimation(a);
 		contentView.setVisibility(VISIBLE);
 	}
 
-
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (imageView.onKeyDown(keyCode, event)) {
@@ -741,14 +730,15 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 		return super.onKeyDown(keyCode, event);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean dispatchTrackballEvent(MotionEvent event) {
 		imageView.dispatchTrackballEvent(event);
 		return true;
 	}
 
-	
-	
 	/*
 	 * @Override protected void onRestoreInstanceState(Parcelable state) { if
 	 * (!(state instanceof SavedState)) { super.onRestoreInstanceState(state);
@@ -810,7 +800,5 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback, Z
 	 * 
 	 * }
 	 */
-
-	
 
 }

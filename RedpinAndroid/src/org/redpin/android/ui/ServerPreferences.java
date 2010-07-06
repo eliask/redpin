@@ -98,7 +98,6 @@ public class ServerPreferences extends PreferenceActivity implements
 
 	}
 
-	private Context context;
 	private ServiceConnection mConnection = new ServiceConnection() {
 
 		@Override

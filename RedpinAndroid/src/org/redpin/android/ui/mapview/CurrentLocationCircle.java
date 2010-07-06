@@ -63,15 +63,15 @@ public class CurrentLocationCircle extends View {
 		super(marker.getContext());
 
 		setVisibility(INVISIBLE);
-		
+
 		density = getContext().getResources().getDisplayMetrics().density;
 
 		this.marker = marker;
-		this.radius = radius*density;
-		this.strokeWidth = strokeWidth*density;
-	
-		setMinimumWidth((int) ((radius * 2) + strokeWidth*2));
-		setMinimumHeight((int) ((radius * 2) + strokeWidth*2));
+		this.radius = radius * density;
+		this.strokeWidth = strokeWidth * density;
+
+		setMinimumWidth((int) ((radius * 2) + strokeWidth * 2));
+		setMinimumHeight((int) ((radius * 2) + strokeWidth * 2));
 
 		redFilledPaint = new Paint();
 		redFilledPaint.setStyle(Style.FILL);
@@ -95,7 +95,8 @@ public class CurrentLocationCircle extends View {
 			layout = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
 					LayoutParams.WRAP_CONTENT, Gravity.NO_GRAVITY);
 
-			int offset = (int) (radius + strokeWidth) - (LocationMarker.size / 2);
+			int offset = (int) (radius + strokeWidth)
+					- (LocationMarker.size / 2);
 			layout.setMargins(marker.markerX - offset, marker.markerY - offset,
 					0, 0);
 			markerPositionChanged = false;
@@ -109,8 +110,10 @@ public class CurrentLocationCircle extends View {
 	 */
 	@Override
 	protected void onDraw(Canvas canvas) {
-		canvas.drawCircle(radius + strokeWidth, radius + strokeWidth, radius, redFilledPaint);
-		canvas.drawCircle(radius + strokeWidth, radius + strokeWidth, radius, redLinePaint);
+		canvas.drawCircle(radius + strokeWidth, radius + strokeWidth, radius,
+				redFilledPaint);
+		canvas.drawCircle(radius + strokeWidth, radius + strokeWidth, radius,
+				redLinePaint);
 		super.onDraw(canvas);
 	}
 
