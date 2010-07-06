@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Redpin"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/RedpinCore"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.5-bin.jar"/>
 	<classpathentry kind="lib" path="lib/gson-1.3.jar" sourcepath="lib/gson-1.3-sources.jar"/>
 	<classpathentry kind="lib" path="lib/libsvm.jar"/>
