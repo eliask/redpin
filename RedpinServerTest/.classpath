@@ -8,6 +8,6 @@
 	<classpathentry kind="lib" path="/RedpinServer/lib/libsvm.jar"/>
 	<classpathentry kind="lib" path="/RedpinServer/lib/mysql-connector-java-5.1.5-bin.jar"/>
 	<classpathentry kind="lib" path="/RedpinServer/lib/sqlite-jdbc-3.6.17.1.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Redpin"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/RedpinCore"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
