@@ -35,7 +35,7 @@
 
 
 
-@interface RootViewController : UIViewController <NSFetchedResultsControllerDelegate, UITabBarDelegate, SnifferDelegate> {
+@interface RootViewController : UIViewController <NSFetchedResultsControllerDelegate, UITabBarDelegate, SnifferDelegate, UIActionSheetDelegate> {
 
 	IBOutlet UIBarButtonItem *addPositionButton;
 	IBOutlet UIBarButtonItem *refreshPositionButton;
@@ -44,7 +44,9 @@
 	IBOutlet UIBarButtonItem *searchButton;
 	IBOutlet UIBarButtonItem *addMapButton;	
 	IBOutlet UIBarButtonItem *redpinLogoButton;
-	
+	IBOutlet UIView *confirmationView;
+	IBOutlet UIToolbar *toolbar;
+		
 	MapListTableViewController *mapListController;
 	ListTableViewController *listController;
 	SearchTableViewController *searchController;
@@ -59,8 +61,11 @@
 	BOOL restoredState;	
 	BOOL locateInProgress;
 	BOOL snifferMovementWasShown;
-	
 	BOOL backsideVisible;
+	
+	BOOL userWantsToSelectCurrentLocation;
+	
+	NSTimer *hideTimer;
 
 }
 
@@ -70,6 +75,10 @@
 - (IBAction) addMap:(id)sender;
 - (IBAction) search:(id)sender;
 - (IBAction) flipBackside:(id)sender;
+
+- (IBAction) userClickYes:(id)sender;
+- (IBAction) userClickNo:(id)sender;
+- (IBAction) userClickDontKnow:(id)sender;
 
 - (void) showLocation:(Location *) loc animated:(BOOL) animated;
 
@@ -84,6 +93,9 @@
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *searchButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *addMapButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *redpinLogoButton;
+@property (nonatomic, retain) IBOutlet UIView *confirmationView;
+@property (nonatomic, retain) IBOutlet UIToolbar *toolbar;
+
 
 @property (nonatomic, retain) Map *currentMap;
 @property (nonatomic, retain) Location *currentLocation;
@@ -96,5 +108,6 @@
 @property (nonatomic, retain) BacksideViewController *backsideController;
 @property (nonatomic, retain) MapViewController *mapViewController;
 
+@property (nonatomic, retain) NSTimer *hideTimer;
 
 @end

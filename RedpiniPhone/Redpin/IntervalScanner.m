@@ -63,8 +63,8 @@ extern NSString * const IntervalScanStopNotification;
 		if (timer) {
 			[timer invalidate];
 		}
-		if([delegate respondsToSelector:@selector(scanner:finishScan:)]) {
-			[delegate scanner:self finishScan:count];
+		if([delegate respondsToSelector:@selector(scanner:didFinishScanning:)]) {
+			[delegate scanner:self didFinishScanning:count];
 		}
 	}
 }
@@ -73,19 +73,7 @@ extern NSString * const IntervalScanStopNotification;
 - (void) endScan: (NSNotification *) note {
 	[self endScan];
 }
-/*
-- (void) locationDeleted: (NSNotification *) note {
-	Location *loc = (Location *) [note object];
-	if (!loc) {
-		return;
-	}
-	if (loc == self.location || [loc.rId intValue] == [self.location.rId intValue]) {
-		self.location = nil;
-		[self endScan];
-	}
-	
-}
-*/
+
 
 - (void) takeNextMeasurement : (NSTimer *) aTimer {
 	

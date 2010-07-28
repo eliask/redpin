@@ -52,14 +52,16 @@
 - (void) showLandscape;
 - (Fingerprint *) buildPosition:(Measurement *) m;
 - (void) notifyStopIntervalScan;
+- (void) askConfirmationForLocation: (Location *) loc;
 @end
 
 
 @implementation RootViewController
 
-@synthesize addPositionButton, refreshPositionButton, activityIndicator, showListButton, searchButton, addMapButton, redpinLogoButton, 
+@synthesize addPositionButton, refreshPositionButton, activityIndicator, showListButton, searchButton, addMapButton, redpinLogoButton, toolbar,
 			currentMap, currentLocation, showingLocation, mapViewController,
-			mapListController, listController, backsideController, searchController;
+			mapListController, listController, backsideController, searchController,
+			confirmationView, hideTimer;
 
 NSString * const IntervalScanStopNotification = @"StopIntervalScan";
 
@@ -81,6 +83,7 @@ NSString * const IntervalScanStopNotification = @"StopIntervalScan";
 
 }
 
+
 - (void)viewDidUnload {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:InternetConnectionManagerUpdateNotification object:nil];
 	[super viewDidUnload];
@@ -90,6 +93,10 @@ NSString * const IntervalScanStopNotification = @"StopIntervalScan";
 - (void) viewWillAppear:(BOOL)animated {
 	[mapViewController viewWillAppear:animated];
     [super viewWillAppear:animated];
+	if (userWantsToSelectCurrentLocation) {
+		NSLog(@"User got back to main view, propably did not find correct location");
+		userWantsToSelectCurrentLocation = NO;
+	}
 }
 
 
@@ -138,9 +145,6 @@ NSString * const IntervalScanStopNotification = @"StopIntervalScan";
 	}
 		
 }
-
-
-
 
 #pragma mark -
 #pragma mark View Controllers
@@ -290,7 +294,8 @@ NSString * const IntervalScanStopNotification = @"StopIntervalScan";
 #pragma mark -
 #pragma mark IntervalScannerDelegate
 
-- (void) scanner:(IntervalScanner *)scanner finishScan:(int) count {
+- (void) scanner:(IntervalScanner *)scanner didFinishScanning:(int) count {
+	NSLog(@"IntervalScanner stopped after %i scanns", count);
 	[scanner release];
 }
 
@@ -409,10 +414,15 @@ NSString * const IntervalScanStopNotification = @"StopIntervalScan";
 			}
 			self.title = currentMap.mapName;
 		}		
-		[self.mapViewController setCurrentLocation:loc animated:animated];			
+		[self.mapViewController setCurrentLocation:loc animated:animated];
+		
+		
 	} else {
 		[self.mapViewController scrollToMarker:self.mapViewController.currentLocationMarker animated:YES];
 	}
+	
+	// ask if the current location is correct
+	[self askConfirmationForLocation: loc];	
 	
 }
 
@@ -426,6 +436,14 @@ NSString * const IntervalScanStopNotification = @"StopIntervalScan";
 }
 
 - (void) showLocation:(Location *) loc animated:(BOOL) animated {
+	
+	if (userWantsToSelectCurrentLocation) {
+		NSLog(@"User did selected correct location");
+		[self setCurrentLocation:loc animated:animated];
+		
+		userWantsToSelectCurrentLocation = NO;
+		return;
+	}
 	
 	if (loc != showingLocation) {
 		[showingLocation release];
@@ -442,6 +460,14 @@ NSString * const IntervalScanStopNotification = @"StopIntervalScan";
 	}
 	
 }
+
+
+- (void) askConfirmationForLocation: (Location *) loc {
+	[NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(showConfirmationView:) userInfo:nil repeats:NO];
+	//[self showConfirmationView];
+}
+
+
 
 #pragma mark -
 #pragma mark Internet Connection Mode
@@ -465,6 +491,131 @@ NSString * const IntervalScanStopNotification = @"StopIntervalScan";
 	[self setInternetMode];
 }
 
+
+#pragma mark -
+#pragma mark Confirmation VIew
+
+
+
+- (void) showConfirmationView {
+    CGRect frame = self.confirmationView.frame;
+    frame.origin = CGPointMake(0.0f, self.view.bounds.size.height);
+    self.confirmationView.frame = frame;
+    [self.view addSubview:self.confirmationView];
+
+    [UIView beginAnimations:@"presentWithSuperview" context:nil];
+    frame.origin = CGPointMake(0.0f, self.view.bounds.size.height - self.confirmationView.bounds.size.height);
+	
+    self.confirmationView.frame = frame;
+    [UIView commitAnimations];
+	self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(hideConfirmationView:) userInfo:nil repeats:NO];
+
+}
+	 
+- (void) showConfirmationView:(NSTimer*)theTimer {
+	[self showConfirmationView];
+}
+
+
+NSString * const removeFromSuperviewWithAnimation = @"removeFromSuperviewWithAnimation";
+
+- (void) hideConfirmationView {
+	
+	if (self.hideTimer) {
+		[self.hideTimer invalidate];
+		self.hideTimer = nil;
+	}
+	
+    [UIView beginAnimations:removeFromSuperviewWithAnimation context:nil];
+
+    [UIView setAnimationDelegate:self];
+    [UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
+
+    CGRect frame = self.confirmationView.frame;
+    frame.origin = CGPointMake(0.0f, self.view.bounds.size.height);
+    self.confirmationView.frame = frame;
+	
+    [UIView commitAnimations]; 
+}
+
+- (void) hideConfirmationView:(NSTimer*)theTimer {
+	if (theTimer == self.hideTimer) {
+		[self hideConfirmationView];
+	}
+}
+
+- (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
+    if ([animationID isEqualToString:removeFromSuperviewWithAnimation]) {
+        [self.confirmationView removeFromSuperview];
+    }
+}
+
+
+- (IBAction) userClickYes:(id)sender {
+	[self hideConfirmationView];
+	
+	NSLog(@"User confirmed location, starting interval scanner");
+	IntervalScanner *scanner = [[IntervalScanner alloc] initWithLocation:currentLocation Delegate:self];
+	if(scanner) {
+		[scanner startScan];
+	}
+	
+	
+}
+- (IBAction) userClickNo:(id)sender {
+	[self hideConfirmationView];
+	NSLog(@"User declined location");
+	
+	UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Do you want to select your correct location?" delegate:self cancelButtonTitle:@"No" destructiveButtonTitle:nil otherButtonTitles:@"Yes",nil];
+	[sheet showInView:self.view];
+	[sheet showFromToolbar:self.toolbar];
+}
+- (IBAction) userClickDontKnow:(id)sender {
+	[self hideConfirmationView];
+}
+
+
+#pragma mark UIActionSheetDelegate
+
+// Called when a button is clicked. The view will be automatically dismissed after this call returns
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	
+	if (buttonIndex != 0) {
+		NSLog(@"User doesn't want to select correct location");	
+		return;
+	}
+	
+	NSLog(@"User wants to select correct location");
+
+	
+	userWantsToSelectCurrentLocation = YES;
+
+	[self initListController];
+	[self.navigationController pushViewController:self.listController animated:NO];
+	[self.listController initMapListController];
+	[self.navigationController pushViewController:self.listController.mapListController animated:NO];
+	[self.listController.mapListController initLocationListController];	
+	[self.listController.mapListController.locationListController initWithMapFilter:currentLocation.map];
+	[self.navigationController pushViewController:self.listController.mapListController.locationListController animated:YES];
+}
+
+- (void)actionSheetCancel:(UIActionSheet *)actionSheet {
+}
+
+- (void)willPresentActionSheet:(UIActionSheet *)actionSheet {	
+}
+
+- (void)didPresentActionSheet:(UIActionSheet *)actionSheet {	
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet willDismissWithButtonIndex:(NSInteger)buttonIndex {	
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {	
+}
+
+
+
 #pragma mark -
 #pragma mark Memory
 - (void)didReceiveMemoryWarning {
@@ -478,10 +629,15 @@ NSString * const IntervalScanStopNotification = @"StopIntervalScan";
 	[searchButton release];
 	[addMapButton release];
 	
+	[toolbar release];
+	[confirmationView release];
+	
 	[currentMap release];
 	[currentLocation release];
 	[mapViewController release];
 	[mapListController release];
+	
+	hideTimer = nil;
 	
     [super dealloc];
 }

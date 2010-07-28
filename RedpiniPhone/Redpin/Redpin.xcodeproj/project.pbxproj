@@ -81,6 +81,8 @@
 		789787E51047499B0089CE22 /* SynchronizationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 789787E41047499B0089CE22 /* SynchronizationManager.m */; };
 		78978E361047A3E70089CE22 /* red_map_pin_big_cur.png in Resources */ = {isa = PBXBuildFile; fileRef = 78978E351047A3E70089CE22 /* red_map_pin_big_cur.png */; };
 		78978E591047A8620089CE22 /* purple_map_pin_big_cur.png in Resources */ = {isa = PBXBuildFile; fileRef = 78978E581047A8620089CE22 /* purple_map_pin_big_cur.png */; };
+		78A344191200873100845F46 /* icon_checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 78A344161200873100845F46 /* icon_checkmark.png */; };
+		78A3441A1200873100845F46 /* icon_delete.png in Resources */ = {isa = PBXBuildFile; fileRef = 78A344171200873100845F46 /* icon_delete.png */; };
 		78B997911059481D006632A1 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 78B997901059481D006632A1 /* Default.png */; };
 		78B9984C105957B4006632A1 /* BacksideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B9984A105957B4006632A1 /* BacksideViewController.m */; };
 		78B9984D105957B4006632A1 /* BacksideViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78B9984B105957B4006632A1 /* BacksideViewController.xib */; };
@@ -226,6 +228,8 @@
 		789787E41047499B0089CE22 /* SynchronizationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SynchronizationManager.m; sourceTree = "<group>"; };
 		78978E351047A3E70089CE22 /* red_map_pin_big_cur.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_map_pin_big_cur.png; sourceTree = "<group>"; };
 		78978E581047A8620089CE22 /* purple_map_pin_big_cur.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = purple_map_pin_big_cur.png; sourceTree = "<group>"; };
+		78A344161200873100845F46 /* icon_checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_checkmark.png; sourceTree = "<group>"; };
+		78A344171200873100845F46 /* icon_delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_delete.png; sourceTree = "<group>"; };
 		78B997901059481D006632A1 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		78B99849105957B4006632A1 /* BacksideViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BacksideViewController.h; sourceTree = "<group>"; };
 		78B9984A105957B4006632A1 /* BacksideViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BacksideViewController.m; sourceTree = "<group>"; };
@@ -588,6 +592,8 @@
 		78BF4E870FFD961D000BA16E /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				78A344161200873100845F46 /* icon_checkmark.png */,
+				78A344171200873100845F46 /* icon_delete.png */,
 				788945591055777F0089B426 /* annotation.png */,
 				7889451810554B6E0089B426 /* current_location.png */,
 				78978E581047A8620089CE22 /* purple_map_pin_big_cur.png */,
@@ -695,6 +701,8 @@
 				7889455A1055777F0089B426 /* annotation.png in Resources */,
 				78B997911059481D006632A1 /* Default.png in Resources */,
 				78B9984D105957B4006632A1 /* BacksideViewController.xib in Resources */,
+				78A344191200873100845F46 /* icon_checkmark.png in Resources */,
+				78A3441A1200873100845F46 /* icon_delete.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

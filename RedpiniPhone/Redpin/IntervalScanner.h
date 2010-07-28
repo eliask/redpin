@@ -49,7 +49,7 @@
 
 @optional
 
-- (void) scanner:(IntervalScanner *)aScanner finishScan:(int) times;
+- (void) scanner:(IntervalScanner *)aScanner didFinishScanning:(int) times;
 
 
 @end

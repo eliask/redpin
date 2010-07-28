@@ -253,11 +253,15 @@
 	[self setTransform:transform];
 	if(self.annotationView) {
 		[annotationView zoomToScale:aScale];
-	}
-	
+	}		
+}
 
-	
-		
+
+- (void)removeFromSuperview {
+	if(self.annotationView) {
+		[annotationView removeFromSuperview];
+	}
+	[super removeFromSuperview];
 }
 
 
