@@ -176,7 +176,7 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 		try {
 			stat = db.getConnection().createStatement();
 			rs = stat.executeQuery(sql);
-			
+			boolean first = true;
 			while(!rs.isAfterLast()) {
 				/*
 				 * only advance cursor the first time, because the reading vector homes (WiFiReadingVectorHome#parseResultRow(), ...)
@@ -184,9 +184,15 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 				 * If we advance the cursor one more time here, we miss one row.
 				 * Unfortunately we can't go one row back (would be a cleaner solution) because the SQLite driver does only support forward cursors
 				 */
-				if(rs.isBeforeFirst()) {
-					rs.next();
+				
+				if(first) {
+					if(!rs.next()) {
+						//empty result set
+						break;
+					}
+					first = false;
 				}
+
 				res.add(parseResultRow(rs));
 			}
 		} catch (SQLException e) {
@@ -241,7 +247,7 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 	 * @return the number of Fingerprints
 	 */
 	protected int getCount(String constraint) {
-		int res = 0;
+		int res = -1;
 		
 		String sql = "SELECT COUNT(*) FROM " + TableName;
 		if (constraint != null && constraint.length() > 0) sql += " WHERE " + constraint;
@@ -252,7 +258,9 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 		try {
 			stat = DatabaseConnection.getInstance().getConnection().createStatement();
 			rs = stat.executeQuery(sql);
-			res = rs.getInt(1);
+			if(rs.next()) {
+				res = rs.getInt(1);
+			}
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, "getCount failed: " + e.getMessage(), e);
 		} finally {
