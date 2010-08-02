@@ -802,6 +802,8 @@ public class DatabaseTest extends TestCase {
 
 	@After
 	public void tearDown() throws Exception {
+		fph.removeAll();
+		lh.removeAll();
 		mh.removeAll();
 	}
 

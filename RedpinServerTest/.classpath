@@ -6,7 +6,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="/RedpinServer/lib/gson-1.3.jar" sourcepath="/RedpinServer/lib/gson-1.3-sources.jar"/>
 	<classpathentry kind="lib" path="/RedpinServer/lib/libsvm.jar"/>
-	<classpathentry kind="lib" path="/RedpinServer/lib/mysql-connector-java-5.1.5-bin.jar"/>
+	<classpathentry kind="lib" path="/RedpinServer/lib/mysql-connector-java-5.1.13-bin.jar"/>
 	<classpathentry kind="lib" path="/RedpinServer/lib/sqlite-jdbc-3.6.17.1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/RedpinCore"/>
 	<classpathentry kind="output" path="bin"/>
