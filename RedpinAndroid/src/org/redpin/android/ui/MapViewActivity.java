@@ -81,9 +81,6 @@ public class MapViewActivity extends Activity {
 	WifiSniffer mWifiService;
 	Location mLocation;
 
-	WiFiReading wfreading, wfreading2, wfreading3;
-	Vector<WiFiReading> vectorWifi;
-	Measurement measurement;
 	private RelativeLayout mapTopBar;
 
 	/**

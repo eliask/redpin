@@ -66,12 +66,16 @@ public class RequestHandler {
 			 * Notify InternetConnectionManager that connectivity might have
 			 * changed
 			 */
-			Context context = ApplicationContext.get();
-			context.bindService(new Intent(context,
-					InternetConnectionManager.class), mConnection,
-					Context.BIND_AUTO_CREATE);
-			// mManager.checkConnectivity();
-			context.unbindService(mConnection);
+			try {
+				Context context = ApplicationContext.get();
+				context.bindService(new Intent(context,
+						InternetConnectionManager.class), mConnection,
+						Context.BIND_AUTO_CREATE);
+				// mManager.checkConnectivity();
+				//TODO: check if possible to move the unbinding to the mConnection
+				context.unbindService(mConnection);
+			} catch (IllegalArgumentException e) {
+			}
 
 			return new Response<Void>(Status.failed, e1.getMessage());
 		}

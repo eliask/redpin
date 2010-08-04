@@ -334,12 +334,18 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 		if (RedpinContract.Map.ITEM_TYPE.equals(type)) {
 			Map m = EntityHomeFactory.getMapHome().getById(id);
+			if (m == null) {
+				return;
+			}
 			showMap(m);
 			return;
 		}
 
 		if (RedpinContract.Location.ITEM_TYPE.equals(type)) {
 			Location l = EntityHomeFactory.getLocationHome().getById(id);
+			if (l == null) {
+				return;
+			}
 			showLocation(l, false);
 			return;
 		}
@@ -539,7 +545,10 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 	 *            {@link Map} to be shown
 	 */
 	public void showMap(Map map) {
-
+		if(map == null) {
+			Log.v(TAG, "tried to show null map");
+			return;
+		}
 		if (!map.equals(currentMap)) {
 			currentMap = map;
 			Log.v(TAG, "showMap: initializing new map view");
