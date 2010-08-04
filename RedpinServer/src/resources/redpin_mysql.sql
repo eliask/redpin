@@ -81,7 +81,7 @@ CREATE TABLE `wifireading` (
   `wifiReadingId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `bssid` varchar(45) DEFAULT NULL,
   `ssid` varchar(45) DEFAULT NULL,
-  `rssi` int(10) unsigned DEFAULT NULL,
+  `rssi` int(10) signed DEFAULT NULL,
   `wepEnabled` tinyint(1) DEFAULT NULL,
   `isInfrastructure` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`wifiReadingId`)

@@ -218,8 +218,8 @@ public class LocationHome extends EntityHome<Location> {
 				stat.addBatch(sql_gsm);
 				stat.addBatch(sql_bluetooth);
 				stat.addBatch(sql_rinm);
-				stat.addBatch(sql_m);
 				stat.addBatch(sql_fp);
+				stat.addBatch(sql_m);				
 				stat.addBatch(sql_loc);
 				int results[] = stat.executeBatch();
 				if (results != null && results.length > 0) {
@@ -230,8 +230,8 @@ public class LocationHome extends EntityHome<Location> {
 				stat.executeUpdate(sql_gsm);
 				stat.executeUpdate(sql_bluetooth);
 				stat.executeUpdate(sql_rinm);
-				stat.executeUpdate(sql_m);
 				stat.executeUpdate(sql_fp);
+				stat.executeUpdate(sql_m);
 				res = stat.executeUpdate(sql_loc);
 			}
 			db.getConnection().commit();

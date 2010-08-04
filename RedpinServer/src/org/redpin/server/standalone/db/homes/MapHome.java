@@ -145,8 +145,8 @@ public class MapHome extends EntityHome<Map> {
 				stat.addBatch(sql_gsm);
 				stat.addBatch(sql_bluetooth);
 				stat.addBatch(sql_rinm);
-				stat.addBatch(sql_m);
 				stat.addBatch(sql_fp);
+				stat.addBatch(sql_m);
 				stat.addBatch(sql_l);
 				stat.addBatch(sql_map);
 				int results[] = stat.executeBatch();
@@ -158,8 +158,8 @@ public class MapHome extends EntityHome<Map> {
 				stat.executeUpdate(sql_gsm);
 				stat.executeUpdate(sql_bluetooth);
 				stat.executeUpdate(sql_rinm);
-				stat.executeUpdate(sql_m);
 				stat.executeUpdate(sql_fp);
+				stat.executeUpdate(sql_m);
 				stat.executeUpdate(sql_l);
 				res = stat.executeUpdate(sql_map);
 			}
