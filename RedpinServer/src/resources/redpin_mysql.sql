@@ -83,7 +83,7 @@ CREATE TABLE `wifireading` (
   `ssid` varchar(45) DEFAULT NULL,
   `rssi` int(10) signed DEFAULT NULL,
   `wepEnabled` tinyint(1) DEFAULT NULL,
-  `isInfrastructure` varchar(45) DEFAULT NULL,
+  `isInfrastructure` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`wifiReadingId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

@@ -352,15 +352,14 @@ public class FingerprintHome extends EntityHome<Fingerprint> {
 	}
 	
 	/**
-	 * get the fingerprint by its {@link Fingerprint} location id
+	 * get the fingerprints by its {@link Fingerprint} location id
 	 * 
 	 * @param id primary key
 	 * @return {@link Fingerprint} 
 	 */
-	public Fingerprint getByLocationId(Integer id) {
-		if (id == null) return null;
-		List<Fingerprint> res = getFingerprints(-1, id, -1);
-		return res == null || res.size() == 0 ? null : res.get(0);
+	public List<Fingerprint> getByLocationId(Integer id) {
+		if (id == null) return new ArrayList<Fingerprint>();
+		return getFingerprints(-1, id, -1);
 	}
 
 	/**
