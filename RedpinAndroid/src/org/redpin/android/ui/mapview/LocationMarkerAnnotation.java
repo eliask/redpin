@@ -113,10 +113,11 @@ public class LocationMarkerAnnotation extends EditText implements
 
 			System.out.println("w, mw, mh: " + w + ", " + getMeasuredWidth()
 					+ ", " + getMeasuredHeight());
-
-			layout.setMargins(marker.markerX - w / 2 + LocationMarker.size / 2,
+			if(marker != null) {
+				layout.setMargins(marker.markerX - w / 2 + LocationMarker.size / 2,
 					marker.markerY - (h + (int) (3 * density)), 0, 0);
-			markerPositionChanged = false;
+					markerPositionChanged = false;
+			}
 		}
 		return layout;
 
