@@ -98,10 +98,9 @@ public class MapViewActivity extends Activity {
 				SynchronizationManager.class));
 		bindService(new Intent(this, InternetConnectionManager.class),
 				mICMConnection, Context.BIND_AUTO_CREATE);
-		/*
-		 * startService(new Intent(MapViewActivity.this,
-		 * InternetConnectionManager.class));
-		 */
+		
+		 startService(new Intent(MapViewActivity.this,InternetConnectionManager.class));
+		 
 
 		startWifiSniffer();
 		/*
@@ -136,7 +135,7 @@ public class MapViewActivity extends Activity {
 			}
 		});
 		progressDialog = new ProgressDialog(this);
-		// progressDialog.setCancelable(false);
+		//progressDialog.setCancelable(false);
 		progressDialog.setCancelable(true);
 		progressDialog.setIndeterminate(true);
 		progressDialog.setMessage(getText(R.string.taking_measurement));
@@ -209,10 +208,9 @@ public class MapViewActivity extends Activity {
 
 		stopService(new Intent(MapViewActivity.this,
 				SynchronizationManager.class));
-		/*
-		 * stopService(new Intent(MapViewActivity.this,
-		 * InternetConnectionManager.class));
-		 */
+		
+		 stopService(new Intent(MapViewActivity.this,InternetConnectionManager.class));
+		 
 		unbindService(mICMConnection);
 
 		super.onDestroy();
@@ -357,7 +355,7 @@ public class MapViewActivity extends Activity {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			setOnlineMode(intent.getFlags() == InternetConnectionManager.ONLINE_FLAG);
+			setOnlineMode((intent.getFlags() & InternetConnectionManager.ONLINE_FLAG)== InternetConnectionManager.ONLINE_FLAG);
 		}
 
 	};
