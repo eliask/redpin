@@ -255,7 +255,7 @@ public class LocationListActivity extends ListActivity implements
 	private BroadcastReceiver connectionChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			isOnline = intent.getFlags() == InternetConnectionManager.ONLINE_FLAG;
+			isOnline = (intent.getFlags() & InternetConnectionManager.ONLINE_FLAG)== InternetConnectionManager.ONLINE_FLAG;
 		}
 	};
 	

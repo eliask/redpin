@@ -156,7 +156,7 @@ public class InternetConnectionManager extends Service {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 
-			if (intent.getFlags() == ONLINE_FLAG) {
+			if ((intent.getFlags() & InternetConnectionManager.ONLINE_FLAG)== InternetConnectionManager.ONLINE_FLAG) {
 				if (!hasNotifiedOnlineState) {
 
 					showNotification(R.string.connection_online);

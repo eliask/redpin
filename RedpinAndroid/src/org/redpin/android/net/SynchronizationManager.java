@@ -87,7 +87,7 @@ public class SynchronizationManager extends Service {
 		 */
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if (intent.getFlags() == InternetConnectionManager.ONLINE_FLAG) {
+			if ((intent.getFlags() & InternetConnectionManager.ONLINE_FLAG)== InternetConnectionManager.ONLINE_FLAG) {
 				sync();
 			}
 		}
