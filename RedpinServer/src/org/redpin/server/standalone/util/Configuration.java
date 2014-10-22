@@ -1,7 +1,7 @@
 /**
  *  Filename: Configuration.java (in org.redpin.server.standalone.util)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.server.standalone.util;
@@ -41,10 +41,10 @@ import org.redpin.server.standalone.svm.SVMSupport;
 import org.redpin.server.standalone.svm.TrainSVMTimerTask;
 
 /**
- * Configuration class which represents all configuration settings. 
+ * Configuration class which represents all configuration settings.
  * Before the first access to a property, all properties are read from the properties file and are initialized accordingly.
  * If the database schema is not already set up, this is also done.
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
  *
  */
@@ -52,11 +52,11 @@ public class Configuration {
 	
 	/**
 	 * Different {@link DatabaseTypes} which are supported by the server
-	 * 
+	 *
 	 * @author Pascal Brogle (broglep@student.ethz.ch)
 	 *
 	 */
-	public enum DatabaseTypes { SQLITE, MYSQL};
+	public enum DatabaseTypes { SQLITE, MYSQL, POSTGRESQL};
 	public static final String ResourcesDir = "/resources/";
 	private static final String SQLite_Schema = ResourcesDir + "redpin_sqlite.sql";
 	
@@ -156,6 +156,11 @@ public class Configuration {
 				
 				if(DatabaseType == DatabaseTypes.MYSQL) {
 					DatabaseDriver = "com.mysql.jdbc.Driver";
+					DatabaseLocation = p.getProperty("db.location", DatabaseLocation);
+				}
+				
+				if(DatabaseType == DatabaseTypes.POSTGRESQL) {
+					DatabaseDriver = "org.postgresql.Driver";
 					DatabaseLocation = p.getProperty("db.location", DatabaseLocation);
 				}
 				
