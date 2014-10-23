@@ -1,7 +1,7 @@
 /**
  *  Filename: ConnectionHandler.java (in org.repin.android.net)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.net;
@@ -33,9 +33,9 @@ import java.net.Socket;
 /**
  * The {@link ConnectionHandler} handles a connection to the redpin server. It
  * sends a request and waits for the response.
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class ConnectionHandler {
 
@@ -45,7 +45,7 @@ public class ConnectionHandler {
 
 	/**
 	 * Sends an request to the server
-	 * 
+	 *
 	 * @param str
 	 *            JSON serialized request
 	 * @return JSON serialized response

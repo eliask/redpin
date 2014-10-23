@@ -71,7 +71,7 @@ public class svm_scale
 		else if(value == feature_max[index])
 			value = upper;
 		else
-			value = lower + (upper-lower) * 
+			value = lower + (upper-lower) *
 				(value-feature_min[index])/
 				(feature_max[index]-feature_min[index]);
 
@@ -163,8 +163,8 @@ public class svm_scale
 			if((c = fp_restore.read()) == 'y')
 			{
 				fp_restore.readLine();
-				fp_restore.readLine();		
-				fp_restore.readLine();		
+				fp_restore.readLine();
+				fp_restore.readLine();
 			}
 			fp_restore.readLine();
 			fp_restore.readLine();
@@ -248,7 +248,7 @@ public class svm_scale
 		/* pass 2.5: save/restore feature_min/feature_max */
 		if(restore_filename != null)
 		{
-			// fp_restore rewinded in finding max_index 
+			// fp_restore rewinded in finding max_index
 			int idx, c;
 			double fmin, fmax;
 
@@ -311,7 +311,7 @@ public class svm_scale
 			formatter.format("%.16g %.16g\n", lower, upper);
 			for(i=1;i<=max_index;i++)
 			{
-				if(feature_min[i] != feature_max[i]) 
+				if(feature_min[i] != feature_max[i])
 					formatter.format("%d %.16g %.16g\n", i, feature_min[i], feature_max[i]);
 			}
 			fp_save.write(formatter.toString());
@@ -367,7 +367,7 @@ public class svm_scale
 			DataOutputStream out   = new DataOutputStream(file);
 			out.writeBytes(theText);
 			out.flush();
-			out.close(); 
+			out.close();
 		}
 		catch(IOException e)
 		{

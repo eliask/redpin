@@ -1,7 +1,7 @@
 /**
  *  Filename: DatabaseConnection.java (in org.redpin.server.standalone.db)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.server.standalone.db;
@@ -32,7 +32,7 @@ import org.redpin.server.standalone.util.Log;
 
 /**
  * Provides basic actions and access to a database.
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
  *
  */
@@ -40,16 +40,16 @@ public class DatabaseConnection {
 	private static Connection connection = null;
 	private static DatabaseConnection instance = null;
 	private static Logger log;
-	
-	
-	
+
+
+
 	public DatabaseConnection() {
 		log = Log.getLogger();
 	}
-	
+
 	/**
-	 * 
-	 * @return {@link DatabaseConnection} instance 
+	 *
+	 * @return {@link DatabaseConnection} instance
 	 */
 	public synchronized static DatabaseConnection getInstance() {
 		if(instance == null) {
@@ -57,23 +57,23 @@ public class DatabaseConnection {
 		}
 		return instance;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return a database {@link Connection}
 	 */
 	public Connection getConnection() {
 		if(!isConnected()) {
 			// TODO: check success
 			connect();
-			
-		} 
+
+		}
 		return connection;
 	}
-	
+
 	/**
 	 * Checks if a connection exists
-	 * 
+	 *
 	 * @return <code>true</code> if connection exists
 	 */
 	public boolean isConnected() {
@@ -84,10 +84,10 @@ public class DatabaseConnection {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Establishes a connection to the database
-	 * 
+	 *
 	 * @return <code>true</code> in case of success
 	 */
 	public synchronized boolean connect() {
@@ -109,7 +109,7 @@ public class DatabaseConnection {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Closes a connection to database
 	 */
@@ -123,6 +123,6 @@ public class DatabaseConnection {
 			}
 		}
 	}
-	
-	
+
+
 }

@@ -9,15 +9,15 @@ import java.util.logging.Level;
 import org.redpin.server.standalone.core.ReadingInMeasurement;
 
 public class ReadingInMeasurementHome extends EntityHome<ReadingInMeasurement> {
-	
+
 	private static final String[] TableCols = {"measurementId", "readingId", "readingClassName"};
-	private static final String TableName = "readinginmeasurement"; 
+	private static final String TableName = "readinginmeasurement";
 	private static final String TableIdCol = "id";
-	
+
 	public ReadingInMeasurementHome() {
 		super();
 	}
-	
+
 	/**
 	 * @see EntityHome#getTableIdCol()
 	 */
@@ -49,7 +49,7 @@ public class ReadingInMeasurementHome extends EntityHome<ReadingInMeasurement> {
 	public ReadingInMeasurement parseResultRow(ResultSet rs, int fromIndex)
 			throws SQLException {
 		ReadingInMeasurement rinm = new ReadingInMeasurement();
-		
+
 		try {
 			if (!rs.isAfterLast()) {
 				rinm.setId(rs.getInt(fromIndex));
@@ -61,7 +61,7 @@ public class ReadingInMeasurementHome extends EntityHome<ReadingInMeasurement> {
 			log.log(Level.SEVERE, "parseResultRow failed: " + e.getMessage(), e);
 			throw e;
 		}
-		
+
 		return rinm;
 	}
 
@@ -69,6 +69,6 @@ public class ReadingInMeasurementHome extends EntityHome<ReadingInMeasurement> {
 	public int fillInStatement(PreparedStatement ps, ReadingInMeasurement t, int fromIndex) throws SQLException {
 		return fillInStatement(ps, new Object[] {t.getMeasurementId(), t.getReadingId(), t.getReadingClassName()}, new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR}, fromIndex);
 	}
-	
+
 
 }

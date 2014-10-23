@@ -1,7 +1,7 @@
 /**
  *  Filename: LocationHome.java (in org.repin.android.db)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.db;
@@ -39,13 +39,13 @@ import android.net.Uri;
  * {@link EntityHome} for {@link Location}s
  * @see EntityHome
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class LocationHome extends EntityHome<Location> {
 
 	private MapHome mapHome = null;
-	
-	
+
+
 	/**
 	 * @see EntityHome#EntityHome()
 	 */
@@ -113,7 +113,7 @@ public class LocationHome extends EntityHome<Location> {
 			res.add(loc);
 
 		}
-		
+
 		cursor.close();
 
 		return res;
@@ -174,7 +174,7 @@ public class LocationHome extends EntityHome<Location> {
 
 	/**
 	 * Gets the {@link Location} by its remote id
-	 * 
+	 *
 	 * @param id remote id of entity
 	 * @return {@link Location} for specified remote id if available, otherwise <code>null</code>
 	 */
@@ -193,7 +193,7 @@ public class LocationHome extends EntityHome<Location> {
 
 	/**
 	 * Gets all locations for a specific map
-	 * 
+	 *
 	 * @param map {@link Map}
 	 * @return {@link List} of {@link Location} that are on the {@link Map}
 	 */
@@ -219,15 +219,15 @@ public class LocationHome extends EntityHome<Location> {
 	/**
 	 * Checks if the {@link Map} is not yet stored in the database.
 	 * If it is not, the {@link Map} is added
-	 * 
+	 *
 	 * @param m {@link Map}
 	 */
 	private void checkImplicitAddMap(Map m) {
-		if (m.getLocalId() < 0) {			
+		if (m.getLocalId() < 0) {
 			if (mapHome == null) {
 				mapHome = new MapHome(resolver);
 			}
-			
+
 			if (m.getRemoteId() != null && m.getRemoteId() > -1) {
 				Map t = mapHome.getByRemoteId(m.getRemoteId());
 				if (t != null) {
@@ -236,7 +236,7 @@ public class LocationHome extends EntityHome<Location> {
 					t = mapHome.add(m);
 					m.setLocalId(t.getLocalId());
 				}
-			}			
+			}
 		}
 	}
 

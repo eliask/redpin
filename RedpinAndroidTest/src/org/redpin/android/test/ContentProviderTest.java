@@ -9,9 +9,9 @@ import android.database.Cursor;
 import android.net.Uri;
 
 /**
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class ContentProviderTest extends
 		android.test.ProviderTestCase2<RedpinContentProvider> {

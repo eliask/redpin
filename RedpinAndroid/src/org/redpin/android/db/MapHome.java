@@ -1,7 +1,7 @@
 /**
  *  Filename: MapHome.java (in org.repin.android.db)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.db;
@@ -36,7 +36,7 @@ import android.net.Uri;
  * {@link EntityHome} for {@link Map}s
  * @see EntityHome
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class MapHome extends EntityHome<Map> {
 
@@ -95,10 +95,10 @@ public class MapHome extends EntityHome<Map> {
 
 		return v;
 	}
-	
+
 	/**
 	 * Gets the {@link Map} by its remote id
-	 * 
+	 *
 	 * @param id remote id of entity
 	 * @return {@link Map} for specified remote id if available, otherwise <code>null</code>
 	 */

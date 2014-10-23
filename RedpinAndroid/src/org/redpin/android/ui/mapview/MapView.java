@@ -1,7 +1,7 @@
 /**
  *  Filename: MapView.java (in org.repin.android.ui.mapview)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.ui.mapview;
@@ -56,9 +56,9 @@ import android.widget.TextView;
 /**
  * {@link MapView} displays a {@link Map} on the screen and its {@link Location}
  * s depending on the selection of the user.
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 		ZoomAndScrollViewListener {
@@ -86,7 +86,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 	/**
 	 * Construct a new MapView with a Context object.
-	 * 
+	 *
 	 * @param context
 	 *            A Context object used to access application assets.
 	 */
@@ -97,7 +97,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 	/**
 	 * Construct a new MapView with layout parameters and a default style.
-	 * 
+	 *
 	 * @param context
 	 *            A Context object used to access application assets.
 	 * @param attrs
@@ -112,7 +112,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 	/**
 	 * Construct a new MapView with layout parameters.
-	 * 
+	 *
 	 * @param context
 	 *            A Context object used to access application assets.
 	 * @param attrs
@@ -125,7 +125,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 	/**
 	 * Initializes the MapView
-	 * 
+	 *
 	 * @param context
 	 *            {@link Context}
 	 */
@@ -160,7 +160,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 	/**
 	 * Shows an {@link LocationMarker}
-	 * 
+	 *
 	 * @param marker
 	 *            {@link LocationMarker} to be shown
 	 */
@@ -185,7 +185,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 	}
 
 	/**
-	 * 
+	 *
 	 * @return The current displayed {@link Map}
 	 */
 	public Map getCurrentMap() {
@@ -193,7 +193,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 	}
 
 	/**
-	 * 
+	 *
 	 * @return The current estimated {@link Location}
 	 */
 	public Location getCurrentLocation() {
@@ -201,7 +201,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 	}
 
 	/**
-	 * 
+	 *
 	 * @return uri of the current image
 	 */
 	public String getUrl() {
@@ -212,7 +212,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Fade out {@link Animation}
 	 */
 	protected Animation fadeOut() {
@@ -222,7 +222,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Fade in {@link Animation}
 	 */
 	protected Animation fadeIn() {
@@ -242,7 +242,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 	/**
 	 * Shows the map image.
-	 * 
+	 *
 	 * @param url
 	 *            URL of the map image
 	 */
@@ -318,7 +318,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 	/**
 	 * Shows either {@link Map} or {@link Location} represented by an
 	 * {@link Uri}
-	 * 
+	 *
 	 * @param uri
 	 *            {@link Uri} of the {@link Map} or {@link Location}
 	 */
@@ -355,7 +355,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 	/**
 	 * Adds a new {@link LocationMarker} on the center of the screen and sets
 	 * the {@link Location}s coordinates accordingly.
-	 * 
+	 *
 	 * @param newLocation
 	 *            {@link Location} for the {@link LocationMarker}
 	 */
@@ -384,7 +384,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 	/**
 	 * Add a {@link LocationMarkerAnnotation} for the specified {@link Location}
-	 * 
+	 *
 	 * @param l
 	 *            {@link Location}
 	 * @return The added {@link LocationMarkerAnnotation}
@@ -409,7 +409,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 	/**
 	 * Scrolls the view so that the {@link LocationMarker} is on the center.
-	 * 
+	 *
 	 * @param marker
 	 *            {@link LocationMarker} to be centered on the screen
 	 */
@@ -431,7 +431,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 	/**
 	 * Centers the requested {@link LocationMarker}
-	 * 
+	 *
 	 */
 	public void processRequestMarkerOnCenter() {
 		if (requestedCenterMarker == null) {
@@ -444,7 +444,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 	/**
 	 * Requests that a {@link LocationMarker} is centered on the screen.
-	 * 
+	 *
 	 * @param marker
 	 *            {@link LocationMarker} to be centered on the screen
 	 */
@@ -470,7 +470,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 	/**
 	 * Scrolls to requested x,y position
-	 * 
+	 *
 	 * @param x
 	 *            position
 	 * @param y
@@ -489,7 +489,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 	/**
 	 * Requests that the view should be scrolled
-	 * 
+	 *
 	 * @param x
 	 * @param y
 	 */
@@ -499,7 +499,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 	/**
 	 * Shows a {@link Location} on the {@link MapView}
-	 * 
+	 *
 	 * @param location
 	 *            The {@link Location} to be shown
 	 * @param isCurrentLocation
@@ -530,7 +530,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 	/**
 	 * Setups the {@link MapView} image
-	 * 
+	 *
 	 * @param map
 	 *            {@link Map} to be shown
 	 */
@@ -540,7 +540,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 	/**
 	 * Shows a {@link Map}
-	 * 
+	 *
 	 * @param map
 	 *            {@link Map} to be shown
 	 */
@@ -596,7 +596,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 	/**
 	 * Removes a {@link LocationMarker}.
-	 * 
+	 *
 	 * @param location
 	 *            {@link Location} of the {@link LocationMarker} that has to be
 	 *            removed
@@ -625,7 +625,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 	/**
 	 * Adds {@link LocationMarker} for a {@link List} of {@link Location}s.
-	 * 
+	 *
 	 * @param list
 	 *            {@link List} of {@link Location} to be shown
 	 */
@@ -637,7 +637,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 
 	/**
 	 * Adds {@link LocationMarker} for all {@link Location}s of a {@link Map}
-	 * 
+	 *
 	 * @param map
 	 *            {@link Map}
 	 */
@@ -650,7 +650,7 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 	/**
 	 * Enables or disables the possibility to modify {@link LocationMarker}s and
 	 * {@link LocationMarkerAnnotation}s.
-	 * 
+	 *
 	 * @param enabled
 	 *            Whether the {@link MapView} should be modifiable
 	 */
@@ -752,61 +752,61 @@ public class MapView extends FrameLayout implements DownloadImageTaskCallback,
 	 * @Override protected void onRestoreInstanceState(Parcelable state) { if
 	 * (!(state instanceof SavedState)) { super.onRestoreInstanceState(state);
 	 * return; }
-	 * 
+	 *
 	 * //currentLocation =
 	 * EntityHomeFactory.getLocationHome().getById(ss.currentLocation);
-	 * 
+	 *
 	 * SavedState ss = (SavedState)state;
 	 * super.onRestoreInstanceState(ss.getSuperState());
-	 * 
+	 *
 	 * if (ss.shown != null) { show(ss.shown); }
-	 * 
+	 *
 	 * requestScroll(ss.scrollX, ss.scrollY);
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * }
-	 * 
+	 *
 	 * @Override protected Parcelable onSaveInstanceState() { Parcelable
 	 * superState = super.onSaveInstanceState(); SavedState ss = new
 	 * SavedState(superState); ss.shown = currentUri; ss.scrollX = getScrollX();
 	 * ss.scrollY = getScrollY(); return ss; }
-	 * 
-	 * 
+	 *
+	 *
 	 * public static class SavedState extends BaseSavedState {
-	 * 
+	 *
 	 * Uri shown; int scrollX; int scrollY;
-	 * 
-	 * 
+	 *
+	 *
 	 * public SavedState(Parcelable arg0) { super(arg0); }
-	 * 
+	 *
 	 * @Override public void writeToParcel(Parcel out, int flags) {
 	 * super.writeToParcel(out, flags); Uri.writeToParcel(out, shown);
-	 * 
+	 *
 	 * out.writeInt(scrollX); out.writeInt(scrollY);
 	 * //out.writeLong(currentLocation); //out.writeLong(currentMap);
-	 * 
+	 *
 	 * }
-	 * 
+	 *
 	 * public static final Parcelable.Creator<SavedState> CREATOR = new
 	 * Parcelable.Creator<SavedState>() { public SavedState
 	 * createFromParcel(Parcel in) { return new SavedState(in); }
-	 * 
+	 *
 	 * public SavedState[] newArray(int size) { return new SavedState[size]; }
 	 * };
-	 * 
+	 *
 	 * private SavedState(Parcel in) {
-	 * 
+	 *
 	 * super(in);
-	 * 
+	 *
 	 * shown = Uri.CREATOR.createFromParcel(in); scrollX = in.readInt(); scrollY
 	 * = in.readInt(); //currentLocation = in.readLong(); //currentMap =
 	 * in.readLong();
-	 * 
+	 *
 	 * }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * }
 	 */
 

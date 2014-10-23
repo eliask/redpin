@@ -1,7 +1,7 @@
 /**
  *  Filename: LocationListActivity.java (in org.repin.android.ui.list)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.ui.list;
@@ -61,10 +61,10 @@ import android.widget.AdapterView.OnItemClickListener;
 /**
  * {@link ListActivity} that displays {@link Location}s for a specific
  * {@link Uri} passed with the {@link Intent}.
- * 
+ *
  * @author Luba Rogoleva (lubar@student.ethz.ch)
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class LocationListActivity extends ListActivity implements
 		OnItemClickListener, OnCreateContextMenuListener, TextWatcher {
@@ -74,7 +74,7 @@ public class LocationListActivity extends ListActivity implements
 	private boolean isOnline = false;
 
 	/**
-	 * 
+	 *
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -83,9 +83,9 @@ public class LocationListActivity extends ListActivity implements
 
 		registerReceiver(connectionChangeReceiver, new IntentFilter(
 				InternetConnectionManager.CONNECTIVITY_ACTION));
-		
+
 		bindService(new Intent(this, InternetConnectionManager.class), mConnection, Context.BIND_AUTO_CREATE);
-		
+
 
 		setContentView(R.layout.list_view);
 		View v = findViewById(R.id.list_view_topbar_text);
@@ -98,12 +98,12 @@ public class LocationListActivity extends ListActivity implements
 		registerForContextMenu(lv);
 		lv.setClickable(true);
 		lv.setOnItemClickListener(this);
-		
+
 		View searchView = (View) findViewById(R.id.filter_layout);
 		searchView.setVisibility(View.VISIBLE);
 		EditText filter = (EditText) findViewById(R.id.filter);
 		filter.addTextChangedListener(this);
-		
+
 		show();
 	}
 
@@ -144,7 +144,7 @@ public class LocationListActivity extends ListActivity implements
 
 	/**
 	 * Gets the clicked {@link Location}
-	 * 
+	 *
 	 * @param parent
 	 *            {@link AdapterView}
 	 * @param position
@@ -258,7 +258,7 @@ public class LocationListActivity extends ListActivity implements
 			isOnline = (intent.getFlags() & InternetConnectionManager.ONLINE_FLAG)== InternetConnectionManager.ONLINE_FLAG;
 		}
 	};
-	
+
 	/**
 	 * {@link InternetConnectionManager} {@link ServiceConnection} to check current online state
 	 */
@@ -269,13 +269,13 @@ public class LocationListActivity extends ListActivity implements
 			InternetConnectionManager mManager = ((InternetConnectionManager.LocalBinder)service).getService();
 			isOnline = mManager.isOnline();
 		}
-		
+
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
 		}
-		
+
 	};
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -289,7 +289,7 @@ public class LocationListActivity extends ListActivity implements
 	 */
 	@Override
 	public void beforeTextChanged(CharSequence s, int start, int count,
-			int after) {		
+			int after) {
 	}
 
 	/**
@@ -298,6 +298,6 @@ public class LocationListActivity extends ListActivity implements
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		CursorAdapter adapter = (CursorAdapter) getListAdapter();
-		adapter.getFilter().filter(s);		
+		adapter.getFilter().filter(s);
 	}
 }

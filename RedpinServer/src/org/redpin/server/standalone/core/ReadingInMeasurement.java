@@ -1,7 +1,7 @@
 /**
  *  Filename: ReadingInMeasurement.java (in org.repin.server.standalone.core)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Luba Rogoleva, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.server.standalone.core;
@@ -29,13 +29,13 @@ public class ReadingInMeasurement implements IEntity<Integer> {
 	private int measurementId = -1;
 	private int readingId = -1;
 	private String readingClassName = "";
-	
+
 	public ReadingInMeasurement() {}
-	
+
 	public ReadingInMeasurement(int measurementId, int readingId, String readingClassName) {
 		this.setMeasurementId(measurementId);
 		this.setReadingId(readingId);
-		this.setReadingClassName(readingClassName);		
+		this.setReadingClassName(readingClassName);
 	}
 	/**
 	 * @return the database id
@@ -43,7 +43,7 @@ public class ReadingInMeasurement implements IEntity<Integer> {
 	public Integer getId() {
 		return id;
 	}
-	
+
 	/**
 	 * @param id
 	 * 			the id to set

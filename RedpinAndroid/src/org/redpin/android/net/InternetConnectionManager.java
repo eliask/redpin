@@ -1,7 +1,7 @@
 /**
  *  Filename: InternetConnectionManager.java (in org.repin.android.net)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Arno Fiva, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.net;
@@ -45,7 +45,7 @@ import android.os.IBinder;
  * The {@link InternetConnectionManager} provides information about the
  * connectivity to the Redpin server. It does so by checking the devices current
  * network state but also contacting the server directly.
- * 
+ *
  * @author Arno Fiva (fivaa@student.ethz.ch)
  */
 public class InternetConnectionManager extends Service {
@@ -118,7 +118,7 @@ public class InternetConnectionManager extends Service {
 
 	/**
 	 * @see Binder
-	 * 
+	 *
 	 */
 	public class LocalBinder extends Binder {
 		public InternetConnectionManager getService() {
@@ -182,7 +182,7 @@ public class InternetConnectionManager extends Service {
 
 		/**
 		 * Display message with id {@link redId} in the notification manager.
-		 * 
+		 *
 		 * @param resId
 		 */
 		private void showNotification(int resId) {
@@ -207,7 +207,7 @@ public class InternetConnectionManager extends Service {
 	/**
 	 * {@link AsyncTask} responsible for explicitly checking the connection to
 	 * the Redpin server by simply opening a socket to it and closing it again.
-	 * 
+	 *
 	 */
 	private class ConnectivityChecker extends AsyncTask<Void, Void, Void> {
 

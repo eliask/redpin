@@ -1,7 +1,7 @@
 /**
  *  Filename: Measurement.java (in org.repin.server.standalone.core)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.server.standalone.core;
@@ -37,11 +37,11 @@ import java.util.Vector;
  *
  */
 public class Measurement extends org.redpin.base.core.Measurement implements IMeasurement, IEntity<Integer> {
-	
-	
+
+
 	public Measurement() {
 		super(new Vector<GSMReading>(), new Vector<WiFiReading>(), new Vector<BluetoothReading>());
-		
+
 	}
 
 	public Measurement(Vector<GSMReading> gsmReadings, Vector<WiFiReading> wifiReadings, Vector<BluetoothReading> bluetoothReadings) {
@@ -56,7 +56,7 @@ public class Measurement extends org.redpin.base.core.Measurement implements IMe
 	public Integer getId() {
 		return id;
 	}
-	
+
 	/**
 	 * @param id
 	 * 			the id to set
@@ -64,17 +64,17 @@ public class Measurement extends org.redpin.base.core.Measurement implements IMe
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
+
 	/*
 	protected Vector<GSMReading> gsmReadings;
 
-	
+
 	protected Vector<WiFiReading> wifiReadings;
 
-	
+
 	protected Vector<BluetoothReading> bluetoothReadings;
 	*/
-	
+
 	/**
 	 * @return Bluetooth readings vector
 	 */
@@ -101,25 +101,25 @@ public class Measurement extends org.redpin.base.core.Measurement implements IMe
 	public Vector<WiFiReading> getWiFiReadings() {
 		return (Vector<WiFiReading>) super.getWiFiReadings();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param br Bluetooth readings vector
 	 */
 	public void setBluetoothReadings(Vector<BluetoothReading> br) {
 		bluetoothReadings = br;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param wr WiFi readings vector
 	 */
 	public void setWiFiReadings(Vector<WiFiReading> wr) {
 		wifiReadings = wr;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param gr GSMreadings vector
 	 */
 	public void setGSMReadings(Vector<GSMReading> gr) {
@@ -135,14 +135,14 @@ public class Measurement extends org.redpin.base.core.Measurement implements IMe
 	public int similarityLevel(org.redpin.base.core.Measurement m) {
 		return LocatorHome.getLocator().measurementSimilarityLevel(this, m);
 	}
-	
-	
-	
+
+
+
 	@Override
 	public boolean equals(Object obj) {
 		return super.equals(obj) || (this.getTimestamp() == ((Measurement)obj).getTimestamp());
 	}
-	
-	
+
+
 
 }

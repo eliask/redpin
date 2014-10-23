@@ -1,7 +1,7 @@
 /**
  *  Filename: GsonFactory.java (in org.redpin.android.json)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.json;
@@ -28,9 +28,9 @@ import com.google.gson.GsonBuilder;
 
 /**
  * Factory for {@link Gson} instances.
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class GsonFactory {
 
@@ -38,7 +38,7 @@ public class GsonFactory {
 
 	/**
 	 * Gets a configured {@link Gson} instance
-	 * 
+	 *
 	 * @return {@link Gson} instance
 	 */
 	public synchronized static Gson getGsonInstance() {

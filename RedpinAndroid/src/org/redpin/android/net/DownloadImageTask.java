@@ -1,7 +1,7 @@
 /**
  *  Filename: DownloadImageTask.java (in org.repin.android.net)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.net;
@@ -43,10 +43,10 @@ import android.view.WindowManager.BadTokenException;
 /**
  * {@link AsyncTask} for downloading images in the background and saving them
  * locally if not yet cached.
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
  * @author Luba Rogoleva (lubar@student.ethz.ch)
- * 
+ *
  */
 public class DownloadImageTask extends AsyncTask<String, Void, String> {
 
@@ -68,7 +68,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, String> {
 	/**
 	 * Checks if images is already cached. If not downloads the images and
 	 * caches it.
-	 * 
+	 *
 	 * @param params
 	 *            URL of image to be downloaded (only first is considered)
 	 * @return Absolute file path to the cached image
@@ -99,7 +99,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, String> {
 
 		InputStream is = null;
 		try {
-			
+
 			if (urlStr != null && url.indexOf("http://{HOST}:{PORT}") != -1) {
 				urlStr = urlStr.replace("{HOST}", ConnectionHandler.host);
 				urlStr = urlStr.replace("{PORT}", ConnectionHandler.port + "");
@@ -107,7 +107,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, String> {
 			URL url = new URL(urlStr);
 			URLConnection conn = url.openConnection();
 			conn.connect();
-			
+
 			is = conn.getInputStream();
 			bm = BitmapFactory.decodeStream(is);
 
@@ -159,7 +159,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, String> {
 
 	/**
 	 * Calls the callback (if supplied) after the image is downloaded
-	 * 
+	 *
 	 * @param result
 	 *            Absolute file path of cached image
 	 */
@@ -186,7 +186,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, String> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param s
 	 *            URL of image
 	 * @return md5 hash value of image URL
@@ -209,13 +209,13 @@ public class DownloadImageTask extends AsyncTask<String, Void, String> {
 
 	/**
 	 * Callback Interface for {@link DownloadImageTask}
-	 * 
+	 *
 	 * @author Pascal Brogle (broglep@student.ethz.ch)
-	 * 
+	 *
 	 */
 	public interface DownloadImageTaskCallback {
 		/**
-		 * 
+		 *
 		 * @param url
 		 *            URL of the image that was downloaded
 		 * @param path

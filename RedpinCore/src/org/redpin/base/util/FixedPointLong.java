@@ -1,7 +1,7 @@
 /**
  *  Filename: FixedPointLong.java (in org.repin.base.util)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.base.util;
@@ -26,9 +26,9 @@ import org.redpin.base.util.FixedPointLongException;
 
 /**
  * Implements fixed-point numbers in the long primitive type
- * 
+ *
  * TAKEN FROM placelab!
- * 
+ *
  * @version 0.1
  */
 public final class FixedPointLong {
@@ -46,7 +46,7 @@ public final class FixedPointLong {
 
 	/**
 	 * make a flong from an integer
-	 * 
+	 *
 	 * @throws FixedPointLongException
 	 *             if an overflow occurs
 	 */
@@ -61,7 +61,7 @@ public final class FixedPointLong {
 	/**
 	 * make a flong from a string. E-notation numbers (e.g. -783.23E-6) are
 	 * understood.
-	 * 
+	 *
 	 * @throws FixedPointLongException
 	 *             if the string is not parseable, or if overflow occurs
 	 */
@@ -358,7 +358,7 @@ public final class FixedPointLong {
 
 	/**
 	 * returns a flong representing the division of the parameter flongs
-	 * 
+	 *
 	 * @throws FixedPointLongException
 	 *             if a divide-by-zero occurs
 	 */
@@ -382,7 +382,7 @@ public final class FixedPointLong {
 
 	/**
 	 * Returns a flong representing the multiple of the two parameter flongs
-	 * 
+	 *
 	 * @throws FixedPointLongException
 	 *             if overflow occurs
 	 */
@@ -427,7 +427,7 @@ public final class FixedPointLong {
 
 	/**
 	 * returns the flong representing the square of the parameter flong
-	 * 
+	 *
 	 * @throws FixedPointLongException
 	 *             if overflow occurs
 	 */
@@ -440,7 +440,7 @@ public final class FixedPointLong {
 
 	/**
 	 * returns the flong representing the positive square root of a flong
-	 * 
+	 *
 	 * @throws FixedPointLongException
 	 *             if a negative number is passed in
 	 */

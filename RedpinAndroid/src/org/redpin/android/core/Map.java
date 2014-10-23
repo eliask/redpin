@@ -1,7 +1,7 @@
 /**
  *  Filename: Map.java (in org.repin.android.core)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.core;
@@ -27,7 +27,7 @@ import org.redpin.android.db.RemoteEntity;
 /**
  * @see org.redpin.base.core.Map
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class Map extends org.redpin.base.core.Map implements
 		RemoteEntity<Integer>, LocalEntity {
@@ -51,7 +51,7 @@ public class Map extends org.redpin.base.core.Map implements
 	public void setLocalId(long id) {
 		_id = id;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -92,7 +92,7 @@ public class Map extends org.redpin.base.core.Map implements
 		return true;
 	}
 
-	
-	
+
+
 
 }

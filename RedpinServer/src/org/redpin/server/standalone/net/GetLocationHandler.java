@@ -1,7 +1,7 @@
 /**
  *  Filename: GetLocationHandler (in org.redpin.server.standalone.net)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.server.standalone.net;
@@ -39,14 +39,14 @@ import com.google.gson.JsonElement;
  */
 public class GetLocationHandler implements IHandler {
 
-	
-	private Logger log;	
-	
+
+	private Logger log;
+
 	public GetLocationHandler() {
 		log = Log.getLogger();
 	}
-	
-	
+
+
 	/**
 	 * @see IHandler#handle(JsonElement)
 	 */
@@ -54,25 +54,25 @@ public class GetLocationHandler implements IHandler {
 	public Response handle(JsonElement data) {
 		Response res;
 		Location loc;
-		
+
 		Measurement currentMeasurement = GsonFactory.getGsonInstance().fromJson(data, Measurement.class);
 		log.finer("got measurement: " + data);
-		
+
 		loc = LocatorHome.getLocator().locate(currentMeasurement);
-		
-			
+
+
 		if(loc == null) {
 			log.fine("no matching location found");
 			res = new Response(Status.failed, "no matching location found", null);
-			
+
 		} else {
 			res = new Response(Status.ok, null, loc);
 			log.finer("location found: " + loc + " accuracy: "+loc.getAccuracy());
 		}
-		
-		
+
+
 		return res;
 	}
-	
+
 
 }

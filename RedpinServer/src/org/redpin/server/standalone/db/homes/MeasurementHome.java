@@ -1,7 +1,7 @@
 /**
  *  Filename: MeasurementHome.java (in org.redpin.server.standalone.db.homes)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.server.standalone.db.homes;
@@ -37,21 +37,21 @@ import org.redpin.server.standalone.db.HomeFactory;
 public class MeasurementHome extends EntityHome<Measurement> {
 
 	private static final String[] TableCols = {"timestamp"};
-	private static final String TableName = "measurement"; 
+	private static final String TableName = "measurement";
 	private static final String TableIdCol = "measurementId";
 	private static final String selectMeasurements = " SELECT " + HomeFactory.getMeasurementHome().getTableColNames() + ", " +
-					 								 " readinginmeasurement.readingClassName, " + HomeFactory.getWiFiReadingHome().getTableColNames() + ", " + 
+					 								 " readinginmeasurement.readingClassName, " + HomeFactory.getWiFiReadingHome().getTableColNames() + ", " +
 					 								 HomeFactory.getGSMReadingHome().getTableColNames() + ", " + HomeFactory.getBluetoothReadingHome().getTableColNames()  +
 					 								 " FROM measurement INNER JOIN readinginmeasurement ON readinginmeasurement.measurementId = measurement.measurementId " +
 					 								 " LEFT OUTER JOIN wifireading ON wifireading.wifiReadingId = readinginmeasurement.readingId " +
 					 								 " LEFT OUTER JOIN gsmreading ON gsmreading.gsmReadingId = readinginmeasurement.readingId " +
 					 								 " LEFT OUTER JOIN bluetoothreading ON bluetoothreading.bluetoothReadingId = readinginmeasurement.readingId ";
 	private static final String orderMeasurements = " measurement.measurementId, readinginmeasurement.readingClassName ";
-	
+
 	public MeasurementHome() {
 		super();
 	}
-	
+
 	/**
 	 * @see EntityHome#getTableIdCol()
 	 */
@@ -75,23 +75,23 @@ public class MeasurementHome extends EntityHome<Measurement> {
 	protected String getTableName() {
 		return TableName;
 	}
-	
+
 	@Override
 	public Measurement parseResultRow(final ResultSet rs, int fromIndex)
 			throws SQLException {
 		Measurement m = new Measurement();
-		
+
 		try {
 			if (!rs.isAfterLast()) {
 				int mId = rs.getInt(fromIndex);
 				m.setId(mId);
 				m.setTimestamp(rs.getLong(fromIndex + 1));
 				String readingClassName = rs.getString(fromIndex + 2);
-				
+
 				if (readingClassName == null) {
 					// there are no readings in measurement
 					rs.next();
-				} else {	
+				} else {
 					while(!rs.isAfterLast() && mId == rs.getInt(fromIndex) ) {
 						readingClassName = rs.getString(fromIndex + 2);
 						if (HomeFactory.getWiFiReadingVectorHome().getContainedObjectClassName().equals(readingClassName)) {
@@ -109,23 +109,23 @@ public class MeasurementHome extends EntityHome<Measurement> {
 					 * adjust pointer to row because the last VectorHome read one row to far to see if readings are finished
 					 * Unfortunately not possible because SQLite JDBC driver only supports forward cursors.
 					 * See comment in FingerprintHome#get(String)
-					 * 
+					 *
 					 * rs.previous();
 					 */
-					
+
 				}
 			}
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, "parseResultRow failed: " + e.getMessage(), e);
 			throw e;
 		}
-		
+
 		return m;
 
 	}
-	
-	
-	
+
+
+
 
 	@Override
 	public Measurement getById(Integer id) {
@@ -135,7 +135,7 @@ public class MeasurementHome extends EntityHome<Measurement> {
 			return null;
 		}
 		return list.get(0);
-		
+
 	}
 
 	@Override
@@ -143,25 +143,25 @@ public class MeasurementHome extends EntityHome<Measurement> {
 		Connection conn = db.getConnection();
 		Vector<PreparedStatement> vps = new Vector<PreparedStatement>();
 		ResultSet rs = null;
-		
+
 		try {
 
 			conn.setAutoCommit(false);
-			
+
 			int measurementId = HomeFactory.getMeasurementHome().executeInsertUpdate(vps, m);
 			// wifi
 			HomeFactory.getWiFiReadingVectorHome().executeUpdate(vps, m.getWiFiReadings(), measurementId);
 			// gsm
-			HomeFactory.getGSMReadingVectorHome().executeUpdate(vps, m.getGsmReadings(), measurementId);			
+			HomeFactory.getGSMReadingVectorHome().executeUpdate(vps, m.getGsmReadings(), measurementId);
 			// bluetooth
 			HomeFactory.getBluetoothReadingVectorHome().executeUpdate(vps, m.getBluetoothReadings(), measurementId);
-		
-			
-			
+
+
+
 			conn.commit();
-			
+
 			return getById(measurementId);
-		
+
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, "add fingerprint failed: " + e.getMessage(), e);
 		} finally {
@@ -177,42 +177,42 @@ public class MeasurementHome extends EntityHome<Measurement> {
 		}
 		return null;
 	}
-	
-	
+
+
 
 
 	@Override
 	protected String getSelectSQL() {
 		return selectMeasurements;
 	}
-	
+
 	@Override
 	protected String getOrder() {
 		return orderMeasurements;
 	}
 
-	
-	
+
+
 
 	@Override
 	protected boolean remove(String constrain) {
 		String measurementsCnst = (constrain != null && constrain.length() > 0) ? constrain : "1=1";
-		
+
 		String readingInMeasurementCnst = " IN (SELECT readingId FROM readinginmeasurement WHERE (" + measurementsCnst + ")) ";
-		
-		
+
+
 		String sql_m = " DELETE FROM " + HomeFactory.getMeasurementHome().getTableName() + " WHERE " + measurementsCnst;
-		String sql_wifi = " DELETE FROM " + HomeFactory.getWiFiReadingHome().getTableName() + 
+		String sql_wifi = " DELETE FROM " + HomeFactory.getWiFiReadingHome().getTableName() +
 						  " WHERE " + HomeFactory.getWiFiReadingHome().getTableIdCol() + readingInMeasurementCnst;
-		String sql_gsm = " DELETE FROM " + HomeFactory.getGSMReadingHome().getTableName() + 
+		String sql_gsm = " DELETE FROM " + HomeFactory.getGSMReadingHome().getTableName() +
 		  				 " WHERE " + HomeFactory.getGSMReadingHome().getTableIdCol() + readingInMeasurementCnst;
-		String sql_bluetooth = " DELETE FROM " + HomeFactory.getBluetoothReadingHome().getTableName() + 
+		String sql_bluetooth = " DELETE FROM " + HomeFactory.getBluetoothReadingHome().getTableName() +
 		  					   " WHERE " + HomeFactory.getBluetoothReadingHome().getTableIdCol() + readingInMeasurementCnst;
-		 
+
 		String sql_rinm = "DELETE FROM readinginmeasurement WHERE " + measurementsCnst;
-		
+
 		Statement stat = null;
-		
+
 		log.finest(sql_wifi);
 		log.finest(sql_gsm);
 		log.finest(sql_bluetooth);
@@ -261,5 +261,5 @@ public class MeasurementHome extends EntityHome<Measurement> {
 		return fillInStatement(ps, new Object[] {t.getTimestamp()}, new int[]{ Types.BIGINT}, fromIndex);
 	}
 
-	
+
 }

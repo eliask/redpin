@@ -1,7 +1,7 @@
 /**
  *  Filename: LocationRemoteHome.java (in org.repin.android.net.home)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.net.home;
@@ -38,9 +38,9 @@ import android.util.Log;
 
 /**
  * RemoteEntityHome for {@link Location}s
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class LocationRemoteHome implements IRemoteEntityHome {
 
@@ -58,7 +58,7 @@ public class LocationRemoteHome implements IRemoteEntityHome {
 
 	/**
 	 * Performs an getLocationList request with callback
-	 * 
+	 *
 	 * @param callback
 	 *            {@link RemoteEntityHomeCallback}
 	 */
@@ -69,7 +69,7 @@ public class LocationRemoteHome implements IRemoteEntityHome {
 	/**
 	 * Performs an getLocation request without callback to estimate the current
 	 * location
-	 * 
+	 *
 	 * @param measurement
 	 *            {@link Measurement}
 	 */
@@ -80,7 +80,7 @@ public class LocationRemoteHome implements IRemoteEntityHome {
 	/**
 	 * Performs an getLocation request with callback to estimate the current
 	 * location
-	 * 
+	 *
 	 * @param measurement
 	 *            {@link Measurement}
 	 * @param callback
@@ -94,7 +94,7 @@ public class LocationRemoteHome implements IRemoteEntityHome {
 
 	/**
 	 * Performs an updateLocation request without callback
-	 * 
+	 *
 	 * @param loc
 	 *            {@link Location} to be updated
 	 * @return <code>true</code> if request can be performed, <code>false</code>
@@ -106,7 +106,7 @@ public class LocationRemoteHome implements IRemoteEntityHome {
 
 	/**
 	 * Performs an updateLocation request with callback
-	 * 
+	 *
 	 * @param loc
 	 *            {@link Location} to be updated
 	 * @param callback
@@ -129,7 +129,7 @@ public class LocationRemoteHome implements IRemoteEntityHome {
 
 	/**
 	 * Performs a removeLocation request without callback
-	 * 
+	 *
 	 * @param loc
 	 *            {@link Location} to be removed
 	 * @return <code>true</code> if request can be performed, <code>false</code>
@@ -141,7 +141,7 @@ public class LocationRemoteHome implements IRemoteEntityHome {
 
 	/**
 	 * Performs a removeLocation request with callback
-	 * 
+	 *
 	 * @param loc
 	 *            {@link Location} to be removed
 	 * @param callback
@@ -196,7 +196,7 @@ public class LocationRemoteHome implements IRemoteEntityHome {
 
 	/**
 	 * Updates the local database after the location was updated on the server
-	 * 
+	 *
 	 * @param request
 	 *            {@link Request} performed
 	 * @param response
@@ -224,7 +224,7 @@ public class LocationRemoteHome implements IRemoteEntityHome {
 	/**
 	 * Removes the {@link Location} from the local database after it was removed
 	 * on the server
-	 * 
+	 *
 	 * @param request
 	 *            {@link Request} performed
 	 * @param response
@@ -242,7 +242,7 @@ public class LocationRemoteHome implements IRemoteEntityHome {
 
 	/**
 	 * Synchronizes the local {@link Location} database
-	 * 
+	 *
 	 * @param request
 	 *            {@link Request} performed
 	 * @param response
@@ -301,7 +301,7 @@ public class LocationRemoteHome implements IRemoteEntityHome {
 
 	/**
 	 * Adds {@link Location} if not yet in local database
-	 * 
+	 *
 	 * @param request
 	 *            {@link Request} performed
 	 * @param response

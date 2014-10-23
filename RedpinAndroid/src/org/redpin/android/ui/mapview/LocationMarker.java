@@ -1,7 +1,7 @@
 /**
  *  Filename: LocationMarker.java (in org.repin.android.ui.mapview)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.ui.mapview;
@@ -39,9 +39,9 @@ import android.widget.FrameLayout;
 /**
  * {@link LocationMarker} is the graphical representation of an {@link Location}
  * on the {@link MapView}
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class LocationMarker extends Button implements OnClickListener {
 
@@ -69,7 +69,7 @@ public class LocationMarker extends Button implements OnClickListener {
 	private float density;
 
 	/**
-	 * 
+	 *
 	 * @param context
 	 *            {@link Context}
 	 * @param l
@@ -86,7 +86,7 @@ public class LocationMarker extends Button implements OnClickListener {
 
 	/**
 	 * Initiates the {@link LocationMarker}
-	 * 
+	 *
 	 * @param context
 	 *            {@link Context}
 	 */
@@ -114,7 +114,7 @@ public class LocationMarker extends Button implements OnClickListener {
 
 	/**
 	 * Sets the markers location
-	 * 
+	 *
 	 * @param l
 	 *            {@link Location}
 	 */
@@ -131,7 +131,7 @@ public class LocationMarker extends Button implements OnClickListener {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return {@link Location} represented by the {@link LocationMarker}
 	 */
 	public Location getLocation() {
@@ -158,7 +158,7 @@ public class LocationMarker extends Button implements OnClickListener {
 	/**
 	 * Changes the look of the marker depending if it represent an current
 	 * {@link Location}
-	 * 
+	 *
 	 * @param b
 	 *            Whether the {@link Location} represented by the
 	 *            {@link Location} is the current {@link Location}
@@ -300,7 +300,7 @@ public class LocationMarker extends Button implements OnClickListener {
 
 	/**
 	 * Handles the dragging of the {@link LocationMarker}
-	 * 
+	 *
 	 * @param ev
 	 *            The motion event
 	 * @return <code>True</code> if the event was handled, <code>false</code>
@@ -380,7 +380,7 @@ public class LocationMarker extends Button implements OnClickListener {
 
 	/**
 	 * Moves the marker by specified distance
-	 * 
+	 *
 	 * @param distanceX
 	 *            Distance in X direction
 	 * @param distanceY

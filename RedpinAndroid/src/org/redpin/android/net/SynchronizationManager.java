@@ -1,7 +1,7 @@
 /**
  *  Filename: SynchronizationManager.java (in org.repin.android.net)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.net;
@@ -37,9 +37,9 @@ import android.util.Log;
 /**
  * {@link SynchronizationManager} synchronizes the local database with the
  * server
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class SynchronizationManager extends Service {
 
@@ -49,7 +49,7 @@ public class SynchronizationManager extends Service {
 	/**
 	 * Registers an {@link InternetConnectionManager} broadcast receiver to get
 	 * notified about connectivity changes and tries to synchronize
-	 * 
+	 *
 	 * @see Service#onCreate()
 	 */
 	@Override
@@ -61,7 +61,7 @@ public class SynchronizationManager extends Service {
 
 	/**
 	 * Unregisters the {@link InternetConnectionManager} broadcast receiver
-	 * 
+	 *
 	 * @see Service#onDestroy()
 	 */
 	@Override
@@ -73,7 +73,7 @@ public class SynchronizationManager extends Service {
 	/**
 	 * {@link BroadcastReceiver} for {@link InternetConnectionManager}
 	 * broadcasts
-	 * 
+	 *
 	 * @see BroadcastReceiver
 	 */
 	private BroadcastReceiver bReceiver = new BroadcastReceiver() {
@@ -82,7 +82,7 @@ public class SynchronizationManager extends Service {
 		 * Tries to synchronize when an {@link InternetConnectionManager}
 		 * broadcast was received that indicates that the redpin server is
 		 * available
-		 * 
+		 *
 		 * @see BroadcastReceiver#onReceive(Context, Intent)
 		 */
 		@Override
@@ -95,13 +95,13 @@ public class SynchronizationManager extends Service {
 
 	/**
 	 * @see Binder
-	 * 
+	 *
 	 * @author Pascal Brogle (broglep@student.ethz.ch)
-	 * 
+	 *
 	 */
 	public class LocalBinder extends Binder {
 		/**
-		 * 
+		 *
 		 * @return {@link SynchronizationManager}
 		 */
 		SynchronizationManager getService() {

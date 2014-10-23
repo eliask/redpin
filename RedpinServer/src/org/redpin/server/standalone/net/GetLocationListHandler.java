@@ -1,7 +1,7 @@
 /**
  *  Filename: GetLocationListHandler.java (in org.redpin.server.standalone.net)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.server.standalone.net;
@@ -37,24 +37,24 @@ import com.google.gson.JsonElement;
  *
  */
 public class GetLocationListHandler implements IHandler {
-	
+
 	LocationHome locHome;
-	
+
 	public GetLocationListHandler() {
 		locHome = HomeFactory.getLocationHome();
 	}
-	
-	
+
+
 	/**
 	 * @see IHandler#handle(JsonElement)
 	 */
 	@Override
 	public Response handle(JsonElement data) {
-		
+
 		Response res;
-		
+
 		List<Location> locations = locHome.getAll();
-		
+
 		if(locations.contains(null)) {
 			res = new Response(Status.failed, "could not fetch all locations", null);
 			Log.getLogger().fine("could not fetch all locations");
@@ -62,9 +62,9 @@ public class GetLocationListHandler implements IHandler {
 			res = new Response(Status.ok, null, locations);
 			Log.getLogger().finer("fetched "+ locations.size()+ " locations");
 		}
-		
+
 		return res;
-		
+
 	}
 
 }

@@ -1,7 +1,7 @@
 /**
  *  Filename: LocationHome.java (in org.redpin.server.standalone.db.homes)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.server.standalone.db.homes;
@@ -41,16 +41,16 @@ import org.redpin.server.standalone.db.HomeFactory;
  *
  */
 public class LocationHome extends EntityHome<Location> {
-	
-	
+
+
 	private static final String[] TableCols = {"symbolicId", "mapId", "mapXCord", "mapYCord", "accuracy"};
-	private static final String TableName = "location"; 
+	private static final String TableName = "location";
 	private static final String TableIdCol = "locationId";
-	
+
 	public LocationHome() {
 		super();
 	}
-	
+
 	/**
 	 * @see EntityHome#getTableIdCol()
 	 */
@@ -81,7 +81,7 @@ public class LocationHome extends EntityHome<Location> {
 	@Override
 	public Location parseResultRow(final ResultSet rs, int fromIndex) throws SQLException {
 		Location loc = new Location();
-		
+
 		try {
 			loc.setId(rs.getInt(fromIndex));
 			loc.setSymbolicID(rs.getString(fromIndex + 1));
@@ -94,27 +94,27 @@ public class LocationHome extends EntityHome<Location> {
 			log.log(Level.SEVERE, "parseResultRow failed: " + e.getMessage(), e);
 			throw e;
 		}
-		
+
 		return loc;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param id {@link Map} primary key
 	 * @return {@link List} of {@link Location} for the {@link Map} with id; or all locations if map id is -1
 	 */
-	public List<Location> getListByMapId(Integer id) {	
-		String constraint = ""; 
+	public List<Location> getListByMapId(Integer id) {
+		String constraint = "";
 		if (id != -1) constraint += " location.mapId = " + id;
 		return get(constraint);
 	}
-	
+
 	/**
 	 * @see LocationHome#getListByMapId(Integer)
 	 * @param m {@link Map}
 	 * @return {@link List} of {@link Location} for the {@link Map}
 	 */
-	public List<Location> getListByMap(Map m) {	
+	public List<Location> getListByMap(Map m) {
 		return getListByMapId(m.getId());
 	}
 
@@ -129,14 +129,14 @@ public class LocationHome extends EntityHome<Location> {
 	/**
 	 * get fingerprints depending on different contraints.
 	 * -1 is used for no constraint
-	 * 
+	 *
 	 * @param locationId {@link Location} primary key
 	 * @param symbolicId Symbolic ID of {@link Location}
-	 * @return {@link Location} either by primary key or by symbolicId 
+	 * @return {@link Location} either by primary key or by symbolicId
 	 */
 	public Location getLocation(Integer locationId, String symbolicId) {
 		List<Location> list;
-		
+
 		if (locationId != -1) {
 			list =  get("locationId = " + locationId);
 			return list.size() == 0 ? null : list.get(0);
@@ -146,8 +146,8 @@ public class LocationHome extends EntityHome<Location> {
 		} else {
 			return null;
 		}
-		
-		
+
+
 	}
 
 	/**
@@ -156,13 +156,13 @@ public class LocationHome extends EntityHome<Location> {
 	@Override
 	public int fillInStatement(PreparedStatement ps, Location t, int fromIndex)
 			throws SQLException {
-		return fillInStatement(ps, new Object[] {t.getSymbolicID(), ((Map)t.getMap()).getId(), t.getMapXcord(), t.getMapYcord(), t.getAccuracy()},   
+		return fillInStatement(ps, new Object[] {t.getSymbolicID(), ((Map)t.getMap()).getId(), t.getMapXcord(), t.getMapYcord(), t.getAccuracy()},
 				new int[]{Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER},
 				fromIndex);
-		
+
 	}
-	
-	
+
+
 	/**
 	 * @see EntityHome#getSelectSQL()
 	 */
@@ -171,7 +171,7 @@ public class LocationHome extends EntityHome<Location> {
 		return "SELECT " + getTableColNames() + ", " + HomeFactory.getMapHome().getTableColNames() + " FROM " + getTableName() + " INNER JOIN map ON location.mapId = map.mapId ";
 	}
 
-	
+
 	/**
 	 * @see EntityHome#remove(String)
 	 */
@@ -179,29 +179,29 @@ public class LocationHome extends EntityHome<Location> {
 	public boolean remove(String constrain) {
 		// remove all fingerprints for the location, then remove location
 		String locationCnst = (constrain != null && constrain.length() > 0) ? constrain : "1=1";
-		String fingerprintsCnst = HomeFactory.getFingerprintHome().getTableIdCol() + " IN (SELECT " + HomeFactory.getFingerprintHome().getTableIdCol() + 
+		String fingerprintsCnst = HomeFactory.getFingerprintHome().getTableIdCol() + " IN (SELECT " + HomeFactory.getFingerprintHome().getTableIdCol() +
 																					   " FROM " + HomeFactory.getFingerprintHome().getTableName() +
 																					   " WHERE (" + locationCnst + ")) ";
-		String measurementsCnst = HomeFactory.getMeasurementHome().getTableIdCol() + " IN (SELECT " + HomeFactory.getFingerprintHome().getTableCols()[1] + 
-																					 " FROM " + HomeFactory.getFingerprintHome().getTableName() + 
+		String measurementsCnst = HomeFactory.getMeasurementHome().getTableIdCol() + " IN (SELECT " + HomeFactory.getFingerprintHome().getTableCols()[1] +
+																					 " FROM " + HomeFactory.getFingerprintHome().getTableName() +
 																					 " WHERE (" + fingerprintsCnst + ")) ";
 		String readingInMeasurementCnst = " IN (SELECT readingId FROM readinginmeasurement WHERE (" + measurementsCnst + ")) ";
-		
-		
+
+
 		String sql_m = " DELETE FROM " + HomeFactory.getMeasurementHome().getTableName() + " WHERE " + measurementsCnst;
-		String sql_wifi = " DELETE FROM " + HomeFactory.getWiFiReadingHome().getTableName() + 
+		String sql_wifi = " DELETE FROM " + HomeFactory.getWiFiReadingHome().getTableName() +
 						  " WHERE " + HomeFactory.getWiFiReadingHome().getTableIdCol() + readingInMeasurementCnst;
-		String sql_gsm = " DELETE FROM " + HomeFactory.getGSMReadingHome().getTableName() + 
+		String sql_gsm = " DELETE FROM " + HomeFactory.getGSMReadingHome().getTableName() +
 		  				 " WHERE " + HomeFactory.getGSMReadingHome().getTableIdCol() + readingInMeasurementCnst;
-		String sql_bluetooth = " DELETE FROM " + HomeFactory.getBluetoothReadingHome().getTableName() + 
+		String sql_bluetooth = " DELETE FROM " + HomeFactory.getBluetoothReadingHome().getTableName() +
 		  					   " WHERE " + HomeFactory.getBluetoothReadingHome().getTableIdCol() + readingInMeasurementCnst;
-		 
+
 		String sql_rinm = "DELETE FROM readinginmeasurement WHERE " + measurementsCnst;
 		String sql_fp = "DELETE FROM " + HomeFactory.getFingerprintHome().getTableName() + " WHERE " + locationCnst;
-	
+
 		String sql_loc = "DELETE FROM " + getTableName() + " WHERE " + locationCnst;
 		Statement stat = null;
-		
+
 		log.finest(sql_wifi);
 		log.finest(sql_gsm);
 		log.finest(sql_bluetooth);
@@ -219,7 +219,7 @@ public class LocationHome extends EntityHome<Location> {
 				stat.addBatch(sql_bluetooth);
 				stat.addBatch(sql_rinm);
 				stat.addBatch(sql_fp);
-				stat.addBatch(sql_m);				
+				stat.addBatch(sql_m);
 				stat.addBatch(sql_loc);
 				int results[] = stat.executeBatch();
 				if (results != null && results.length > 0) {

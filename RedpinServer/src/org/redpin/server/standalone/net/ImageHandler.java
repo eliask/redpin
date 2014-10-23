@@ -1,7 +1,7 @@
 /**
  *  Filename: ImageHandler.java (in org.redpin.server.standalone.net)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.server.standalone.net;
@@ -39,9 +39,9 @@ import org.redpin.server.standalone.util.Log;
 
 /**
  * Handler for HTTP requests used to up- and download image.
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class ImageHandler {
 
@@ -51,7 +51,7 @@ public class ImageHandler {
 	final static String CRLF = "\r\n";
 	final static int HTTP_OK = 200;
 	final static int HTTP_NOT_FOUND = 404;
-	
+
 	final static int BUFFER_SIZE = 1024;
 	private Logger log = Log.getLogger();
 
@@ -102,7 +102,7 @@ public class ImageHandler {
 		int dataLength = 0;
 		String boundary = "";
 		DataOutputStream fileout = null;
-		
+
 		try {
 
 			while (true) {
@@ -156,16 +156,16 @@ public class ImageHandler {
 			String fileName = generateFilename();
 			fileout = new DataOutputStream(new FileOutputStream(
 					Configuration.ImageUploadPath + "/" + fileName));
-			
+
 			byte[] buf = new byte[BUFFER_SIZE];
-			
+
 			int l = dataLength;
 			int bytesRead;
 			while (((bytesRead = in.read(buf,0,Math.min(BUFFER_SIZE, l))) != -1) && (l != 0)) {
 				fileout.write(buf, 0, bytesRead);
 				l -= bytesRead;
 			}
-			
+
 			in.readLine();
 			currentLine = in.readLine();
 			if (currentLine != null && currentLine.indexOf("--" + boundary + "--") != -1) {

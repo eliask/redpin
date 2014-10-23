@@ -1,7 +1,7 @@
 /**
  *  Filename: MapHome.java (in org.redpin.server.standalone.db.homes)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.server.standalone.db.homes;
@@ -39,17 +39,17 @@ import org.redpin.server.standalone.db.HomeFactory;
  *
  */
 public class MapHome extends EntityHome<Map> {
-	
+
 	public static final String[] TableCols = {"mapName", "mapURL"};
-	public static final String TableName = "map"; 
+	public static final String TableName = "map";
 	private static final String TableIdCol = "mapId";
-	
+
 
 
 	public MapHome() {
 		super();
 	}
-	
+
 	/**
 	 * @see EntityHome#getTableName()
 	 */
@@ -57,7 +57,7 @@ public class MapHome extends EntityHome<Map> {
 	protected String getTableName() {
 		return TableName;
 	}
-	
+
 	/**
 	 * @see EntityHome#getTableIdCol()
 	 */
@@ -65,7 +65,7 @@ public class MapHome extends EntityHome<Map> {
 	protected String getTableIdCol() {
 		return TableIdCol;
 	}
-	
+
 	/**
 	 * @see EntityHome#getTableCols()
 	 */
@@ -73,24 +73,24 @@ public class MapHome extends EntityHome<Map> {
 	protected String[] getTableCols() {
 		return TableCols;
 	}
-	
+
 	/**
 	 * @see EntityHome#parseResultRow(ResultSet, int)
 	 */
 	@Override
 	public Map parseResultRow(final ResultSet rs, int fromIndex) throws SQLException{
 		Map map = new Map();
-		
+
 		try {
 			map.setId(rs.getInt(fromIndex));
 			map.setMapName(rs.getString(fromIndex + 1));
 			map.setMapURL(rs.getString(fromIndex + 2));
-		
+
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, "parseResultRow failed: " + e.getMessage(), e);
 			throw e;
 		}
-		
+
 		return map;
 	}
 
@@ -101,33 +101,33 @@ public class MapHome extends EntityHome<Map> {
 	public boolean remove(String constraint) {
 		// remove all locations and fingerprints for the map, then remove map
 		String mapCnst = (constraint != null && constraint.length() > 0) ? constraint : "1=1";
-		String locationCnst = HomeFactory.getLocationHome().getTableIdCol() + " IN (SELECT " + HomeFactory.getLocationHome().getTableIdCol() + 
-																				 " FROM " + HomeFactory.getLocationHome().getTableName() + 
+		String locationCnst = HomeFactory.getLocationHome().getTableIdCol() + " IN (SELECT " + HomeFactory.getLocationHome().getTableIdCol() +
+																				 " FROM " + HomeFactory.getLocationHome().getTableName() +
 																				 " WHERE " + mapCnst + ")";
-		String fingerprintsCnst = HomeFactory.getFingerprintHome().getTableIdCol() + " IN (SELECT " + HomeFactory.getFingerprintHome().getTableIdCol() + 
+		String fingerprintsCnst = HomeFactory.getFingerprintHome().getTableIdCol() + " IN (SELECT " + HomeFactory.getFingerprintHome().getTableIdCol() +
 																					   " FROM " + HomeFactory.getFingerprintHome().getTableName() +
 																					   " WHERE (" + locationCnst + ")) ";
-		String measurementsCnst = HomeFactory.getMeasurementHome().getTableIdCol() + " IN (SELECT " + HomeFactory.getFingerprintHome().getTableCols()[1] + 
-																					 " FROM " + HomeFactory.getFingerprintHome().getTableName() + 
+		String measurementsCnst = HomeFactory.getMeasurementHome().getTableIdCol() + " IN (SELECT " + HomeFactory.getFingerprintHome().getTableCols()[1] +
+																					 " FROM " + HomeFactory.getFingerprintHome().getTableName() +
 																					 " WHERE (" + fingerprintsCnst + ")) ";
 		String readingInMeasurementCnst = " IN (SELECT readingId FROM readinginmeasurement WHERE (" + measurementsCnst + ")) ";
-		
-		
+
+
 		String sql_m = " DELETE FROM " + HomeFactory.getMeasurementHome().getTableName() + " WHERE " + measurementsCnst;
-		String sql_wifi = " DELETE FROM " + HomeFactory.getWiFiReadingHome().getTableName() + 
+		String sql_wifi = " DELETE FROM " + HomeFactory.getWiFiReadingHome().getTableName() +
 						  " WHERE " + HomeFactory.getWiFiReadingHome().getTableIdCol() + readingInMeasurementCnst;
-		String sql_gsm = " DELETE FROM " + HomeFactory.getGSMReadingHome().getTableName() + 
+		String sql_gsm = " DELETE FROM " + HomeFactory.getGSMReadingHome().getTableName() +
 		  				 " WHERE " + HomeFactory.getGSMReadingHome().getTableIdCol() + readingInMeasurementCnst;
-		String sql_bluetooth = " DELETE FROM " + HomeFactory.getBluetoothReadingHome().getTableName() + 
+		String sql_bluetooth = " DELETE FROM " + HomeFactory.getBluetoothReadingHome().getTableName() +
 		  					   " WHERE " + HomeFactory.getBluetoothReadingHome().getTableIdCol() + readingInMeasurementCnst;
-		 
+
 		String sql_rinm = "DELETE FROM readinginmeasurement WHERE " + measurementsCnst;
 		String sql_fp = "DELETE FROM " + HomeFactory.getFingerprintHome().getTableName() + " WHERE " + locationCnst;
-		
+
 		String sql_l = "DELETE FROM " + HomeFactory.getLocationHome().getTableName() + " WHERE " + mapCnst;
 		String sql_map = "DELETE FROM " + getTableName() + " WHERE " + mapCnst;
 		Statement stat = null;
-		
+
 		log.finest(sql_wifi);
 		log.finest(sql_gsm);
 		log.finest(sql_bluetooth);

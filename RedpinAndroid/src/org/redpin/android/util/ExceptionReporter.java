@@ -22,7 +22,7 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
-Contributors: 
+Contributors:
 Mads Kristiansen, mads.kristiansen@nullwire.com
 Glen Humphrey
 Evan Charlton
@@ -60,7 +60,7 @@ public class ExceptionReporter {
 
 	/**
 	 * Register handler for unhandled exceptions.
-	 * 
+	 *
 	 * @param context
 	 */
 	public static boolean register(Context context) {
@@ -121,10 +121,10 @@ public class ExceptionReporter {
 		return stackTracesFound;
 	}
 
-	
+
 	/**
 	 * Search for stack trace files.
-	 * 
+	 *
 	 * @return
 	 */
 	private static String[] searchForStackTraces() {

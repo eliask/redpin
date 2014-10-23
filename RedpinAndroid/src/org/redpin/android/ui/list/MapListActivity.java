@@ -1,7 +1,7 @@
 /**
  *  Filename: MapListActivity.java (in org.repin.android.ui.list)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.ui.list;
@@ -59,10 +59,10 @@ import android.widget.AdapterView.OnItemClickListener;
 
 /**
  * {@link ListActivity} that displays {@link Map}s.
- * 
+ *
  * @author Luba Rogoleva (lubar@student.ethz.ch)
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class MapListActivity extends ListActivity implements
 		OnItemClickListener, OnCreateContextMenuListener, TextWatcher {
@@ -80,7 +80,7 @@ public class MapListActivity extends ListActivity implements
 		super.onCreate(savedInstanceState);
 
 		bindService(new Intent(this, InternetConnectionManager.class), mConnection, Context.BIND_AUTO_CREATE);
-		
+
 		registerReceiver(connectionChangeReceiver, new IntentFilter(
 				InternetConnectionManager.CONNECTIVITY_ACTION));
 
@@ -98,17 +98,17 @@ public class MapListActivity extends ListActivity implements
 
 		setListAdapter(new MapCursorAdapter(this, getIntent().getData()));
 		ListView lv = getListView();
-		
+
 		/*
 		 * Does pose problems with own search box. after user presses search, focus is transfered to the listview and the keyboard appears again
 		 * Possible fix is to use lv.setFocusableInTouchMode(true)
 		 */
 		//lv.setTextFilterEnabled(true);
-		
+
 		registerForContextMenu(lv);
 		lv.setClickable(true);
 		lv.setOnItemClickListener(this);
-		
+
 		View searchView = (View) findViewById(R.id.filter_layout);
 		searchView.setVisibility(View.VISIBLE);
 		EditText filter = (EditText) findViewById(R.id.filter);
@@ -129,7 +129,7 @@ public class MapListActivity extends ListActivity implements
 
 	/**
 	 * Gets the clicked {@link Map}
-	 * 
+	 *
 	 * @param parent
 	 *            {@link AdapterView}
 	 * @param position
@@ -254,7 +254,7 @@ public class MapListActivity extends ListActivity implements
 			isOnline = (intent.getFlags() & InternetConnectionManager.ONLINE_FLAG)== InternetConnectionManager.ONLINE_FLAG;
 		}
 	};
-	
+
 	/**
 	 * {@link InternetConnectionManager} {@link ServiceConnection} to check current online state
 	 */
@@ -265,11 +265,11 @@ public class MapListActivity extends ListActivity implements
 			InternetConnectionManager mManager = ((InternetConnectionManager.LocalBinder)service).getService();
 			isOnline = mManager.isOnline();
 		}
-		
+
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
 		}
-		
+
 	};
 
 	/**
@@ -285,7 +285,7 @@ public class MapListActivity extends ListActivity implements
 	 */
 	@Override
 	public void beforeTextChanged(CharSequence s, int start, int count,
-			int after) {		
+			int after) {
 	}
 
 	/**
@@ -294,7 +294,7 @@ public class MapListActivity extends ListActivity implements
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		CursorAdapter adapter = (CursorAdapter) getListAdapter();
-		adapter.getFilter().filter(s);		
+		adapter.getFilter().filter(s);
 	}
 
 }

@@ -27,9 +27,9 @@ import org.redpin.android.provider.RedpinContract;
 import android.test.ProviderTestCase2;
 
 /**
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class RemoteEntityHomeTest extends
 		ProviderTestCase2<RedpinContentProvider> {
@@ -561,66 +561,66 @@ public class RemoteEntityHomeTest extends
 	}
 
 	/*
-	 * 
-	 * 
+	 *
+	 *
 	 * public void test_CallbackOnFailure() { assertEquals(0,
 	 * RemoteEntityHome.getPending().size()); map.setRemoteId(20); Request<Map>
 	 * mockRequest = new Request<Map>(RequestType.setMap, map); mockResponse =
 	 * new Response<Map>(Status.failed, map);
-	 * 
+	 *
 	 * PerformRequestTask mockTask = new PerformRequestTask();
-	 * 
+	 *
 	 * mockExecuteTask(mockTask, mockRequest, new RemoteEntityHomeCallback() {
-	 * 
+	 *
 	 * public void onResponse(Response<?> response) { fail(); }
-	 * 
+	 *
 	 * public void onFailure(Response<?> response) { assertTrue(response ==
 	 * mockResponse);
-	 * 
+	 *
 	 * } });
-	 * 
-	 * 
+	 *
+	 *
 	 * RemoteEntityHome.getInstance().onPerformedForeground(mockRequest,
 	 * mockResponse, mockTask);
-	 * 
-	 * 
+	 *
+	 *
 	 * assertEquals(0, RemoteEntityHome.getPending().size()); assertEquals(0,
 	 * RemoteEntityHome.getCallbacks().size());
-	 * 
+	 *
 	 * }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * public void test_onFailure() { assertEquals(0,
 	 * RemoteEntityHome.getPending().size()); Request<Map> mockRequest = new
 	 * Request<Map>(RequestType.removeMap, map); Response<Void> mockResponse =
 	 * new Response<Void>(Status.failed);
-	 * 
+	 *
 	 * PerformRequestTask mockTask = new PerformRequestTask();
-	 * 
+	 *
 	 * mockExecuteTask(mockTask, mockRequest);
-	 * 
+	 *
 	 * RemoteEntityHome.getInstance().onPerformedForeground(mockRequest,
 	 * mockResponse, mockTask);
-	 * 
+	 *
 	 * assertEquals(1, RemoteEntityHome.getPending().size());
 	 * assertFalse(RemoteEntityHome.getPending().containsKey(mockTask));
 	 * assertTrue(RemoteEntityHome.getPending().values().contains(mockRequest));
 	 * assertTrue(RemoteEntityHome.getRetryCount().containsKey(mockRequest));
 	 * assertEquals((Integer)1,
 	 * RemoteEntityHome.getRetryCount().get(mockRequest));
-	 * 
-	 * 
+	 *
+	 *
 	 * RemoteEntityHome.getInstance().onPerformedForeground(mockRequest,
 	 * mockResponse, mockTask);
-	 * 
+	 *
 	 * assertEquals(1, RemoteEntityHome.getPending().size());
 	 * assertFalse(RemoteEntityHome.getPending().containsKey(mockTask));
 	 * assertTrue(RemoteEntityHome.getPending().values().contains(mockRequest));
 	 * assertTrue(RemoteEntityHome.getRetryCount().containsKey(mockRequest));
 	 * assertEquals((Integer)2,
 	 * RemoteEntityHome.getRetryCount().get(mockRequest));
-	 * 
+	 *
 	 * RemoteEntityHome.getInstance().onPerformedForeground(mockRequest,
 	 * mockResponse, mockTask); //given up assertEquals(0,
 	 * RemoteEntityHome.getPending().size());
@@ -628,9 +628,9 @@ public class RemoteEntityHomeTest extends
 	 * assertFalse
 	 * (RemoteEntityHome.getPending().values().contains(mockRequest));
 	 * assertFalse(RemoteEntityHome.getRetryCount().containsKey(mockRequest));
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * }
 	 */
 

@@ -1,7 +1,7 @@
 /**
  *  Filename: ZoomAndScrollImageView.java (in org.repin.android.ui.mapview)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.ui.mapview;
@@ -49,9 +49,9 @@ import android.widget.ZoomButtonsController.OnZoomListener;
 
 /**
  * ImageView that is capable of zooming and scrolling an image.
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class ZoomAndScrollImageView extends View implements OnZoomListener,
 		OnDoubleTapListener, OnGestureListener, OnScaleGestureListener {
@@ -90,7 +90,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 	/**
 	 * Construct a new ZoomAndScrollImageView with layout parameters and a
 	 * default style.
-	 * 
+	 *
 	 * @param context
 	 *            A Context object used to access application assets.
 	 * @param attrs
@@ -107,7 +107,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 	/**
 	 * Construct a new ZoomAndScrollImageView with layout parameters.
-	 * 
+	 *
 	 * @param context
 	 *            A Context object used to access application assets.
 	 * @param attrs
@@ -120,7 +120,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 	/**
 	 * Construct a new ZoomAndScrollImageView with a Context object.
-	 * 
+	 *
 	 * @param context
 	 *            A Context object used to access application assets.
 	 */
@@ -131,7 +131,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 	/**
 	 * Initializes the view
-	 * 
+	 *
 	 * @param context
 	 *            {@link Context}
 	 */
@@ -154,7 +154,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 	/**
 	 * Displays a bitmap
-	 * 
+	 *
 	 * @param bitmap
 	 *            {@link Bitmap}
 	 */
@@ -171,7 +171,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 	/**
 	 * Displays a drawable
-	 * 
+	 *
 	 * @param bDrawable
 	 *            {@link BitmapDrawable}
 	 */
@@ -194,7 +194,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 	/**
 	 * Sets the image content size
-	 * 
+	 *
 	 * @param width
 	 *            Image width
 	 * @param height
@@ -207,7 +207,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Current zoom scale
 	 */
 	public float getScale() {
@@ -215,7 +215,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 	}
 
 	/**
-	 * 
+	 *
 	 * @param scale
 	 *            Desired zoom scale
 	 */
@@ -225,7 +225,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 	/**
 	 * Notifies the listener about the changed matrix
-	 * 
+	 *
 	 * @param m
 	 *            Changed matrix
 	 */
@@ -259,7 +259,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 	}
 
 	/**
-	 * 
+	 *
 	 * @return current x and y coordinate of the
 	 */
 	public float[] getCurrentXY() {
@@ -589,9 +589,9 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 	/**
 	 * Animation that zoom and translates to a given position
-	 * 
+	 *
 	 * @author Pascal Brogle (broglep@student.ethz.ch)
-	 * 
+	 *
 	 */
 	class ZoomAndTranslate extends Animation {
 		private static final int DURATION = 1000;
@@ -628,7 +628,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 		/**
 		 * Starts the animation
-		 * 
+		 *
 		 * @param amount
 		 *            Zoom amount
 		 * @param fromX
@@ -741,14 +741,14 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 	/**
 	 * Listener-Interface for {@link ZoomAndScrollImageView}
-	 * 
+	 *
 	 * @author Pascal Brogle (broglep@student.ethz.ch)
-	 * 
+	 *
 	 */
 	public interface ZoomAndScrollViewListener {
 		/**
 		 * Called when a change in the drawing matrix occours
-		 * 
+		 *
 		 * @param m
 		 *            New matrix
 		 * @param view
@@ -758,7 +758,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 		/**
 		 * Called when the user begins to scale
-		 * 
+		 *
 		 * @param view
 		 *            View that calls the method
 		 */
@@ -766,7 +766,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 		/**
 		 * Called when the user ends scaling
-		 * 
+		 *
 		 * @param view
 		 *            View that calls the method
 		 */
@@ -774,7 +774,7 @@ public class ZoomAndScrollImageView extends View implements OnZoomListener,
 
 		/**
 		 * Called when the user tabs the view
-		 * 
+		 *
 		 * @param e
 		 *            MotionEvent
 		 */

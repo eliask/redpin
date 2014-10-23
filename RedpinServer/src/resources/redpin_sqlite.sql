@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS 'bluetoothreading' (
   'minorDeviceClass' varchar(45) NOT NULL
 ) ;
 CREATE TABLE IF NOT EXISTS 'fingerprint' (
-  'fingerprintId' INTEGER PRIMARY KEY, 
+  'fingerprintId' INTEGER PRIMARY KEY,
   'locationId' int(10) NOT NULL,
   'measurementId' int(10) NOT NULL
 ) ;

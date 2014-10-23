@@ -1,7 +1,7 @@
 /**
  *  Filename: GSMReadingHome.java (in org.redpin.server.standalone.db.homes)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.server.standalone.db.homes;
@@ -36,16 +36,16 @@ import org.redpin.server.standalone.core.measure.GSMReading;
  *
  */
 public class GSMReadingHome extends EntityHome<GSMReading> {
-	
+
 	private static final String[] TableCols = {"cellId", "areaId", "signalStrength", "MCC", "MNC","networkName"};
-	private static final String TableName = "gsmreading"; 
+	private static final String TableName = "gsmreading";
 	private static final String TableIdCol = "gsmReadingId";
-	
-	
+
+
 	public GSMReadingHome() {
 		super();
 	}
-	
+
 	/**
 	 * @see EntityHome#getTableName()
 	 */
@@ -53,7 +53,7 @@ public class GSMReadingHome extends EntityHome<GSMReading> {
 	protected String getTableName() {
 		return TableName;
 	}
-	
+
 	/**
 	 * @see EntityHome#getTableIdCol()
 	 */
@@ -61,7 +61,7 @@ public class GSMReadingHome extends EntityHome<GSMReading> {
 	protected String getTableIdCol() {
 		return TableIdCol;
 	}
-	
+
 	/**
 	 * @see EntityHome#getTableCols()
 	 */
@@ -69,14 +69,14 @@ public class GSMReadingHome extends EntityHome<GSMReading> {
 	protected String[] getTableCols() {
 		return TableCols;
 	}
-	
+
 	/**
 	 * @see EntityHome#parseResultRow(ResultSet)
 	 */
 	@Override
 	public GSMReading parseResultRow(final ResultSet rs, int fromIndex) throws SQLException{
 		GSMReading reading = new GSMReading();
-		
+
 		try {
 			reading.setId(rs.getInt(fromIndex));
 			reading.setCellId(rs.getString(fromIndex + 1));
@@ -85,13 +85,13 @@ public class GSMReadingHome extends EntityHome<GSMReading> {
 			reading.setMCC(rs.getString(fromIndex + 4));
 			reading.setMNC(rs.getString(fromIndex + 5));
 			reading.setNetworkName(rs.getString(fromIndex + 6));
-			
-		
+
+
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, "parseResultRow failed: " + e.getMessage(), e);
 			throw e;
 		}
-		
+
 		return reading;
 	}
 
@@ -101,12 +101,12 @@ public class GSMReadingHome extends EntityHome<GSMReading> {
 	@Override
 	public int fillInStatement(PreparedStatement ps, GSMReading t, int fromIndex)
 			throws SQLException {
-		return fillInStatement(ps, new Object[] {t.getCellId(), t.getAreaId(), t.getSignalStrength(), t.getMCC(), t.getMNC(), t.getNetworkName()},   
+		return fillInStatement(ps, new Object[] {t.getCellId(), t.getAreaId(), t.getSignalStrength(), t.getMCC(), t.getMNC(), t.getNetworkName()},
 				new int[]{Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR},
 				fromIndex);
 	}
 
 
-	
-	
+
+
 }

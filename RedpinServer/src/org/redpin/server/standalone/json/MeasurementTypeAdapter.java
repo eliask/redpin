@@ -1,7 +1,7 @@
 /**
  *  Filename: MeasurementTypeAdapter.java (in org.redpin.server.standalone.json)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.server.standalone.json;
@@ -40,7 +40,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 /**
  * Custom adapter for {@link Measurement}s in order to deserialize the {@link Vector}s
- * 
+ *
  * @see JsonDeserializer
  * @author Pascal Brogle (broglep@student.ethz.ch)
  *
@@ -60,13 +60,13 @@ public class MeasurementTypeAdapter implements JsonDeserializer<Measurement> {
 		JsonElement json_wifi = obj.get("wifiReadings");
 		JsonElement json_gsm = obj.get("gsmReadings");
 		JsonElement json_bluetooth = obj.get("bluetoothReadings");
-		
+
 		// init vectors
 		Vector<WiFiReading> wifi = new Vector<WiFiReading>();
 		Vector<GSMReading> gsm = new Vector<GSMReading>();
-		Vector<BluetoothReading> bluetooth = new Vector<BluetoothReading>();		
-		
-		
+		Vector<BluetoothReading> bluetooth = new Vector<BluetoothReading>();
+
+
 		// deserialize reading vectors
 		Type listType;
 		if(json_wifi != null) {
@@ -74,13 +74,13 @@ public class MeasurementTypeAdapter implements JsonDeserializer<Measurement> {
 			Collection<WiFiReading> wificol = context.deserialize(json_wifi, listType);
 			wifi.addAll(wificol);
 		}
-		
+
 		if(json_gsm != null) {
 			listType = new TypeToken<Vector<GSMReading>>() {}.getType();
 			Collection<GSMReading> gsmcol = context.deserialize(json_gsm, listType);
 			gsm.addAll(gsmcol);
 		}
-		
+
 		if(json_bluetooth != null) {
 			listType = new TypeToken<Vector<BluetoothReading>>() {}.getType();
 			Collection<BluetoothReading> bluetoothcol = context.deserialize(json_bluetooth, listType);

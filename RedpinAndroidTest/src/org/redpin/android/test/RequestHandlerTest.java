@@ -24,8 +24,8 @@ import com.google.gson.Gson;
 
 /**
  * Does need a running redpin standalone server on localhost:8000
- * 
- * 
+ *
+ *
  */
 public class RequestHandlerTest extends InstrumentationTestCase {
 	Map map, map2;

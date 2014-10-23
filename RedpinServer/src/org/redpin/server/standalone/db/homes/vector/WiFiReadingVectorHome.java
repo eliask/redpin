@@ -1,7 +1,7 @@
 /**
  *  Filename: WiFiReadingVectorHome.java (in org.redpin.server.standalone.db.homes.vector)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.server.standalone.db.homes.vector;
@@ -35,7 +35,7 @@ import org.redpin.server.standalone.db.homes.EntityHome;
 public class WiFiReadingVectorHome extends VectorHome<WiFiReading> {
 
 	private static final String className = WiFiReading.class.getSimpleName();
-	
+
 	/**
 	 * @see VectorHome#getContainedObjectClassName()
 	 */
@@ -51,5 +51,5 @@ public class WiFiReadingVectorHome extends VectorHome<WiFiReading> {
 	public EntityHome<WiFiReading> getObjectHome() {
 		return HomeFactory.getWiFiReadingHome();
 	}
-	
+
 }

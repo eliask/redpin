@@ -1,7 +1,7 @@
 /**
  *  Filename: SetMapHandler.java (in org.redpin.server.standalone.net)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.server.standalone.net;
@@ -38,22 +38,22 @@ import com.google.gson.JsonElement;
 public class SetMapHandler implements IHandler {
 
 	MapHome mapHome;
-	
+
 	public SetMapHandler() {
 		mapHome = HomeFactory.getMapHome();
 	}
-	
+
 	/**
 	 * @see IHandler#handle(JsonElement)
 	 */
 	@Override
 	public Response handle(JsonElement data) {
-		
+
 		Response res;
-		
+
 		Map map = GsonFactory.getGsonInstance().fromJson(data, Map.class);
 		map = mapHome.add(map);
-		
+
 		if(map == null) {
 			res = new Response(Status.failed, "could not add to database", null);
 			Log.getLogger().fine("could not add map to database");
@@ -61,8 +61,8 @@ public class SetMapHandler implements IHandler {
 			res = new Response(Status.ok, null, map);
 			Log.getLogger().finer("added map to database");
 		}
-		
-		
+
+
 		return res;
 	}
 

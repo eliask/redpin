@@ -1,7 +1,7 @@
 /**
  *  Filename: MapViewActivity.java (in org.repin.android.ui)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.ui;
@@ -66,7 +66,7 @@ import android.widget.TextView;
 
 /**
  * Main activity of the client that displays maps and locations
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
  *
  */
@@ -98,9 +98,9 @@ public class MapViewActivity extends Activity {
 				SynchronizationManager.class));
 		bindService(new Intent(this, InternetConnectionManager.class),
 				mICMConnection, Context.BIND_AUTO_CREATE);
-		
+
 		 startService(new Intent(MapViewActivity.this,InternetConnectionManager.class));
-		 
+
 
 		startWifiSniffer();
 		/*
@@ -113,7 +113,7 @@ public class MapViewActivity extends Activity {
 		mapView = (MapView) findViewById(R.id.map_view_component);
 		mapName = (TextView) findViewById(R.id.map_name);
 		mapTopBar = (RelativeLayout) findViewById(R.id.map_topbar);
-		
+
 		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			mapTopBar.setVisibility(View.GONE);
 		}
@@ -151,7 +151,7 @@ public class MapViewActivity extends Activity {
 
 	/**
 	 * Starts the setting screen
-	 * 
+	 *
 	 * @param target {@link View} that called this method
 	 */
 	public void button_Settings(View target) {
@@ -208,9 +208,9 @@ public class MapViewActivity extends Activity {
 
 		stopService(new Intent(MapViewActivity.this,
 				SynchronizationManager.class));
-		
+
 		 stopService(new Intent(MapViewActivity.this,InternetConnectionManager.class));
-		 
+
 		unbindService(mICMConnection);
 
 		super.onDestroy();
@@ -230,7 +230,7 @@ public class MapViewActivity extends Activity {
 	}
 
 	/**
-	 * Displays the current location on the map 
+	 * Displays the current location on the map
 	 * @param loc The current estimated location
 	 */
 	protected void showLocation(Location loc) {
@@ -296,7 +296,7 @@ public class MapViewActivity extends Activity {
 
 	/**
 	 * Sets the connectivity mode of the view
-	 * 
+	 *
 	 * @param isOnline <code>True</code> if the client can connect to the server, <code>false</code> otherwise
 	 */
 	private void setOnlineMode(boolean isOnline) {
@@ -412,7 +412,7 @@ public class MapViewActivity extends Activity {
 							@Override
 							public void onFailure(Response<?> response) {
 								progressDialog.hide();
-								
+
 								new AlertDialog.Builder(MapViewActivity.this).setMessage(response.getMessage()).setPositiveButton(android.R.string.ok, null).create().show();
 
 							}
@@ -431,7 +431,7 @@ public class MapViewActivity extends Activity {
 
 		}
 	};
-	/** 
+	/**
 	 * {@link ServiceConnection} for the {@link WifiSniffer}
 	 */
 	private ServiceConnection mWifiConnection = new ServiceConnection() {

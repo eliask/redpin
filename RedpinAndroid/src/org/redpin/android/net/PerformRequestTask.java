@@ -1,7 +1,7 @@
 /**
  *  Filename: PerformRequestTask.java (in org.repin.android.net)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.net;
@@ -27,10 +27,10 @@ import android.util.Log;
 /**
  * PerformRequestTask is a specialized {@link AsyncTask} to perform an server
  * request on the background
- * 
+ *
  * @see AsyncTask
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class PerformRequestTask extends
 		AsyncTask<Request<?>, Void, Response<?>> {
@@ -48,7 +48,7 @@ public class PerformRequestTask extends
 	/**
 	 * Creates a {@link PerformRequestTask} with setting a
 	 * {@link PerformRequestTaskCallback}
-	 * 
+	 *
 	 * @param callback
 	 *            {@link PerformRequestTaskCallback} for the current task
 	 */
@@ -60,7 +60,7 @@ public class PerformRequestTask extends
 	/**
 	 * Creates a {@link PerformRequestTask} by copying the
 	 * {@link PerformRequestTaskCallback} from task
-	 * 
+	 *
 	 * @param task
 	 *            {@link PerformRequestTask} with
 	 *            {@link PerformRequestTaskCallback} to be used
@@ -74,7 +74,7 @@ public class PerformRequestTask extends
 
 	/**
 	 * Performs an server request on the background
-	 * 
+	 *
 	 * @param params
 	 *            Request to be performed (only the first is used)
 	 * @return {@link Response} from the server

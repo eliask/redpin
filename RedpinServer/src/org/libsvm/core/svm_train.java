@@ -84,7 +84,7 @@ public class svm_train {
 			System.out.print("Cross Validation Accuracy = "+100.0*total_correct/prob.l+"%\n");
 		}
 	}
-	
+
 	public void run(String argv[]) throws IOException
 	{
 		parse_command_line(argv);
@@ -199,7 +199,7 @@ public class svm_train {
 					break;
 				case 'q':
 					svm.svm_print_string = new svm_print_interface()
-					{ 
+					{
 						public void print(String s){}
 					};
 					i--;

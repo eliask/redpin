@@ -11,9 +11,9 @@ import org.redpin.android.provider.RedpinContentProvider;
 import org.redpin.android.provider.RedpinContract;
 
 /**
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class EntityHomeTest extends
 		android.test.ProviderTestCase2<RedpinContentProvider> {

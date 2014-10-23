@@ -1,7 +1,7 @@
 /**
  *  Filename: RemoteEntityHome.java (in org.repin.android.net.home)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.net.home;
@@ -37,9 +37,9 @@ import android.util.Log;
  * {@link RemoteEntityHome} handles request to server and calls the responsible
  * Entity RemoteEntityHomes to synchronize the local database after the request
  * was performed
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class RemoteEntityHome implements PerformRequestTaskCallback {
 
@@ -55,7 +55,7 @@ public class RemoteEntityHome implements PerformRequestTaskCallback {
 
 	/**
 	 * Performs an server request. This method must be invoked on the UI thread.
-	 * 
+	 *
 	 * @param action
 	 *            Action to be performed
 	 * @param callback
@@ -69,7 +69,7 @@ public class RemoteEntityHome implements PerformRequestTaskCallback {
 	/**
 	 * Performs an server request . This method must be invoked on the UI
 	 * thread.
-	 * 
+	 *
 	 * @param action
 	 *            Action to be performed
 	 */
@@ -79,7 +79,7 @@ public class RemoteEntityHome implements PerformRequestTaskCallback {
 
 	/**
 	 * Performs an server request. This method must be invoked on the UI thread.
-	 * 
+	 *
 	 * @param <D>
 	 *            Data type the request contains
 	 * @param action
@@ -94,7 +94,7 @@ public class RemoteEntityHome implements PerformRequestTaskCallback {
 	/**
 	 * Performs an server request. This method must be invoked on the UI thread
 	 * (as it invokes {@link AsyncTask#execute(Object...)}
-	 * 
+	 *
 	 * @param <D>
 	 *            Data type the request contains
 	 * @param action
@@ -118,7 +118,7 @@ public class RemoteEntityHome implements PerformRequestTaskCallback {
 
 	/**
 	 * Starts an asynchronous server request and adds it to the pending list.
-	 * 
+	 *
 	 * @param task
 	 *            {@link PerformRequestTask} to be started
 	 * @param request
@@ -137,7 +137,7 @@ public class RemoteEntityHome implements PerformRequestTaskCallback {
 
 	/**
 	 * Removes a task form the pending list
-	 * 
+	 *
 	 * @param task
 	 *            {@link PerformRequestTask} to be removed
 	 */
@@ -154,7 +154,7 @@ public class RemoteEntityHome implements PerformRequestTaskCallback {
 
 	/**
 	 * Restarts a failed server request.
-	 * 
+	 *
 	 * @param task
 	 *            {@link PerformRequestTask} to be restarted
 	 */
@@ -179,7 +179,7 @@ public class RemoteEntityHome implements PerformRequestTaskCallback {
 
 	/**
 	 * Returns the Entity RemoteEntityHome that is responsible for the request.
-	 * 
+	 *
 	 * @param request
 	 *            {@link Request}
 	 * @return RemoteEntityHome for specific request
@@ -190,7 +190,7 @@ public class RemoteEntityHome implements PerformRequestTaskCallback {
 
 	/**
 	 * Returns the Entity RemoteEntityHome that is responsible for an action.
-	 * 
+	 *
 	 * @param type
 	 *            Action
 	 * @return RemoteEntityHome for specific request type
@@ -232,7 +232,7 @@ public class RemoteEntityHome implements PerformRequestTaskCallback {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param response
 	 *            {@link Response} received from the server
 	 * @return <code>true</code> if request was successful
@@ -243,7 +243,7 @@ public class RemoteEntityHome implements PerformRequestTaskCallback {
 
 	/**
 	 * Hands over the response to the responsible Entity RemoteEntityHome.
-	 * 
+	 *
 	 * @see PerformRequestTaskCallback#onPerformedBackground(Request, Response,
 	 *      PerformRequestTask)
 	 */
@@ -258,7 +258,7 @@ public class RemoteEntityHome implements PerformRequestTaskCallback {
 	/**
 	 * Calls the {@link RemoteEntityHomeCallback} if request was successful,
 	 * otherwise retries to perform the request.
-	 * 
+	 *
 	 * @see PerformRequestTaskCallback#onPerformedForeground(Request, Response,
 	 *      PerformRequestTask)
 	 */
@@ -299,7 +299,7 @@ public class RemoteEntityHome implements PerformRequestTaskCallback {
 
 	/**
 	 * Retries to perform the canceled request
-	 * 
+	 *
 	 * @see PerformRequestTaskCallback#onCanceledForeground(Request,
 	 *      PerformRequestTask)
 	 */

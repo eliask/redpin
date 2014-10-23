@@ -1,7 +1,7 @@
 /**
  *  Filename: RedpinContentProvider.java (in org.repin.android.provider)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.provider;
@@ -41,9 +41,9 @@ import android.util.Log;
 
 /**
  * Redpin {@link ContentProvider} for {@link Map}s and {@link Location}s
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class RedpinContentProvider extends ContentProvider {
 
@@ -92,16 +92,16 @@ public class RedpinContentProvider extends ContentProvider {
 	/**
 	 * {@link SQLiteOpenHelper} that handles database creation and version
 	 * management
-	 * 
+	 *
 	 * @see SQLiteOpenHelper
-	 * 
+	 *
 	 * @author Pascal Brogle (broglep@student.ethz.ch)
-	 * 
+	 *
 	 */
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 		/**
 		 * Creates the Helper
-		 * 
+		 *
 		 * @param context
 		 *            to use to open or create the database
 		 */
@@ -146,7 +146,7 @@ public class RedpinContentProvider extends ContentProvider {
 
 	/**
 	 * Opens or creates the database
-	 * 
+	 *
 	 * @return <code>true</code> if successful
 	 */
 	@Override
@@ -298,7 +298,7 @@ public class RedpinContentProvider extends ContentProvider {
 
 	/**
 	 * Insert an {@link Map} into the database
-	 * 
+	 *
 	 * @param initialValues
 	 *            {@link ContentValues} representing a {@link Map}
 	 * @return {@link Uri} of the inserted {@link Map}
@@ -339,7 +339,7 @@ public class RedpinContentProvider extends ContentProvider {
 
 	/**
 	 * Insert an {@link Location} into the database
-	 * 
+	 *
 	 * @param initialValues
 	 *            {@link ContentValues} representing a {@link Location}
 	 * @return {@link Uri} of the inserted {@link Map}

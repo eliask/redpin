@@ -1,7 +1,7 @@
 /**
  *  Filename: SearchListActivity.java (in org.repin.android.ui.list)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Luba Rogoleva, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.ui.list;
@@ -46,7 +46,7 @@ import android.widget.AdapterView.OnItemClickListener;
  * {@link ListActivity} that displays {@link Location}s grouped by {@link Map}s an lets the user search them.
  * @author Luba Rogoleva (lubar@student.ethz.ch)
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class SearchListActivity extends ListActivity implements
 		OnItemClickListener, TextWatcher {
@@ -112,7 +112,7 @@ public class SearchListActivity extends ListActivity implements
 
 	/**
 	 * Sets the filtered {@link GroupedListAdapter}
-	 * 
+	 *
 	 * @param text
 	 *            The text that is searched
 	 */
@@ -128,7 +128,7 @@ public class SearchListActivity extends ListActivity implements
 
 	/**
 	 * Gets the clicked {@link Location}
-	 * 
+	 *
 	 * @param parent
 	 *            {@link AdapterView}
 	 * @param position

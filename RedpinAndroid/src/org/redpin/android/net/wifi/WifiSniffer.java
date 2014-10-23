@@ -1,7 +1,7 @@
 /**
  *  Filename: WifiSniffer.java (in org.repin.android.net.wifi)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Arno Fiva, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.net.wifi;
@@ -42,9 +42,9 @@ import android.util.Log;
 /**
  * {@link WifiSniffer} is responsible for scanning the wirless network and
  * gathering measurement so that the server can try to locate the client.
- * 
+ *
  * @author Arno Fiva (fivaa@student.ethz.ch)
- * 
+ *
  */
 public class WifiSniffer extends Service {
 
@@ -87,7 +87,7 @@ public class WifiSniffer extends Service {
 
 	/**
 	 * Retrieve measurement from last scan.
-	 * 
+	 *
 	 * @return {@link Measurement}
 	 */
 	public Measurement retrieveLastMeasurement() {
@@ -155,14 +155,14 @@ public class WifiSniffer extends Service {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			
+
 			//Do not listen to broadcast when not initiated scan
 			//When no network is available, broadcasts are sent every few seconds
 			if(stop) {
 				Log.d(TAG, "Received not requested scan result");
 				return;
 			}
-			
+
 			List<ScanResult> results = mWifi.getScanResults();
 			Measurement measurement = new Measurement();
 
@@ -204,7 +204,7 @@ public class WifiSniffer extends Service {
 			if (mWifi == null) {
 				return;
 			}
-				
+
 			if (stop) {
 				Log.d(TAG, "Scanning stopped, skiping scan");
 				return;

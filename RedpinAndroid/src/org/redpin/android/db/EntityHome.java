@@ -1,7 +1,7 @@
 /**
  *  Filename: EntityHome.java (in org.repin.android.db)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.db;
@@ -40,9 +40,9 @@ import android.provider.BaseColumns;
  * Abstract class which provides an partial implementation of all function
  * needed to add, get, update and remove entities to/from database.
  * EntityHomes are used to encapsulate androids {@link ContentProvider}
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  * @param <T>
  *            entity which implements the interface {@link LocalEntity}
  */
@@ -54,7 +54,7 @@ public abstract class EntityHome<T extends LocalEntity> implements
 
 	/**
 	 * Transforms an entity to a set of values
-	 * 
+	 *
 	 * @param e
 	 *            Entity
 	 * @return Set of entity values
@@ -63,14 +63,14 @@ public abstract class EntityHome<T extends LocalEntity> implements
 
 	/**
 	 * Transforms an database row to an entity
-	 * 
+	 *
 	 * @param cursor
 	 * @return Entity
 	 */
 	abstract public T fromCursorRow(Cursor cursor);
 
 	/**
-	 * 
+	 *
 	 * @return {@link ContentProvider} URI of entities handled by this
 	 *         {@link EntityHome}
 	 */
@@ -85,7 +85,7 @@ public abstract class EntityHome<T extends LocalEntity> implements
 	}
 
 	/**
-	 * 
+	 *
 	 * @param resolver
 	 *            {@link ContentResolver}
 	 */
@@ -97,7 +97,7 @@ public abstract class EntityHome<T extends LocalEntity> implements
 
 	/**
 	 * Add an entity to the database.
-	 * 
+	 *
 	 * @param e
 	 *            Entity
 	 * @return Entity with its generated primary key
@@ -112,7 +112,7 @@ public abstract class EntityHome<T extends LocalEntity> implements
 
 	/**
 	 * Add a list of entities
-	 * 
+	 *
 	 * @param list
 	 *            {@link List} of entities
 	 * @return {@link List} of entities with their generated primary keys
@@ -140,7 +140,7 @@ public abstract class EntityHome<T extends LocalEntity> implements
 
 	/**
 	 * Get an entity by it's primary key
-	 * 
+	 *
 	 * @param id
 	 *            Primary Key
 	 * @return Entity
@@ -156,7 +156,7 @@ public abstract class EntityHome<T extends LocalEntity> implements
 
 	/**
 	 * Get all entities
-	 * 
+	 *
 	 * @return {@link List} of all entities
 	 */
 
@@ -166,7 +166,7 @@ public abstract class EntityHome<T extends LocalEntity> implements
 
 	/**
 	 * Get an entity
-	 * 
+	 *
 	 * @param e
 	 *            Entity
 	 * @return Entity with all fields filled from database
@@ -177,7 +177,7 @@ public abstract class EntityHome<T extends LocalEntity> implements
 
 	/**
 	 * Get a {@link List} of entities
-	 * 
+	 *
 	 * @param list
 	 *            {@link List} of primary keys
 	 * @return {@link List} of entities
@@ -192,7 +192,7 @@ public abstract class EntityHome<T extends LocalEntity> implements
 
 	/**
 	 * Get a {@link List} of entities by their primary keys
-	 * 
+	 *
 	 * @param ids
 	 *            {@link List} of primary keys
 	 * @return {@link List} of entities
@@ -209,7 +209,7 @@ public abstract class EntityHome<T extends LocalEntity> implements
 
 	/**
 	 * Removes an entity by it's primary key
-	 * 
+	 *
 	 * @param id
 	 *            Primary Key
 	 * @return True if successful
@@ -222,7 +222,7 @@ public abstract class EntityHome<T extends LocalEntity> implements
 
 	/**
 	 * Removes an entity
-	 * 
+	 *
 	 * @param e
 	 *            Entity
 	 * @return True if successful
@@ -234,7 +234,7 @@ public abstract class EntityHome<T extends LocalEntity> implements
 
 	/**
 	 * Removes a {@link List} of entities
-	 * 
+	 *
 	 * @param list
 	 *            {@link List} of entities
 	 * @return True if removal of all entities was successful
@@ -253,7 +253,7 @@ public abstract class EntityHome<T extends LocalEntity> implements
 
 	/**
 	 * Removes a list of entities by their primary keys
-	 * 
+	 *
 	 * @param ids
 	 *            List of primary keys
 	 * @return True if removal of all entities was successful
@@ -274,7 +274,7 @@ public abstract class EntityHome<T extends LocalEntity> implements
 
 	/**
 	 * Removes all entities from database
-	 * 
+	 *
 	 * @return True if removal was successful
 	 */
 
@@ -287,7 +287,7 @@ public abstract class EntityHome<T extends LocalEntity> implements
 
 	/**
 	 * Updates an entity
-	 * 
+	 *
 	 * @param e
 	 *            Entity
 	 * @return <code>true</code> if successful
@@ -302,7 +302,7 @@ public abstract class EntityHome<T extends LocalEntity> implements
 
 	/**
 	 * Updates a {@link List} of entities
-	 * 
+	 *
 	 * @param list
 	 *            {@link List} of entities to be updated
 	 * @return <code>true</code> if all entities were updated successfully
@@ -325,7 +325,7 @@ public abstract class EntityHome<T extends LocalEntity> implements
 
 	/**
 	 * Gets the database id of an entity-URI
-	 * 
+	 *
 	 * @param uri
 	 *            URI of an entity
 	 * @return Database id for entity with specified URI
@@ -344,7 +344,7 @@ public abstract class EntityHome<T extends LocalEntity> implements
 
 	/**
 	 * Creates entities from cursor
-	 * 
+	 *
 	 * @param cursor
 	 * @return {@link List} of entities
 	 */

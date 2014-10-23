@@ -1,7 +1,7 @@
 /**
  *  Filename: Request.java (in org.repin.android.net)
  *  This file is part of the Redpin project.
- * 
+ *
  *  Redpin is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
  *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
  *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
- * 
+ *
  *  www.redpin.org
  */
 package org.redpin.android.net;
@@ -33,17 +33,17 @@ import com.google.gson.reflect.TypeToken;
 
 /**
  * Class representing an server request
- * 
+ *
  * @author Pascal Brogle (broglep@student.ethz.ch)
- * 
+ *
  */
 public class Request<D> {
 
 	/**
 	 * Supported redpin request types
-	 * 
+	 *
 	 * @author Pascal Brogle (broglep@student.ethz.ch)
-	 * 
+	 *
 	 */
 	public enum RequestType {
 		setFingerprint, getLocation, getMapList, setMap, removeMap, getLocationList, updateLocation, removeLocation;
@@ -61,7 +61,7 @@ public class Request<D> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param action
 	 *            Action to be performed
 	 * @param data
@@ -73,7 +73,7 @@ public class Request<D> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param action
 	 *            Action to be performed
 	 */
@@ -84,7 +84,7 @@ public class Request<D> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param action
 	 *            Action to be performed
 	 */
@@ -94,7 +94,7 @@ public class Request<D> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Action to be performed
 	 */
 	public RequestType getAction() {
@@ -102,7 +102,7 @@ public class Request<D> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param data
 	 *            Data to be submitted with the request
 	 */
@@ -111,7 +111,7 @@ public class Request<D> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Data to be submitted with the request
 	 */
 	public D getData() {
@@ -120,7 +120,7 @@ public class Request<D> {
 
 	/**
 	 * This method is needed for JSON serialization/deserialization
-	 * 
+	 *
 	 * @return {@link Type} of the request
 	 */
 	public Type getRequestType() {
@@ -129,7 +129,7 @@ public class Request<D> {
 
 	/**
 	 * This method is needed for JSON serialization/deserialization
-	 * 
+	 *
 	 * @return {@link Type} of the response
 	 */
 	public Type getResponseType() {
@@ -150,7 +150,7 @@ public class Request<D> {
 
 	/**
 	 * Setups the proper types for the action to be performed
-	 * 
+	 *
 	 * @param t
 	 *            Action to be performed
 	 */
