@@ -198,10 +198,10 @@ public class svm_train {
 					param.probability = atoi(argv[i]);
 					break;
 				case 'q':
-					svm.svm_print_string = new svm_print_interface()
-					{
-						public void print(String s){}
-					};
+//					svm.svm_print_string = new svm_print_interface()
+//					{
+//						public void print(String s){}
+//					};
 					i--;
 					break;
 				case 'v':

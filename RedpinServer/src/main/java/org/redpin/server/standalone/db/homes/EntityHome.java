@@ -295,17 +295,26 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 		ResultSet rs = null;
 
 		try {
+                    System.out.println("1");
 			ps =  getPreparedStatement(getInsertSQL());
+                    System.out.println("2");
 			e.setId(getPrimaryKeyId());
+                    System.out.println("3");
 			ps.setInt(1, e.getId());
+                    System.out.println("4");
 			fillInStatement(ps, e, 2);
+                    System.out.println("5");
 			ps.executeUpdate();
+                    System.out.println("6");
 			rs = getGeneratedKey(ps);
+                    System.out.println("7");
 			if(rs != null && rs.next()) {
 				e.setId(rs.getInt(1));
 			}
+                    System.out.println("8");
 
 		} catch (SQLException ex) {
+                    System.out.println("SDSD " + ex);
 			log.log(Level.SEVERE, "add failed: " + ex.getMessage(), ex);
 		} finally {
 			try {
@@ -315,6 +324,7 @@ public abstract class EntityHome<T extends IEntity<Integer>> implements IEntityH
 				log.log(Level.WARNING, "failed to close db resources: " + es.getMessage(), es);
 			}
 		}
+                System.out.println("end");
 
 		return e;
 	}
