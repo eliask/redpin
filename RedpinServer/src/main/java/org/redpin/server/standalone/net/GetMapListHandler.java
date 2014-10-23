@@ -1,35 +1,34 @@
 /**
- *  Filename: GetMapListHandler.java (in org.redpin.server.standalone.net)
- *  This file is part of the Redpin project.
+ * Filename: GetMapListHandler.java (in org.redpin.server.standalone.net) This
+ * file is part of the Redpin project.
  *
- *  Redpin is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License as published
- *  by the Free Software Foundation, either version 3 of the License, or
- *  any later version.
+ * Redpin is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or any later version.
  *
- *  Redpin is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Lesser General Public License for more details.
+ * Redpin is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ * (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS
+ * RESERVED.
  *
- *  www.redpin.org
+ * www.redpin.org
  */
 package org.redpin.server.standalone.net;
 
+import com.google.gson.JsonElement;
 import java.util.List;
-
+import java.util.logging.Level;
 import org.redpin.server.standalone.core.Map;
 import org.redpin.server.standalone.db.HomeFactory;
 import org.redpin.server.standalone.db.homes.MapHome;
 import org.redpin.server.standalone.net.Response.Status;
 import org.redpin.server.standalone.util.Log;
-
-import com.google.gson.JsonElement;
 
 /**
  * @see IHandler
@@ -38,32 +37,31 @@ import com.google.gson.JsonElement;
  */
 public class GetMapListHandler implements IHandler {
 
+    MapHome mapHome;
 
-	MapHome mapHome;
+    public GetMapListHandler() {
+        mapHome = HomeFactory.getMapHome();
+    }
 
-	public GetMapListHandler() {
-		mapHome = HomeFactory.getMapHome();
-	}
+    /**
+     * @see IHandler#handle(JsonElement)
+     */
+    @Override
+    public Response handle(JsonElement data) {
 
-	/**
-	 * @see IHandler#handle(JsonElement)
-	 */
-	@Override
-	public Response handle(JsonElement data) {
+        Response res;
 
-		Response res;
+        List<Map> maps = mapHome.getAll();
 
-		List<Map> maps = mapHome.getAll();
+        if (maps.contains(null)) {
+            res = new Response(Status.failed, "could not fetch all maps", null);
+            Log.getLogger().fine("could not fetch all maps");
+        } else {
+            res = new Response(Status.ok, null, maps);
+            Log.getLogger().log(Level.FINER, "fetched {0} maps", maps.size());
+        }
 
-		if(maps.contains(null)) {
-			res = new Response(Status.failed, "could not fetch all maps", null);
-			Log.getLogger().fine("could not fetch all maps");
-		} else {
-			res = new Response(Status.ok, null, maps);
-			Log.getLogger().finer("fetched "+ maps.size()+ " maps");
-		}
-
-		return res;
-	}
+        return res;
+    }
 
 }

@@ -1,23 +1,23 @@
 /**
- *  Filename: ImageHandler.java (in org.redpin.server.standalone.net)
- *  This file is part of the Redpin project.
+ * Filename: ImageHandler.java (in org.redpin.server.standalone.net) This file
+ * is part of the Redpin project.
  *
- *  Redpin is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License as published
- *  by the Free Software Foundation, either version 3 of the License, or
- *  any later version.
+ * Redpin is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or any later version.
  *
- *  Redpin is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Lesser General Public License for more details.
+ * Redpin is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ * (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS
+ * RESERVED.
  *
- *  www.redpin.org
+ * www.redpin.org
  */
 package org.redpin.server.standalone.net;
 
@@ -28,12 +28,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.redpin.server.standalone.util.Configuration;
 import org.redpin.server.standalone.util.Log;
 
@@ -45,277 +46,271 @@ import org.redpin.server.standalone.util.Log;
  */
 public class ImageHandler {
 
-	private DataInputStream in;
-	private DataOutputStream out;
+    final static String CRLF = "\r\n";
+    final static int HTTP_OK = 200;
+    final static int HTTP_NOT_FOUND = 404;
 
-	final static String CRLF = "\r\n";
-	final static int HTTP_OK = 200;
-	final static int HTTP_NOT_FOUND = 404;
+    final static int BUFFER_SIZE = 1_024;
 
-	final static int BUFFER_SIZE = 1024;
-	private Logger log = Log.getLogger();
+    private static byte[] toByte(String s) {
+        if (s == null || s.isEmpty()) {
+            return new byte[0];
+        }
 
-	public ImageHandler(DataInputStream in, DataOutputStream out) {
-		this.in = in;
-		this.out = out;
-	}
+        byte[] r = null;
+        try {
+            r = s.getBytes("US-ASCII");
+        } catch (Exception e) {
+            r = s.getBytes();
+        }
+        return r;
+    }
 
-	public void handle(String firstLine) {
-		System.out.println(firstLine);
-		StringTokenizer tokenizer = new StringTokenizer(firstLine);
-		String httpMethod = tokenizer.nextToken();
-		String httpQuery = tokenizer.nextToken();
+    private static String convertToHex(byte[] data) {
+        StringBuffer buffer = new StringBuffer();
+        for (int i = 0; i < data.length; i++) {
+            int halfbyte = (data[i] >>> 4) & 0x0F;
+            int two_halfs = 0;
+            do {
+                if ((0 <= halfbyte) && (halfbyte <= 9)) {
+                    buffer.append((char) ('0' + halfbyte));
+                } else {
+                    buffer.append((char) ('a' + (halfbyte - 10)));
+                }
+                halfbyte = data[i] & 0x0F;
+            } while (two_halfs++ < 1);
+        }
+        return buffer.toString();
+    }
+    private final DataInputStream in;
+    private final DataOutputStream out;
+    private final Logger log = Log.getLogger();
 
-		if (httpMethod.equals("GET")) {
-			requestGET(httpQuery);
-		}
+    public ImageHandler(DataInputStream in, DataOutputStream out) {
+        this.in = in;
+        this.out = out;
+    }
 
-		if (httpMethod.equals("POST")) {
-			requestPOST(firstLine);
-		}
+    public void handle(String firstLine) {
+        System.out.println(firstLine);
+        StringTokenizer tokenizer = new StringTokenizer(firstLine);
+        String httpMethod = tokenizer.nextToken();
+        String httpQuery = tokenizer.nextToken();
 
-	}
+        if (httpMethod.equals("GET")) {
+            requestGET(httpQuery);
+        }
 
-	public void requestGET(String httpQuery) {
+        if (httpMethod.equals("POST")) {
+            requestPOST(firstLine);
+        }
 
-		if (!httpQuery.equals("/")) {
-			String fileName = httpQuery.substring(1);
-			File f = new File(Configuration.ImageUploadPath + "/" + fileName);
-			if (f.exists() && f.canRead()) {
-				Log.getLogger().log(Level.FINER,
-						"sending map image " + fileName);
-				sendResponse(HTTP_OK, fileName, true);
-			} else {
-				Log.getLogger().log(Level.FINE,
-						"client requested non existing map image " + fileName);
-				sendResponse(HTTP_NOT_FOUND);
-			}
-		} else {
-			sendResponse(HTTP_NOT_FOUND);
-		}
+    }
 
-	}
+    public void requestGET(String httpQuery) {
 
-	@SuppressWarnings("deprecation")
-	public void requestPOST(String firstLine) {
-		String currentLine;
-		int dataLength = 0;
-		String boundary = "";
-		DataOutputStream fileout = null;
+        if (!httpQuery.equals("/")) {
+            String fileName = httpQuery.substring(1);
+            File f = new File(Configuration.ImageUploadPath + "/" + fileName);
+            if (f.exists() && f.canRead()) {
+                Log.getLogger().log(Level.FINER, "sending map image {0}", fileName);
+                sendResponse(HTTP_OK, fileName, true);
+            } else {
+                Log.getLogger().log(Level.FINE, "client requested non existing map image {0}", fileName);
+                sendResponse(HTTP_NOT_FOUND);
+            }
+        } else {
+            sendResponse(HTTP_NOT_FOUND);
+        }
 
-		try {
+    }
 
-			while (true) {
-				currentLine = in.readLine();
-				if (currentLine == null) {
-					break;
-				}
-				//convert to lowercase, due to a bug in android http://code.google.com/p/android/issues/detail?id=6684
-				if (currentLine.toLowerCase().indexOf("Content-Type: multipart/form-data".toLowerCase()) != -1) {
-					boundary = currentLine.split("boundary=")[1];
-					break;
-				}
-			}
+    @SuppressWarnings("deprecation")
+    public void requestPOST(String firstLine) {
+        String currentLine;
+        int dataLength = 0;
+        String boundary = "";
+        DataOutputStream fileout = null;
 
-			while (true) {
-				currentLine = in.readLine();
-				if (currentLine == null) {
-					break;
-				}
-				if (currentLine.indexOf("--" + boundary) != -1) {
-					String filename = in.readLine().split("filename=")[1]
-							.replaceAll("\"", "");
-					String[] filelist = filename.split("\\"
-							+ System.getProperty("file.separator"));
-					filename = filelist[filelist.length - 1];
-					if (!filename.equals("redpinfile")) {
-						Log
-								.getLogger()
-								.log(Level.FINE,
-										"unauthorized client tried to upload map image");
-						sendResponse(HTTP_NOT_FOUND);
-					}
+        try {
 
-					break;
-				}
-			}
+            while (true) {
+                currentLine = in.readLine();
+                if (currentLine == null) {
+                    break;
+                }
+                //convert to lowercase, due to a bug in android http://code.google.com/p/android/issues/detail?id=6684
+                if (currentLine.toLowerCase().contains("Content-Type: multipart/form-data".toLowerCase())) {
+                    boundary = currentLine.split("boundary=")[1];
+                    break;
+                }
+            }
 
-			while (true) {
+            while (true) {
+                currentLine = in.readLine();
+                if (currentLine == null) {
+                    break;
+                }
+                if (currentLine.contains("--" + boundary)) {
+                    String filename = in.readLine().split("filename=")[1]
+                            .replaceAll("\"", "");
+                    String[] filelist = filename.split("\\"
+                            + System.getProperty("file.separator"));
+                    filename = filelist[filelist.length - 1];
+                    if (!filename.equals("redpinfile")) {
+                        Log
+                                .getLogger()
+                                .log(Level.FINE,
+                                        "unauthorized client tried to upload map image");
+                        sendResponse(HTTP_NOT_FOUND);
+                    }
 
-				currentLine = in.readLine();
-				if (currentLine == null) {
-					break;
-				}
-				if (currentLine.indexOf("Content-Length:") != -1) {
-					dataLength = Integer.parseInt(currentLine.split(" ")[1]);
-					break;
-				}
-			}
-			// skip CRLF
-			in.readLine();
-			String fileName = generateFilename();
-			fileout = new DataOutputStream(new FileOutputStream(
-					Configuration.ImageUploadPath + "/" + fileName));
+                    break;
+                }
+            }
 
-			byte[] buf = new byte[BUFFER_SIZE];
+            while (true) {
 
-			int l = dataLength;
-			int bytesRead;
-			while (((bytesRead = in.read(buf,0,Math.min(BUFFER_SIZE, l))) != -1) && (l != 0)) {
-				fileout.write(buf, 0, bytesRead);
-				l -= bytesRead;
-			}
+                currentLine = in.readLine();
+                if (currentLine == null) {
+                    break;
+                }
+                if (currentLine.contains("Content-Length:")) {
+                    dataLength = Integer.parseInt(currentLine.split(" ")[1]);
+                    break;
+                }
+            }
+            // skip CRLF
+            in.readLine();
+            String fileName = generateFilename();
+            fileout = new DataOutputStream(new FileOutputStream(
+                    Configuration.ImageUploadPath + "/" + fileName));
 
-			in.readLine();
-			currentLine = in.readLine();
-			if (currentLine != null && currentLine.indexOf("--" + boundary + "--") != -1) {
-				// everything ok
-			}
-			log.log(Level.FINER,
-					"successful uploaded map image " + fileName);
-			sendResponse(HTTP_OK, fileName, false);
+            byte[] buf = new byte[BUFFER_SIZE];
 
-		} catch (IOException e) {
-			log.log(Level.WARNING, e.getMessage(), e);
-		} finally {
-			if (fileout != null) {
-				try {
-					fileout.close();
-				} catch (IOException e) {}
-			}
-		}
-	}
+            int l = dataLength;
+            int bytesRead;
+            while (((bytesRead = in.read(buf, 0, Math.min(BUFFER_SIZE, l))) != -1) && (l != 0)) {
+                fileout.write(buf, 0, bytesRead);
+                l -= bytesRead;
+            }
 
-	public void sendResponse(int code) {
-		sendResponse(code, null, false);
-	}
+            in.readLine();
+            currentLine = in.readLine();
+            if (currentLine != null && currentLine.contains("--" + boundary + "--")) {
+                // everything ok
+            }
+            log.log(Level.FINER, "successful uploaded map image {0}", fileName);
+            sendResponse(HTTP_OK, fileName, false);
 
-	public void sendResponse(int code, String fileName, boolean isFile) {
-		String status = "";
-		String contentLength = "";
-		String contentType = "";
+        } catch (IOException e) {
+            log.log(Level.WARNING, e.getMessage(), e);
+        } finally {
+            if (fileout != null) {
+                try {
+                    fileout.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+    }
 
-		String responseBody = "";
+    public void sendResponse(int code) {
+        sendResponse(code, null, false);
+    }
 
-		FileInputStream fileInput;
-		DataInputStream fileReader = null;
+    public void sendResponse(int code, String fileName, boolean isFile) {
+        String status = "";
+        String contentLength = "";
+        String contentType = "";
 
-		if (code == HTTP_OK) {
-			status = "HTTP/1.1 200 OK" + CRLF;
-		}
+        String responseBody = "";
 
-		if (code == HTTP_NOT_FOUND) {
-			status = "HTTP/1.1 404 Not Found" + CRLF;
-		}
+        FileInputStream fileInput;
+        DataInputStream fileReader = null;
 
-		if (isFile) {
+        if (code == HTTP_OK) {
+            status = "HTTP/1.1 200 OK" + CRLF;
+        }
 
-			try {
-				fileInput = new FileInputStream(Configuration.ImageUploadPath
-						+ "/" + fileName);
-				fileReader = new DataInputStream(fileInput);
-				int available = fileInput.available();
-				contentLength = "Content-Length: " + available + CRLF;
-				contentType = "Content-Type: application/octet-stream" + CRLF;
-			} catch (FileNotFoundException e) {
-				log.log(Level.WARNING, e.getMessage(), e);
-			} catch (IOException e) {
-				log.log(Level.WARNING, e.getMessage(), e);
-			}
-		} else {
-			if (fileName != null) {
-				responseBody = "http://{HOST}:{PORT}/" + fileName;
-			}
-			contentType = "Content-Type: text/plain" + CRLF;
-			contentLength = "Content-Length: " + responseBody.length() + CRLF;
-		}
+        if (code == HTTP_NOT_FOUND) {
+            status = "HTTP/1.1 404 Not Found" + CRLF;
+        }
 
-		try {
-			out.write(toByte(status));
-			out.write(toByte(contentType));
-			out.write(toByte(contentLength));
-			out.write(toByte("Connection: close" + CRLF));
-			out.write(toByte(CRLF));
+        if (isFile) {
 
-			if (isFile) {
-				byte[] buffer = new byte[1024];
-				int bytesRead;
-				while ((bytesRead = fileReader.read(buffer)) != -1) {
-					out.write(buffer, 0, bytesRead);
-				}
+            try {
+                fileInput = new FileInputStream(Configuration.ImageUploadPath
+                        + "/" + fileName);
+                fileReader = new DataInputStream(fileInput);
+                int available = fileInput.available();
+                contentLength = "Content-Length: " + available + CRLF;
+                contentType = "Content-Type: application/octet-stream" + CRLF;
+            } catch (FileNotFoundException e) {
+                log.log(Level.WARNING, e.getMessage(), e);
+            } catch (IOException e) {
+                log.log(Level.WARNING, e.getMessage(), e);
+            }
+        } else {
+            if (fileName != null) {
+                responseBody = "http://{HOST}:{PORT}/" + fileName;
+            }
+            contentType = "Content-Type: text/plain" + CRLF;
+            contentLength = "Content-Length: " + responseBody.length() + CRLF;
+        }
 
-			} else {
-				out.write(toByte(responseBody));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (fileReader != null) {
-				try {
-					fileReader.close();
-				} catch (IOException e) {
-				}
-			}
-		}
+        try {
+            out.write(toByte(status));
+            out.write(toByte(contentType));
+            out.write(toByte(contentLength));
+            out.write(toByte("Connection: close" + CRLF));
+            out.write(toByte(CRLF));
 
-	}
+            if (isFile) {
+                byte[] buffer = new byte[1_024];
+                int bytesRead;
+                while ((bytesRead = fileReader.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytesRead);
+                }
 
-	private static byte[] toByte(String s) {
-		if (s == null || s.isEmpty()) {
-			return new byte[0];
-		}
+            } else {
+                out.write(toByte(responseBody));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fileReader != null) {
+                try {
+                    fileReader.close();
+                } catch (IOException e) {
+                }
+            }
+        }
 
-		byte[] r = null;
-		try {
-			r = s.getBytes("US-ASCII");
-		} catch (Exception e) {
-			r = s.getBytes();
-		}
-		return r;
-	}
+    }
 
-	public String generateFilename() {
-		MessageDigest md;
-		byte[] sha1hash = new byte[40];
-		Random r = new Random();
-		String fileName = "";
-		String token = "";
-		while (true) {
-			token = Long.toString(Math.abs(r.nextLong()), 36)
-					+ Long.toString(System.currentTimeMillis());
+    public String generateFilename() {
+        MessageDigest md;
+        byte[] sha1hash = new byte[40];
+        Random r = new Random();
+        String fileName = "";
+        String token = "";
+        while (true) {
+            token = Long.toString(Math.abs(r.nextLong()), 36)
+                    + Long.toString(System.currentTimeMillis());
+            try {
+                md = MessageDigest.getInstance("SHA-1");
+                md.update(token.getBytes("iso-8859-1"), 0, token.length());
+                sha1hash = md.digest();
+            } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+                log.log(Level.WARNING, e.getMessage(), e);
+            }
+            fileName = convertToHex(sha1hash);
+            if (!new File(Configuration.ImageUploadPath + fileName).exists()) {
+                break;
+            }
+        }
+        return fileName;
+    }
 
-			try {
-				md = MessageDigest.getInstance("SHA-1");
-				md.update(token.getBytes("iso-8859-1"), 0, token.length());
-				sha1hash = md.digest();
-			} catch (Exception e) {
-				log.log(Level.WARNING, e.getMessage(), e);
-			}
-
-			fileName = convertToHex(sha1hash);
-
-			if (!new File(Configuration.ImageUploadPath + fileName).exists()) {
-				break;
-			}
-
-		}
-		return fileName;
-	}
-
-	private static String convertToHex(byte[] data) {
-		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < data.length; i++) {
-			int halfbyte = (data[i] >>> 4) & 0x0F;
-			int two_halfs = 0;
-			do {
-				if ((0 <= halfbyte) && (halfbyte <= 9)) {
-					buffer.append((char) ('0' + halfbyte));
-				} else {
-					buffer.append((char) ('a' + (halfbyte - 10)));
-				}
-				halfbyte = data[i] & 0x0F;
-			} while (two_halfs++ < 1);
-		}
-		return buffer.toString();
-	}
 }

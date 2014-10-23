@@ -1,376 +1,344 @@
 /**
- *  Filename: RedpinLocator.java (in org.redpin.server.standalone.locator)
- *  This file is part of the Redpin project.
+ * Filename: RedpinLocator.java (in org.redpin.server.standalone.locator) This
+ * file is part of the Redpin project.
  *
- *  Redpin is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License as published
- *  by the Free Software Foundation, either version 3 of the License, or
- *  any later version.
+ * Redpin is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or any later version.
  *
- *  Redpin is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Lesser General Public License for more details.
+ * Redpin is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with Redpin. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Redpin. If not, see <http://www.gnu.org/licenses/>.
  *
- *  (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS RESERVED.
+ * (c) Copyright ETH Zurich, Pascal Brogle, Philipp Bolliger, 2010, ALL RIGHTS
+ * RESERVED.
  *
- *  www.redpin.org
+ * www.redpin.org
  */
-
 package org.redpin.server.standalone.locator;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.redpin.server.standalone.core.Fingerprint;
 import org.redpin.server.standalone.core.Location;
 import org.redpin.server.standalone.core.Measurement;
 import org.redpin.server.standalone.core.measure.WiFiReading;
 import org.redpin.server.standalone.db.HomeFactory;
+import org.redpin.server.standalone.db.IEntity;
 import org.redpin.server.standalone.db.homes.FingerprintHome;
 import org.redpin.server.standalone.db.homes.MeasurementHome;
 import org.redpin.server.standalone.util.Log;
 
 public class RedpinLocator implements ILocator {
 
-	MeasurementHome measurementHome = null;
-	FingerprintHome fingerprintHome = null;
-	Logger log;
-	Level loglevel = Level.FINEST;
+    private static double ID_POS_CONTRIBUTION = 1;
+    private static double ID_NEG_CONTRIBUTION = -0.4;
+
+    public static double SIGNAL_CONTRIBUTION = 1;
+    public static double SIGNAL_PENALTY_THRESHOLD = 10;
+    public static double SIGNAL_GRAPH_LEVELING = 0.2;
+
+    /* accuracy level */
+    public static final int LOCATION_KNOWN = 10;
+    public static final int LOCATION_UNKNOWN = 0;
+    public static int LOCATION_THRESHOLD = 2;
+
+    public static boolean debug = false;
+    MeasurementHome measurementHome = null;
+    FingerprintHome fingerprintHome = null;
+    Logger log;
+    Level loglevel = Level.FINEST;
+
+    public RedpinLocator() {
+        measurementHome = HomeFactory.getMeasurementHome();
+        fingerprintHome = HomeFactory.getFingerprintHome();
+        log = Log.getLogger();
+
+        loadParameters();
+    }
+
+    public void loadParameters() {
+        Properties p = new Properties();
+        File f = new File("redpinlocator.properties");
+        if (f.exists()) {
+            try {
+                FileInputStream reader = new FileInputStream(f);
+                p.load(reader);
+
+                debug = Boolean.valueOf(p.getProperty("debug", Boolean.valueOf(debug).toString()));
+
+                LOCATION_THRESHOLD = Integer.parseInt(p.getProperty("LOCATION_THRESHOLD", new Integer(LOCATION_THRESHOLD).toString()));
+                ID_POS_CONTRIBUTION = Double.parseDouble(p.getProperty("ID_POS_CONTRIBUTION", new Double(ID_POS_CONTRIBUTION).toString()));
+                ID_NEG_CONTRIBUTION = Double.parseDouble(p.getProperty("ID_NEG_CONTRIBUTION", new Double(ID_NEG_CONTRIBUTION).toString()));
+                SIGNAL_CONTRIBUTION = Double.parseDouble(p.getProperty("SIGNAL_CONTRIBUTION", new Double(SIGNAL_CONTRIBUTION).toString()));
+                SIGNAL_PENALTY_THRESHOLD = Double.parseDouble(p.getProperty("SIGNAL_PENALTY_THRESHOLD", new Double(SIGNAL_PENALTY_THRESHOLD).toString()));
+                SIGNAL_GRAPH_LEVELING = Double.parseDouble(p.getProperty("SIGNAL_GRAPH_LEVELING", new Double(SIGNAL_GRAPH_LEVELING).toString()));
+
+            } catch (IOException | NumberFormatException e) {
+                Log.getLogger().log(Level.WARNING, "RedpinLocator Config initialization failed: " + e.getMessage(), e);
+
+            }
+        }
+    }
+
+    @Override
+    public Location locate(Measurement currentMeasurement) {
+
+        if (debug) {
+            loadParameters();
+        }
+
+        Location loc = null;
+
+        // get all measurement in database
+        List<Measurement> list = measurementHome.getAll();
+        /* check for similarity */
+        TreeSet<Measurement> hits = new TreeSet<>(new MeasurementComparator(currentMeasurement));
+
+        list.stream().forEach((m) -> {
+            int level = measurementSimilarityLevel(m, currentMeasurement);
+            if (debug) {
+                //debug
+                Fingerprint fp = fingerprintHome.getByMeasurementId(m.getId());
+                if (fp != null) {
+                    Location l = (Location) fp.getLocation();
+                    if (l != null) {
+                        log.log(Level.FINE, "location \"{0}{1}\" achieved similarity level {2}", new Object[]{l.getMap().getMapName(), l.getSymbolicID(), level});
+                    }
+                }
+                //end debug
+            }
+            if (level > LOCATION_THRESHOLD) {
+                hits.add(m);
+            }
+        });
+
+        if (hits.size() > 0) {
+
+            Measurement bestMatch = hits.first();
+
+            Fingerprint f = fingerprintHome.getByMeasurementId(bestMatch.getId());
+
+            if (f != null) {
+                loc = (Location) f.getLocation();
+                loc.setAccuracy(measurementSimilarityLevel(bestMatch, currentMeasurement));
+
+                if (debug) {
+                    log.log(Level.FINE, "Best match: \"{0}{1}\" achieved similarity level {2}", new Object[]{loc.getMap().getMapName(), loc.getSymbolicID(), loc.getAccuracy()});
+                }
+            }
+
+        }
+
+        return loc;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public int measurementSimilarityLevel(org.redpin.base.core.Measurement t,
+            org.redpin.base.core.Measurement o) {
+
+        Location mloc = null;
+        if (debug) {
+            Fingerprint tf = fingerprintHome.getByMeasurementId(((Measurement) t).getId());
+
+            if (tf != null) {
+                mloc = (Location) tf.getLocation();
+            }
+
+            if (mloc != null) {
+                log.log(loglevel, "Calculating similarity Level between current measurement and {0}{1}", new Object[]{mloc.getMap().getMapName(), mloc.getSymbolicID()});
+            } else {
+                log.log(loglevel, "Calculating similarity Level between current Measurements and #{0}", ((IEntity<Integer>) t).getId());
+            }
+        } else {
+            log.log(loglevel, "Calculating similarity Level between current Measurements and #{0}", ((IEntity<Integer>) t).getId());
+        }
 
 
+        /* total amount of credit that can be achieved */
+        double totalCredit = 0;
 
-	private static double ID_POS_CONTRIBUTION = 1;
-	private static double ID_NEG_CONTRIBUTION = -0.4;
+        /* account that holds the achieved credit */
+        double account = 0;
 
-	public static double SIGNAL_CONTRIBUTION = 1;
-	public static double SIGNAL_PENALTY_THRESHOLD = 10;
-	public static double SIGNAL_GRAPH_LEVELING = 0.2;
+        /* counts the nr of positive matches of reading ID's */
+        int matches;
 
-	/* accuracy level */
-	public static final int LOCATION_KNOWN = 10;
-	public static final int LOCATION_UNKNOWN = 0;
-	public static int LOCATION_THRESHOLD = 2;
+        /*log.log(loglevel, "WiFi ID penalty: (" + readings + " read - "
+         * holds the max nr of measured readings. max of reference measurement
+         * and current measurement
+         */
+        int readings;
 
-	public static boolean debug = false;
+        java.util.Vector<WiFiReading> this_vect = t.getWiFiReadings();
+        java.util.Vector<WiFiReading> other_vect = o.getWiFiReadings();
 
-
-	public RedpinLocator() {
-		measurementHome = HomeFactory.getMeasurementHome();
-		fingerprintHome = HomeFactory.getFingerprintHome();
-		log = Log.getLogger();
-
-		loadParameters();
-	}
-
-	public void loadParameters() {
-		Properties p = new Properties();
-		File f = new File("redpinlocator.properties");
-		if(f.exists()) {
-			try {
-				FileInputStream reader = new FileInputStream( f);
-				p.load(reader);
-
-				debug = Boolean.valueOf(p.getProperty("debug", Boolean.valueOf(debug).toString())).booleanValue();
-
-				LOCATION_THRESHOLD = Integer.parseInt(p.getProperty("LOCATION_THRESHOLD", new Integer(LOCATION_THRESHOLD).toString()));
-				ID_POS_CONTRIBUTION = Double.parseDouble(p.getProperty("ID_POS_CONTRIBUTION", new Double(ID_POS_CONTRIBUTION).toString()));
-				ID_NEG_CONTRIBUTION = Double.parseDouble(p.getProperty("ID_NEG_CONTRIBUTION", new Double(ID_NEG_CONTRIBUTION).toString()));
-				SIGNAL_CONTRIBUTION = Double.parseDouble(p.getProperty("SIGNAL_CONTRIBUTION", new Double(SIGNAL_CONTRIBUTION).toString()));
-				SIGNAL_PENALTY_THRESHOLD = Double.parseDouble(p.getProperty("SIGNAL_PENALTY_THRESHOLD", new Double(SIGNAL_PENALTY_THRESHOLD).toString()));
-				SIGNAL_GRAPH_LEVELING = Double.parseDouble(p.getProperty("SIGNAL_GRAPH_LEVELING", new Double(SIGNAL_GRAPH_LEVELING).toString()));
-
-
-
-			} catch (Exception e) {
-				Log.getLogger().log(Level.WARNING, "RedpinLocator Config initialization failed: "+ e.getMessage(), e);
-
-			}
-		}
-	}
-
-	@Override
-	public Location locate(Measurement currentMeasurement) {
-
-		if(debug) {
-			loadParameters();
-		}
-
-		Location loc = null;
-
-		// get all measurement in database
-		List<Measurement> list = measurementHome.getAll();
-		/* check for similarity */
-		TreeSet<Measurement> hits = new TreeSet<Measurement>(new MeasurementComparator(currentMeasurement));
-
-		for(Measurement m : list) {
-			int level = measurementSimilarityLevel(m, currentMeasurement);
-
-			if(debug) {
-				//debug
-				Fingerprint fp = fingerprintHome.getByMeasurementId(m.getId());
-
-				if(fp != null) {
-					Location l = (Location) fp.getLocation();
-					if(l != null) {
-						log.log(Level.FINE, "location \"" + l.getMap().getMapName() + l.getSymbolicID() + "\" achieved similarity level " + level);
-					}
-				}
-				//end debug
-			}
-
-			if(level > LOCATION_THRESHOLD) {
-				hits.add(m);
-			}
-		}
-
-		if (hits.size() > 0) {
-
-			Measurement bestMatch = hits.first();
-
-
-			Fingerprint f = fingerprintHome.getByMeasurementId(bestMatch.getId());
-
-			if(f != null) {
-				loc = (Location) f.getLocation();
-				loc.setAccuracy(measurementSimilarityLevel(bestMatch, currentMeasurement));
-
-				if(debug) {
-					log.log(Level.FINE, "Best match: \"" + loc.getMap().getMapName() + loc.getSymbolicID() + "\" achieved similarity level " + loc.getAccuracy());
-				}
-			}
-
-
-		}
-
-		return loc;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public int measurementSimilarityLevel(org.redpin.base.core.Measurement t,
-			org.redpin.base.core.Measurement o) {
-
-		Location mloc = null;
-		if(debug) {
-			Fingerprint tf = fingerprintHome.getByMeasurementId(((Measurement)t).getId());
-
-			if(tf != null) {
-				mloc = (Location) tf.getLocation();
-			}
-
-			if(mloc != null) {
-				log.log(loglevel, "Calculating similarity Level between current measurement and " + mloc.getMap().getMapName() + mloc.getSymbolicID());
-			} else {
-				log.log(loglevel, "Calculating similarity Level between current Measurements and #" + ((Measurement)t).getId());
-			}
-		} else {
-			log.log(loglevel, "Calculating similarity Level between current Measurements and #" + ((Measurement)t).getId());
-		}
-
-
-		/* total amount of credit that can be achieved */
-		double totalCredit = 0;
-
-		/* account that holds the achieved credit */
-		double account = 0;
-
-		/* counts the nr of positive matches of reading ID's */
-		int matches;
-
-		/*log.log(loglevel, "WiFi ID penalty: (" + readings + " read - "
-		 * holds the max nr of measured readings. max of reference measurement
-		 * and current measurement
-		 */
-		int readings;
-
-
-		java.util.Vector<WiFiReading> this_vect = t.getWiFiReadings();
-		java.util.Vector<WiFiReading> other_vect = o.getWiFiReadings();
-
-		/* check WiFiReadings */
+        /* check WiFiReadings */
 		//Vector wifiReadings1 = this.wifiReadings;
-		//Vector wifiReadings2 = m.getWiFiReadings();
+        //Vector wifiReadings2 = m.getWiFiReadings();
+        matches = 0;
 
-		matches = 0;
+        for (int i = 0; i < this_vect.size(); i++) {
+            WiFiReading this_wifi = this_vect.elementAt(i);
+            for (int j = 0; j < other_vect.size(); j++) {
+                WiFiReading other_wifi = other_vect.elementAt(j);
 
-		for (int i = 0; i < this_vect.size(); i++) {
-			WiFiReading this_wifi = this_vect.elementAt(i);
-			for (int j = 0; j < other_vect.size(); j++) {
-				WiFiReading other_wifi = other_vect.elementAt(j);
-
-				/*
-				 * bssid match: add ID contribution and signal strength
-				 * contribution
-				 */
-				if (this_wifi != null && this_wifi.getBssid() != null && other_wifi != null && other_wifi.getBssid() != null &&
-						this_wifi.getBssid().equals(other_wifi.getBssid())) {
+                /*
+                 * bssid match: add ID contribution and signal strength
+                 * contribution
+                 */
+                if (this_wifi != null && this_wifi.getBssid() != null && other_wifi != null && other_wifi.getBssid() != null
+                        && this_wifi.getBssid().equals(other_wifi.getBssid())) {
 
 					//log.log(loglevel, "WiFi + ID + SC");
+                    account += ID_POS_CONTRIBUTION;
+                    account += signalContribution(this_wifi.getRssi(), other_wifi.getRssi());
+                    matches++;
+                }
+            }
+        }
 
-					account += ID_POS_CONTRIBUTION;
-					account += signalContribution(this_wifi.getRssi(), other_wifi.getRssi());
-					matches++;
-				}
-			}
-		}
+        /*
+         * penalty if for each net that did not match
+         */
+        readings = Math.max(this_vect.size(), other_vect.size());
+        account += (readings - matches) * ID_NEG_CONTRIBUTION;
 
-		/*
-		 * penalty if for each net that did not match
-		 */
-		readings = Math.max(this_vect.size(), other_vect.size());
-		account += (readings - matches) * ID_NEG_CONTRIBUTION;
+        log.log(loglevel, "WiFi ID penalty: ({0} read - {1} matches) * {2} = {3}", new Object[]{readings, matches, ID_NEG_CONTRIBUTION, (readings - matches)
+            * ID_NEG_CONTRIBUTION});
 
-		log.log(loglevel, "WiFi ID penalty: (" + readings + " read - "
-					+ matches + " matches) * "
-					+ ID_NEG_CONTRIBUTION + " = "
-					+ (readings - matches)
-					* ID_NEG_CONTRIBUTION);
+        /*
+         * get the total credit for this measurement.
+         */
+        totalCredit += this_vect.size()
+                * ID_POS_CONTRIBUTION;
 
-		/*
-		 * get the total credit for this measurement.
-		 */
-		totalCredit += this_vect.size()
-				* ID_POS_CONTRIBUTION;
-
-		totalCredit += this_vect.size()
-				* SIGNAL_CONTRIBUTION;
+        totalCredit += this_vect.size()
+                * SIGNAL_CONTRIBUTION;
 
 
-		/* get accuracy level defined by bounds */
-		int factor = LOCATION_KNOWN	- LOCATION_UNKNOWN;
+        /* get accuracy level defined by bounds */
+        int factor = LOCATION_KNOWN - LOCATION_UNKNOWN;
 
-		/* a negative account results immediately in accuracy equals zero */
-		int accuracy = 0;
-		if (account > 0) {
-			/*
-			 * compute percentage of account from totalCredit -> [0,1]; stretch
-			 * by accuracy span -> [0,MAX]; and in case min accuracy would not
-			 * be zero, add this offset
-			 */
-			double a = (account / totalCredit) * factor
-					+ LOCATION_UNKNOWN;
+        /* a negative account results immediately in accuracy equals zero */
+        int accuracy = 0;
+        if (account > 0) {
+            /*
+             * compute percentage of account from totalCredit -> [0,1]; stretch
+             * by accuracy span -> [0,MAX]; and in case min accuracy would not
+             * be zero, add this offset
+             */
+            double a = (account / totalCredit) * factor
+                    + LOCATION_UNKNOWN;
 
-			/* same as Math.round */
-			accuracy = (int) Math.floor(a + 0.5d);
-		}
-		String logmsg = "Comparing measurements..."
-			+ "\n" + "-> Testing Measur: " + ( mloc == null ? ((Measurement)t).getId() : mloc.getMap().getMapName() + mloc.getSymbolicID())
-			+ "\n" + "-> Credit achieved: " + account
-			+ "\n" + "-> Total Credit possible: " + totalCredit
-			+ "\n" + "-> Accuracy achieved: " + accuracy;
-		log.log(loglevel, logmsg);
+            /* same as Math.round */
+            accuracy = (int) Math.floor(a + 0.5d);
+        }
+        String logmsg = "Comparing measurements..."
+                + "\n" + "-> Testing Measur: " + (mloc == null ? ((Measurement) t).getId() : mloc.getMap().getMapName() + mloc.getSymbolicID())
+                + "\n" + "-> Credit achieved: " + account
+                + "\n" + "-> Total Credit possible: " + totalCredit
+                + "\n" + "-> Accuracy achieved: " + accuracy;
+        log.log(loglevel, logmsg);
 
+        return accuracy;
+    }
 
-		return accuracy;
-	}
+    @Override
+    public Boolean measurmentAreSimilar(org.redpin.base.core.Measurement t,
+            org.redpin.base.core.Measurement o) {
 
-	@Override
-	public Boolean measurmentAreSimilar(org.redpin.base.core.Measurement t,
-			org.redpin.base.core.Measurement o) {
+        return measurementSimilarityLevel(t, o) > LOCATION_THRESHOLD;
+    }
 
-		if (measurementSimilarityLevel(t, o) > LOCATION_THRESHOLD) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * computes the credit contributed by the received signal strength of any
-	 * wireless scan
-	 */
-	private double signalContribution(double rssi1, double rssi2) {
+    /**
+     * computes the credit contributed by the received signal strength of any
+     * wireless scan
+     */
+    private double signalContribution(double rssi1, double rssi2) {
 
 
-		/*
-		 * we take the reference value of the rssi as base for further
-		 * computations
-		 */
-		double base = rssi1;
+        /*
+         * we take the reference value of the rssi as base for further
+         * computations
+         */
+        double base = rssi1;
 
+        log.log(loglevel, "  Base: {0}", base);
 
-		log.log(loglevel, "  Base: " + base);
+        /*
+         * in order that +20 and -20 dB are treated the same, the penalty
+         * function uses the difference of the rssi's.
+         */
+        double diff = Math.abs(rssi1 - rssi2);
 
-		/*
-		 * in order that +20 and -20 dB are treated the same, the penalty
-		 * function uses the difference of the rssi's.
-		 */
-		double diff = Math.abs(rssi1 - rssi2);
+        log.log(loglevel, "  Diff: {0}", diff);
 
+        /* get percentage of error */
+        double x = diff / base;
 
-		log.log(loglevel, "  Diff: " + diff);
+        log.log(loglevel, "  Diff percents of base: {0}", x);
 
-		/* get percentage of error */
-		double x = diff / base;
+        /* prevent division by zero */
+        if (x > 0.0) {
+            /*
+             * small error should result in a high contribution, big error in a
+             * small -> reciprocate (1/x) MIN = 1, MAX = infinity
+             */
+            double y = 1 / x;
 
+            log.log(loglevel, "  Current Contribution: {0}", y);
 
-		log.log(loglevel, "  Diff percents of base: " + x);
+            /*
+             * compute percentage of treshold regarding the current base
+             */
+            double t = SIGNAL_PENALTY_THRESHOLD / base;
 
-		/* prevent division by zero */
-		if (x > 0.0) {
-			/*
-			 * small error should result in a high contribution, big error in a
-			 * small -> reciprocate (1/x) MIN = 1, MAX = infinity
-			 */
-			double y = 1 / x;
+            /*
+             * shift down the resulting graph. the root (zero) will then be
+             * exactly at x = treshold for every base, e.g. measurement, and
+             * signal differences above the treshold will result in a negative
+             * contribution
+             */
+            y -= 1 / t;
 
+            /*
+             * graph increases fast, so that a difference of 15 still results in
+             * a maximal contribution. With this adjustment, the graph gets flat
+             * and this has also an impact on the penalty (difference to big)
+             */
+            y *= SIGNAL_GRAPH_LEVELING;
 
-			log.log(loglevel, "  Current Contribution: " + y);
+            log.log(loglevel, "  Shifted Contribution: {0} (shifted by {1})", new Object[]{y, t});
 
-			/*
-			 * compute percentage of treshold regarding the current base
-			 */
-			double t = SIGNAL_PENALTY_THRESHOLD / base;
+            if ((-1 * SIGNAL_CONTRIBUTION <= y)
+                    && (y <= SIGNAL_CONTRIBUTION)) {
 
-			/*
-			 * shift down the resulting graph. the root (zero) will then be
-			 * exactly at x = treshold for every base, e.g. measurement, and
-			 * signal differences above the treshold will result in a negative
-			 * contribution
-			 */
-			y -= 1 / t;
+                log.log(loglevel, "  Returned: {0}", y);
+                return y;
+            } else {
 
-			/*
-			 * graph increases fast, so that a difference of 15 still results in
-			 * a maximal contribution. With this adjustment, the graph gets flat
-			 * and this has also an impact on the penalty (difference to big)
-			 */
-			y = y * SIGNAL_GRAPH_LEVELING;
+                log.log(loglevel, "  Returned: {0} (CUTOFF, y was {1})", new Object[]{SIGNAL_CONTRIBUTION, y});
 
+                /* don't exceed the max possible credits/penalty */
+                return SIGNAL_CONTRIBUTION;
+            }
+        } else {
 
-			log.log(loglevel, "  Shifted Contribution: " + y
-						+ " (shifted by " + t + ")");
-
-			if ((-1 * SIGNAL_CONTRIBUTION <= y)
-					&& (y <= SIGNAL_CONTRIBUTION)) {
-
-				log.log(loglevel, "  Returned: " + y);
-				return y;
-			} else {
-
-				log.log(loglevel, "  Returned: "
-							+ SIGNAL_CONTRIBUTION
-							+ " (CUTOFF, y was " + y + ")");
-
-				/* don't exceed the max possible credits/penalty */
-				return SIGNAL_CONTRIBUTION;
-			}
-		} else {
-
-			log.log(loglevel, "  Returned: "
-						+ SIGNAL_CONTRIBUTION
-						+ " (diff was zero)");
-			return SIGNAL_CONTRIBUTION;
-		}
-	}
+            log.log(loglevel, "  Returned: {0} (diff was zero)", SIGNAL_CONTRIBUTION);
+            return SIGNAL_CONTRIBUTION;
+        }
+    }
 
 }
